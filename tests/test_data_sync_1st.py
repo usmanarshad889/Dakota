@@ -129,5 +129,102 @@ def test_data_sync_account_name(driver, config):
     driver.find_element(By.XPATH, "//button[normalize-space()='OK']").click()
     time.sleep(15)
 
+
+# Define Selected Options in dropdown for Marketplace Account Fields (Contact Name)
+marketplace_contact_fields = "Dakota First Name"
+sync_option_contact = "Update"
+notification_setting_contact = "Create Task"
+notification_recipient_contact = "Group"
+notification_assignee_contact = "HRG"
+def test_data_sync_contact_name(driver, config):
+    try:
+        # Using class name (if applicable)
+        element = WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.XPATH, "(//*[name()='svg'][@class='slds-button__icon'])[4]"))
+        )
+        element.click()
+        print("Clicked using CLASS_NAME")
+    except:
+        pass
+    time.sleep(1)
+
+    # Click on Auto Sync Field Updates
+    driver.find_element(By.XPATH, "//span[@class='slds-checkbox_faux']").click()
+    time.sleep(1)
+
+    # Scroll down by 500 pixels
+    driver.execute_script("window.scrollBy(0, 400);")
+    time.sleep(2)
+
+    # Click on Contacts
+    try:
+        driver.find_element(By.XPATH, "//li[@title='Contacts']").click()
+        time.sleep(5)
+    except:
+        print("rel xpath failed")
+    time.sleep(10)
+
+    try:
+        # Select Salesforce Account Fields
+        select_element = driver.find_element(By.XPATH,
+                                             "/html[1]/body[1]/div[4]/div[1]/section[1]/div[1]/div[2]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/ol[1]/li[2]/article[1]/div[1]/div[1]/div[3]/div[1]/div[1]/div[3]/div[2]/div[1]/div[1]/table[1]/tr[1]/td[2]/div[1]/div[1]/div[1]/select[1]")
+        select = Select(select_element)
+        select.select_by_visible_text(marketplace_contact_fields)
+        time.sleep(1)
+    except:
+        print("Salesforce Account Fields not selected")
+
+    try:
+        # Select Sync Option
+        select_element = driver.find_element(By.XPATH,
+                                             "/html[1]/body[1]/div[4]/div[1]/section[1]/div[1]/div[2]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/ol[1]/li[2]/article[1]/div[1]/div[1]/div[3]/div[1]/div[1]/div[3]/div[2]/div[1]/div[1]/table[1]/tr[1]/td[3]/div[1]/div[1]/div[1]/select[1]")
+        select = Select(select_element)
+        select.select_by_visible_text(sync_option_contact)
+        time.sleep(1)
+    except:
+        print("Sync Option not selected")
+
+    try:
+        # Select Notification Setting
+        select_element = driver.find_element(By.XPATH,
+                                             "/html[1]/body[1]/div[4]/div[1]/section[1]/div[1]/div[2]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/ol[1]/li[2]/article[1]/div[1]/div[1]/div[3]/div[1]/div[1]/div[3]/div[2]/div[1]/div[1]/table[1]/tr[1]/td[4]/div[1]/div[1]/div[1]/select[1]")
+        select = Select(select_element)
+        select.select_by_visible_text(notification_setting_contact)
+        time.sleep(1)
+    except:
+        print("Notification Setting field not selected")
+
+    try:
+        # Select Notification Recipient
+        select_element = driver.find_element(By.XPATH,
+                                             "/html[1]/body[1]/div[4]/div[1]/section[1]/div[1]/div[2]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/ol[1]/li[2]/article[1]/div[1]/div[1]/div[3]/div[1]/div[1]/div[3]/div[2]/div[1]/div[1]/table[1]/tr[1]/td[5]/div[1]/div[1]/div[1]/select[1]")
+        select = Select(select_element)
+        select.select_by_visible_text(notification_recipient_contact)
+        time.sleep(1)
+    except:
+        print("Notification Recipient field not selected")
+
+    try:
+        # Select Notification Assignee User/Group
+        select_element = driver.find_element(By.XPATH,
+                                             "/html[1]/body[1]/div[4]/div[1]/section[1]/div[1]/div[2]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/ol[1]/li[2]/article[1]/div[1]/div[1]/div[3]/div[1]/div[1]/div[3]/div[2]/div[1]/div[1]/table[1]/tr[1]/td[6]/div[1]/div[1]/div[1]/select[1]")
+        select = Select(select_element)
+        select.select_by_visible_text(notification_assignee_contact)
+        time.sleep(1)
+    except:
+        print("Notification Assignee User/Group not selected")
+    time.sleep(1)
+
+    # Scroll down by 1500 pixels
+    driver.execute_script("window.scrollBy(0, 2000);")
+    time.sleep(2)
+
+    # Select Save Option
+    driver.find_element(By.XPATH,
+                        "//div[@id='contacts']//button[@class='slds-button slds-button--brand slds-button--small'][normalize-space()='Save']").click()
+    time.sleep(1)
+    driver.find_element(By.XPATH, "//button[normalize-space()='OK']").click()
+    time.sleep(15)
+
     # Quit Driver
     driver.quit()
