@@ -31,7 +31,7 @@ def config(request):
     with open(config_file_path) as file:
         return json.load(file)
 
-def test_data_sync_account_name(driver, config):
+def test_data_sync(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])
     wait = WebDriverWait(driver, 10)
@@ -130,13 +130,13 @@ def test_data_sync_account_name(driver, config):
     time.sleep(15)
 
 
-# Define Selected Options in dropdown for Marketplace Account Fields (Contact Name)
-marketplace_contact_fields = "Dakota First Name"
-sync_option_contact = "Update"
-notification_setting_contact = "Create Task"
-notification_recipient_contact = "Group"
-notification_assignee_contact = "HRG"
-def test_data_sync_contact_name(driver, config):
+    # Define Selected Options in dropdown for Marketplace Account Fields (Contact Name)
+    marketplace_contact_fields = "Dakota First Name"
+    sync_option_contact = "Update"
+    notification_setting_contact = "Create Task"
+    notification_recipient_contact = "Group"
+    notification_assignee_contact = "HRG"
+
     try:
         # Using class name (if applicable)
         element = WebDriverWait(driver, 10).until(
@@ -152,8 +152,8 @@ def test_data_sync_contact_name(driver, config):
     driver.find_element(By.XPATH, "//span[@class='slds-checkbox_faux']").click()
     time.sleep(1)
 
-    # Scroll down by 500 pixels
-    driver.execute_script("window.scrollBy(0, 400);")
+    # Scroll down by 200 pixels
+    driver.execute_script("window.scrollBy(0, 200);")
     time.sleep(2)
 
     # Click on Contacts
@@ -162,7 +162,7 @@ def test_data_sync_contact_name(driver, config):
         time.sleep(5)
     except:
         print("rel xpath failed")
-    time.sleep(10)
+    time.sleep(15)
 
     try:
         # Select Salesforce Account Fields
