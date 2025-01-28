@@ -29,52 +29,42 @@ login_button = wait.until(EC.element_to_be_clickable((By.ID, "Login")))
 login_button.click()
 
 # Wait for page to load
-time.sleep(5)
+time.sleep(3)
 print("Successfully login to salesforce")
 
-# Locate and click "Marketplace Search"
-marketplace_search = wait.until(EC.presence_of_element_located((By.XPATH, "//span[@class='slds-truncate' and text()='Marketplace Search']")))
-driver.execute_script("arguments[0].click();", marketplace_search)
-print("Successfully clicked on Marketplace Search")
+# Navigate to Marketplace Search
+driver.get("https://dakotanetworks--sand2024.sandbox.lightning.force.com/lightning/n/Marketplace__Dakota_Search")
 time.sleep(15)
 
+# Navigate to Contacts Tab
+driver.find_element(By.XPATH, "//li[@title='Contacts']").click()
+time.sleep(7)
 
-# Select Display Criteria (Linked Account)
-criteria_dropdown = driver.find_element(By.XPATH, "(//select[@name='DisplayCriteria'])")
-dropdown_option = Select(criteria_dropdown)
-dropdown_option.select_by_visible_text("Linked Accounts")
+# Click on Search Button
+driver.find_element(By.XPATH,
+                    "//div[contains(@class,'filterInnerDiv')]//button[contains(@title,'Search')][normalize-space()='Search']").click()
+time.sleep(5)
 
-# click on search button
-button = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@title='Search']")))
-button.click()
-time.sleep(10)
+# Copy the Contact Name text
+contact_name = driver.find_element(By.XPATH,
+                                   "//body[1]/div[4]/div[1]/section[1]/div[1]/div[2]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/article[1]/div[2]/p[1]/div[1]/div[1]/div[1]/lightning-datatable[1]/div[2]/div[1]/div[1]/table[1]/tbody[1]/tr[1]/td[2]")
+contact_name_text = contact_name.text
 
-# Find the element and Verify
-sag_element = driver.find_elements(By.XPATH, "//tbody/tr[1]/th[1]/lightning-primitive-cell-factory[1]/span[1]/div[1]/lightning-icon[1]/span[1]/lightning-primitive-icon[1]//*[name()='svg']")
+# Search Account name
+driver.find_element(By.XPATH, "(//input[@placeholder='Contact Name'])").send_keys(contact_name_text)
+time.sleep(1)
 
-if sag_element:
-    assert True, "Element found"
+# Click on Search Button
+driver.find_element(By.XPATH,
+                    "//div[contains(@class,'filterInnerDiv')]//button[contains(@title,'Search')][normalize-space()='Search']").click()
+time.sleep(5)
+
+# Copy the Search Contact Name text
+contact_name = driver.find_element(By.XPATH,
+                                   "//body[1]/div[4]/div[1]/section[1]/div[1]/div[2]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/article[1]/div[2]/p[1]/div[1]/div[1]/div[1]/lightning-datatable[1]/div[2]/div[1]/div[1]/table[1]/tbody[1]/tr[1]/td[2]")
+search_contact_name_text = contact_name.text
+
+if contact_name_text == search_contact_name_text:
+    assert True
 else:
-    assert False, "Test case failed: Element not found"
-time.sleep(2)
-
-# Select Display Criteria (Unlinked Account)
-criteria_dropdown = driver.find_element(By.XPATH, "(//select[@name='DisplayCriteria'])")
-dropdown_option = Select(criteria_dropdown)
-dropdown_option.select_by_visible_text("Unlinked Accounts")
-
-# click on search button
-button = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@title='Search']")))
-button.click()
-time.sleep(10)
-
-# Find the element and Verify
-sag_element = driver.find_elements(By.XPATH, "//tbody/tr[1]/th[1]/lightning-primitive-cell-factory[1]/span[1]/div[1]/lightning-icon[1]/span[1]/lightning-primitive-icon[1]//*[name()='svg']")
-
-if sag_element:
-    assert False, "Element not found"
-else:
-    assert True, "Test case failed: Element found"
-time.sleep(2)
-
-driver.quit()
+    assert False
