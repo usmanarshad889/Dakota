@@ -41,7 +41,7 @@ def test_search_contact_account_name(driver, config):
     time.sleep(3)
 
     # Navigate to Marketplace Search
-    driver.get("https://dakotanetworks--sand2024.sandbox.lightning.force.com/lightning/n/Marketplace__Dakota_Search")
+    driver.get("https://dakotanetworks--fuseupgrad.sandbox.lightning.force.com/lightning/n/Marketplace__Dakota_Search")
     time.sleep(15)
 
     # Navigate to Contacts Tab

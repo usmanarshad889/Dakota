@@ -48,7 +48,7 @@ def test_data_sync(driver, config):
     time.sleep(3)
 
     # Navigate to installed pakages setup
-    driver.get("https://dakotanetworks--sand2024.sandbox.lightning.force.com/lightning/n/Marketplace__Dakota_Setup")
+    driver.get("https://dakotanetworks--fuseupgrad.sandbox.lightning.force.com/lightning/n/Marketplace__Dakota_Setup")
     time.sleep(15)
 
     try:
@@ -61,8 +61,12 @@ def test_data_sync(driver, config):
     time.sleep(1)
 
     # Click on Auto Sync Field Updates
-    driver.find_element(By.XPATH, "//span[@class='slds-checkbox_faux']").click()
-    time.sleep(1)
+    inactive_button = driver.find_element(By.XPATH, "//span[@class='slds-checkbox_off']")
+    if inactive_button.text == "Inactive":
+        driver.find_element(By.XPATH, "//span[@class='slds-checkbox_faux']").click()
+        time.sleep(1)
+    else:
+        pass
 
     # Scroll down by 500 pixels
     driver.execute_script("window.scrollBy(0, 500);")
@@ -149,8 +153,12 @@ def test_data_sync(driver, config):
     time.sleep(1)
 
     # Click on Auto Sync Field Updates
-    driver.find_element(By.XPATH, "//span[@class='slds-checkbox_faux']").click()
-    time.sleep(1)
+    inactive_button = driver.find_element(By.XPATH, "//span[@class='slds-checkbox_off']")
+    if inactive_button.text == "Inactive":
+        driver.find_element(By.XPATH, "//span[@class='slds-checkbox_faux']").click()
+        time.sleep(1)
+    else:
+        pass
 
     # Scroll down by 200 pixels
     driver.execute_script("window.scrollBy(0, 200);")

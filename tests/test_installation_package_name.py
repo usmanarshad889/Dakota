@@ -41,7 +41,7 @@ def test_package_installation(driver, config):
     time.sleep(3)
 
     # Navigate to installed package
-    driver.get("https://dakotanetworks--sand2024.sandbox.my.salesforce-setup.com/lightning/setup/ImportedPackage/home")
+    driver.get("https://dakotanetworks--fuseupgrad.sandbox.lightning.force.com/lightning/setup/ImportedPackage/home")
     time.sleep(15)
 
     # Switch to iframe

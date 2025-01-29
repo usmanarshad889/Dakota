@@ -7,7 +7,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 domains = []
-expected_domains = ["dakotanetworks--sand2024.sandbox.my.salesforce-sites.com", "dakotanetworks--sand2024.sandbox.my.salesforce.com", "dakotanetworks--sand2024.sandbox.my.site.com", "pardot.dakotafunds.com"]
+expected_domains = ["dakotanetworks--fuseupgrad.sandbox.my.salesforce-sites.com", "dakotanetworks--fuseupgrad.sandbox.my.salesforce.com", "dakotanetworks--fuseupgrad.sandbox.my.site.com", "pardot.dakotafunds.com"]
 # Fixture to set up the WebDriver
 @pytest.fixture(scope="module")
 def driver():
@@ -45,7 +45,7 @@ def test_pre_installation_1(driver, config):
     time.sleep(3)
 
     # Navigate to Domain Setup
-    driver.get("https://dakotanetworks--sand2024.sandbox.my.salesforce-setup.com/lightning/setup/DomainNames/home")
+    driver.get("https://dakotanetworks--fuseupgrad.sandbox.lightning.force.com/lightning/setup/DomainNames/home")
     time.sleep(15)
 
     # Switch to iframe

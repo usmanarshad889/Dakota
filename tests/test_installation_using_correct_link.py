@@ -24,7 +24,7 @@ def config(request):
     with open(config_file_path) as file:
         return json.load(file)
 
-def test_search_aum(driver, config):
+def test_installation_using_correct_link(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])
     wait = WebDriverWait(driver, 10)
@@ -38,33 +38,35 @@ def test_search_aum(driver, config):
 
     login_button = wait.until(EC.element_to_be_clickable((By.ID, "Login")))
     login_button.click()
-    time.sleep(3)
-
-    # Navigate to Marketplace Search
-    driver.get("https://dakotanetworks--fuseupgrad.sandbox.lightning.force.com/lightning/n/Marketplace__Dakota_Search")
-    time.sleep(15)
-
-    # Enter AUM From
-    driver.find_element(By.XPATH, "//input[@name='FROM']").send_keys("1")
-    time.sleep(3)
-
-    # Enter AUM To
-    driver.find_element(By.XPATH, "//input[@name='To']").send_keys("100000")
-    time.sleep(3)
-
-    # Click on Search Button
-    driver.find_element(By.XPATH,
-                        "//div[@class='SearchbuttonDiv']//button[@title='Search'][normalize-space()='Search']").click()
     time.sleep(5)
 
-    # aum element value
-    aum_element = driver.find_element(By.XPATH, "(//td[@data-label='AUM'])[1]")
+    # Navigate to correct link of installed package
+    driver.get("https://dakotanetworks--fuseupgrad.sandbox.my.salesforce-setup.com/packaging/installPackage.apexp?p0=04tKf000000kjBf")
+    time.sleep(15)
 
-    # Remove the dollar sign and commas, then convert to integer
-    aum_value = int(aum_element.text.replace('$', '').replace(',', ''))
+    if driver.title == "Install Package":
+        print("Link is correct")
 
-    # Validate if the value is within the range
-    if 1 <= aum_value <= 100000:
+        # Click on install button
+        driver.find_element(By.XPATH, "/html[1]/body[1]/div[4]/div[1]/div[4]/div[1]/div[2]/span[1]/div[1]/button[1]").click()
+        time.sleep(3)
+
+        # Click on grant access
+        driver.find_element(By.XPATH, "//input[@class='uiInput uiInputCheckbox uiInput--default uiInput--checkbox']").click()
+        time.sleep(1)
+
+        # Click on Continue button
+        driver.find_element(By.XPATH, "/html[1]/body[1]/div[3]/div[1]/div[2]/div[1]/div[3]/div[2]/div[1]/button[1]").click()
+        time.sleep(100)
+
+        try:
+            driver.find_element(By.XPATH, '//*[@id="buttonsArea"]/span/button/span').click()
+            time.sleep(5)
+        except:
+            pass
         assert True
     else:
+        print("Install Package Link is not correct")
+        driver.quit()
         assert False
+
