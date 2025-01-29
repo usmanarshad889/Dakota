@@ -51,14 +51,19 @@ def test_search_aum(driver, config):
     dropdown.select_by_visible_text("Last 90 Days")
     time.sleep(2)
 
-    # Click on Search Button
-    driver.find_element(By.XPATH,
-                        "//div[@class='SearchbuttonDiv']//button[@title='Search'][normalize-space()='Search']").click()
-    time.sleep(5)
+    # Select Display Criteria (Unlinked Account)
+    criteria_dropdown = driver.find_element(By.XPATH, "(//select[@name='DisplayCriteria'])")
+    dropdown_option = Select(criteria_dropdown)
+    dropdown_option.select_by_visible_text("Unlinked Accounts")
+
+    # click on search button
+    button = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@title='Search']")))
+    button.click()
+    time.sleep(10)
 
     # Click on first Result
     driver.find_element(By.XPATH, "/html[1]/body[1]/div[4]/div[1]/section[1]/div[1]/div[2]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/article[1]/div[2]/p[1]/div[1]/div[1]/div[1]/lightning-datatable[1]/div[2]/div[1]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/lightning-primitive-cell-factory[1]/span[1]/div[1]/lightning-primitive-cell-button[1]/lightning-button[1]/button[1]").click()
-    time.sleep(8)
+    time.sleep(10)
 
     # Copy Dakota Created Date
     account_date = driver.find_element(By.XPATH, "/html[1]/body[1]/div[4]/div[1]/section[1]/div[1]/div[2]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[9]/section[1]/div[1]/div[1]/form[1]/div[1]/div[1]/div[1]/marketplace-preview-unlinked-account[1]/div[1]/div[1]/lightning-accordion[1]/div[1]/slot[1]/lightning-accordion-section[1]/div[1]/section[1]/div[2]/slot[1]/table[1]/tr[7]/div[1]/div[1]/div[1]/p[1]/lightning-formatted-text[1]")
