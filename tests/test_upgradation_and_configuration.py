@@ -143,8 +143,7 @@ def test_upgrade_and_configuration(driver, config):
         time.sleep(2)
 
         # Navigate to installed pakages setup
-        driver.get(
-            "https://dakotanetworks--fuseupgrad.sandbox.lightning.force.com/lightning/n/Marketplace__Dakota_Setup")
+        driver.get(f"{config["base_url"]}lightning/n/Marketplace__Dakota_Setup")
         time.sleep(15)
 
         try:

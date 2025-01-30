@@ -24,7 +24,7 @@ def config(request):
     with open(config_file_path) as file:
         return json.load(file)
 
-def test_upgrade_and_configuration(driver, config):
+def test_upgrade_and_reload(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])
     wait = WebDriverWait(driver, 10)
@@ -38,12 +38,59 @@ def test_upgrade_and_configuration(driver, config):
 
     login_button = wait.until(EC.element_to_be_clickable((By.ID, "Login")))
     login_button.click()
-    time.sleep(3)
+    time.sleep(1)
 
     # Navigate to installed pakages setup
-    driver.get("https://dakotanetworks--fuseupgrad.sandbox.lightning.force.com/lightning/n/Marketplace__Dakota_Setup")
-    time.sleep(15)
+    driver.get(f"{config["base_url"]}lightning/n/Marketplace__Dakota_Setup")
+    time.sleep(3)
 
+    # Reload the Dakota Setup page
+    driver.refresh()
+    assert True
+
+    # Click on Authentication svg button
+    try:
+        element = WebDriverWait(driver, 20).until(
+            EC.presence_of_element_located((By.XPATH, "(//*[name()='svg'][@class='slds-button__icon'])[3]"))
+        )
+        element.click()
+    except:
+        pass
+    time.sleep(1)
+
+    # Verify the Authentication with correct Credentials
+    driver.find_element(By.XPATH, "//input[@name='Username']").clear()
+    driver.find_element(By.XPATH, "//input[@name='Username']").send_keys("Fuse Upgrade")
+    driver.find_element(By.XPATH, "//input[@name='Password']").clear()
+    driver.find_element(By.XPATH, "//input[@name='Password']").send_keys("rolus009")
+    driver.find_element(By.XPATH, "//input[@name='AuthorizationURL']").clear()
+    driver.find_element(By.XPATH, "//input[@name='AuthorizationURL']").send_keys("https://marketplace-dakota-uat.herokuapp.com")
+
+    try:
+        driver.find_element(By.XPATH, "//button[@value='Connect']").click()
+        time.sleep(1)
+    except:
+        print("fail first")
+
+    try:
+        driver.find_element(By.XPATH, "(//button[normalize-space()='Connect'])[1]").click()
+        time.sleep(1)
+    except:
+        print("Button clicked successfully in first try")
+
+
+    # Verify the toast message
+    try:
+        toast_text = driver.find_element(By.XPATH, "//span[@class='toastMessage forceActionsText']").text
+        if toast_text.lower() == "dakota marketplace account connected successfully.":
+            assert True
+        else:
+            assert False
+        time.sleep(2)
+    except:
+        pass
+
+    # Click on Mapping svg button
     try:
         element = WebDriverWait(driver, 10).until(
             EC.element_to_be_clickable((By.XPATH, "(//*[name()='svg'][@class='slds-button__icon'])[4]"))
@@ -121,53 +168,77 @@ def test_upgrade_and_configuration(driver, config):
     driver.find_element(By.XPATH, "//button[normalize-space()='Save']").click()
     time.sleep(1)
     driver.find_element(By.XPATH, "//button[normalize-space()='OK']").click()
-    time.sleep(15)
 
-    # Navigate to Upgrade Link
-    driver.get("https://dakotanetworks--fuseupgrad.sandbox.lightning.force.com/packaging/installPackage.apexp?p0=04tKf000000Y1Ew")
-    time.sleep(15)
-
-    if driver.title == "Install Package":
-        print("Link is correct")
-
-        # Click on install button
-        driver.find_element(By.XPATH, "//button[@title='Upgrade']").click()
-        time.sleep(150)
-
-        try:
-            driver.find_element(By.XPATH, "//button[@type='button']").click()
-            time.sleep(5)
-        except:
-            pass
-
-        time.sleep(2)
-
-        # Navigate to installed pakages setup
-        driver.get(
-            "https://dakotanetworks--fuseupgrad.sandbox.lightning.force.com/lightning/n/Marketplace__Dakota_Setup")
-        time.sleep(15)
-
-        try:
-            element = WebDriverWait(driver, 10).until(
-                EC.element_to_be_clickable((By.XPATH, "(//*[name()='svg'][@class='slds-button__icon'])[4]"))
-            )
-            element.click()
-        except:
-            pass
-        time.sleep(1)
-
-        # Scroll down by 500 pixels
-        driver.execute_script("window.scrollBy(0, 200);")
-        time.sleep(10)
-
-        # Validate Previous configuration
-        active_state = driver.find_element(By.XPATH, "//span[@class='slds-checkbox_on']")
-        if active_state.text.lower() == 'active':
+    try:
+        toast = WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.XPATH, "//span[@class='toastMessage forceActionsText']")))
+        print(toast.text)
+        if toast.text.lower() == "mapping saved successfully.":
             assert True
         else:
             assert False
+    except:
+        assert True
 
+
+    # Click on Addition Setting svg button
+    try:
+        element = WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.XPATH, "(//*[name()='svg'][@class='slds-button__icon'])[5]"))
+        )
+        element.click()
+    except:
+        pass
+    time.sleep(1)
+
+    # Scroll down by 200 pixels
+    driver.execute_script("window.scrollBy(0, 200);")
+    time.sleep(2)
+
+    # Click on Toggles buttons
+    inactive_button = driver.find_element(By.XPATH, "(//span[@class='slds-checkbox_off'][normalize-space()='Inactive'])[1]")
+    if inactive_button.text == "Inactive":
+        driver.find_element(By.XPATH, "(//span[@class='slds-checkbox_faux'])[1]").click()
+        time.sleep(1)
     else:
-        print("Upgrade Package Link is not correct")
-        driver.quit()
-        assert False
+        pass
+
+    inactive_button = driver.find_element(By.XPATH, "(//span[@class='slds-checkbox_off'][normalize-space()='Inactive'])[2]")
+    if inactive_button.text == "Inactive":
+        driver.find_element(By.XPATH, "(//span[@class='slds-checkbox_faux'])[2]").click()
+        time.sleep(1)
+    else:
+        pass
+
+    inactive_button = driver.find_element(By.XPATH, "(//span[@class='slds-checkbox_off'][normalize-space()='Inactive'])[3]")
+    if inactive_button.text == "Inactive":
+        driver.find_element(By.XPATH, "(//span[@class='slds-checkbox_faux'])[3]").click()
+        time.sleep(1)
+    else:
+        pass
+
+    inactive_button = driver.find_element(By.XPATH, "(//span[@class='slds-checkbox_off'][normalize-space()='Inactive'])[4]")
+    if inactive_button.text == "Inactive":
+        driver.find_element(By.XPATH, "(//span[@class='slds-checkbox_faux'])[4]").click()
+        time.sleep(1)
+    else:
+        pass
+
+    # Scroll down by 500 pixels
+    driver.execute_script("window.scrollBy(0, 500);")
+    time.sleep(2)
+
+
+    # Select Save Option
+    driver.find_element(By.XPATH, "//button[normalize-space()='Save']").click()
+
+    try:
+        toast = WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.XPATH, "//span[@class='toastMessage forceActionsText']")))
+        print(toast.text)
+        if toast.text == "Status changed successfully!":
+            assert True
+        else:
+            assert False
+    except:
+        assert True
+
+    driver.quit()

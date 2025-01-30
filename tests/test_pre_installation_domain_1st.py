@@ -45,7 +45,7 @@ def test_pre_installation_1(driver, config):
     time.sleep(3)
 
     # Navigate to Domain Setup
-    driver.get("https://dakotanetworks--fuseupgrad.sandbox.lightning.force.com/lightning/setup/DomainNames/home")
+    driver.get(f"{config["base_url"]}lightning/setup/DomainNames/home")
     time.sleep(15)
 
     # Switch to iframe

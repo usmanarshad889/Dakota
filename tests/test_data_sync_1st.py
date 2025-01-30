@@ -47,12 +47,10 @@ def test_data_sync(driver, config):
     login_button.click()
     time.sleep(3)
 
-    # Navigate to installed pakages setup
-    driver.get("https://dakotanetworks--fuseupgrad.sandbox.lightning.force.com/lightning/n/Marketplace__Dakota_Setup")
-    time.sleep(15)
+    driver.get(f"{config["base_url"]}lightning/n/Marketplace__Dakota_Setup")
 
     try:
-        element = WebDriverWait(driver, 10).until(
+        element = WebDriverWait(driver, 20).until(
             EC.element_to_be_clickable((By.XPATH, "(//*[name()='svg'][@class='slds-button__icon'])[4]"))
         )
         element.click()

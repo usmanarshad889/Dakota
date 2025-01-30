@@ -48,7 +48,7 @@ def test_notification_mapped_field_none(driver, config):
     time.sleep(3)
 
     # Navigate to installed pakages setup
-    driver.get("https://dakotanetworks--fuseupgrad.sandbox.lightning.force.com/lightning/n/Marketplace__Dakota_Setup")
+    driver.get(f"{config["base_url"]}lightning/n/Marketplace__Dakota_Setup")
     time.sleep(15)
 
     try:
