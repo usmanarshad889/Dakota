@@ -42,11 +42,10 @@ def test_notification_setting_create_task(driver, config):
 
     # Navigate to installed pakages setup
     driver.get(f"{config["base_url"]}lightning/n/Marketplace__Dakota_Setup")
-    time.sleep(15)
 
     try:
-        element = WebDriverWait(driver, 10).until(
-            EC.element_to_be_clickable((By.XPATH, "(//*[name()='svg'][@class='slds-button__icon'])[5]"))
+        element = WebDriverWait(driver, 20).until(
+            EC.element_to_be_clickable((By.XPATH, "(//*[name()='svg'][@class='slds-button__icon'])[4]"))
         )
         element.click()
     except:

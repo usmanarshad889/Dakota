@@ -131,7 +131,7 @@ def test_data_sync(driver, config):
     driver.find_element(By.XPATH, "//button[normalize-space()='OK']").click()
     time.sleep(15)
 
-########################################################################################################################
+    #######################################################################################
     # Define Selected Options in dropdown for Marketplace Account Fields (Contact Name)
     marketplace_contact_fields = "Dakota First Name"
     sync_option_contact = "Update"
