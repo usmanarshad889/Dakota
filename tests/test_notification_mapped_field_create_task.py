@@ -42,10 +42,9 @@ def test_notification_mapped_field_create_task(driver, config):
 
     # Navigate to installed pakages setup
     driver.get(f"{config["base_url"]}lightning/n/Marketplace__Dakota_Setup")
-    time.sleep(15)
 
     try:
-        element = WebDriverWait(driver, 10).until(
+        element = WebDriverWait(driver, 20).until(
             EC.element_to_be_clickable((By.XPATH, "(//*[name()='svg'][@class='slds-button__icon'])[4]"))
         )
         element.click()
@@ -96,7 +95,7 @@ def test_notification_mapped_field_create_task(driver, config):
         for element in select_element:
             if element.is_enabled():
                 select = Select(element)
-                select.select_by_visible_text("User")
+                select.select_by_visible_text("Owner")
     except:
         print("Notification Recipient field not selected")
     time.sleep(2)
