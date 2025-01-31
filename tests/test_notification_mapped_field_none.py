@@ -13,6 +13,7 @@ notification_setting = "Create Task"
 notification_recipient = "Group"
 notification_assignee = "HRG"
 
+
 @pytest.fixture(scope="module")
 def driver():
     driver = webdriver.Chrome()
@@ -31,6 +32,7 @@ def config(request):
     with open(config_file_path) as file:
         return json.load(file)
 
+@pytest.mark.smoke
 def test_notification_mapped_field_none(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

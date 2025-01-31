@@ -24,6 +24,7 @@ name_var = random_name
 email_var = random_email
 phone_var = random_phone
 
+
 @pytest.fixture(scope="module")
 def driver():
     driver = webdriver.Chrome()
@@ -42,6 +43,7 @@ def config(request):
     with open(config_file_path) as file:
         return json.load(file)
 
+@pytest.mark.smoke
 def test_data_sync_notification(driver, config):
     driver.get("https://dakotanetworks--uat.sandbox.lightning.force.com/")
     wait = WebDriverWait(driver, 10)
@@ -212,6 +214,9 @@ def test_data_sync_notification(driver, config):
 
     # Navigate to installed pakages setup
     driver.get(f"{config["base_url"]}lightning/n/Marketplace__Dakota_Search")
+    time.sleep(5)
+
+    driver.refresh()
     time.sleep(15)
 
     # Search by name

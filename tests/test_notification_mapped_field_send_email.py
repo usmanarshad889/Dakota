@@ -26,7 +26,7 @@ def config(request):
         return json.load(file)
 
 @pytest.mark.smoke
-def test_notification_mapped_field_create_task(driver, config):
+def test_notification_mapped_field_send_email(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])
     wait = WebDriverWait(driver, 10)
@@ -85,7 +85,7 @@ def test_notification_mapped_field_create_task(driver, config):
         for element in select_element:
             if element.is_enabled():
                 select = Select(element)
-                select.select_by_visible_text("Create Task")
+                select.select_by_visible_text("Send Email")
     except:
         print("Notification Setting field not selected")
     time.sleep(2)
@@ -97,7 +97,7 @@ def test_notification_mapped_field_create_task(driver, config):
         for element in select_element:
             if element.is_enabled():
                 select = Select(element)
-                select.select_by_visible_text("Owner")
+                select.select_by_visible_text("User")
     except:
         print("Notification Recipient field not selected")
     time.sleep(2)
