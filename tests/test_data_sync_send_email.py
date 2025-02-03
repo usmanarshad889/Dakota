@@ -11,8 +11,8 @@ from selenium.webdriver.support import expected_conditions as EC
 
 # Generate Random Name, Email and Phone
 fake = Faker()
-random_name = fake.name()
-email_prefix = ''.join(random.choices(string.ascii_lowercase + string.digits, k=7))
+random_name = "test " + fake.name()  # Add 'test' at the start of the name
+email_prefix = ''.join(random.choices(string.ascii_lowercase, k=7))
 random_email = f"www.{email_prefix}.com"
 random_phone = ''.join(random.choices(string.digits, k=9))
 # Print the generated values
@@ -43,8 +43,7 @@ def config(request):
     with open(config_file_path) as file:
         return json.load(file)
 
-@pytest.mark.smoke
-def test_data_sync_notification(driver, config):
+def test_data_sync_notification_email(driver, config):
     driver.get("https://dakotanetworks--uat.sandbox.lightning.force.com/")
     wait = WebDriverWait(driver, 10)
     # Perform login
@@ -224,6 +223,14 @@ def test_data_sync_notification(driver, config):
     driver.find_element(By.XPATH, "//button[@title='Search']").click()
     time.sleep(10)
 
+    driver.refresh()
+    time.sleep(15)
+
+    # Search by name
+    driver.find_element(By.XPATH, "//input[@name='searchTerm']").send_keys(name_var)
+    driver.find_element(By.XPATH, "//button[@title='Search']").click()
+    time.sleep(10)
+
     driver.find_element(By.XPATH, "//button[@class='slds-button slds-button_icon-border slds-button_icon-x-small']").click()
     time.sleep(1)
 
@@ -231,14 +238,14 @@ def test_data_sync_notification(driver, config):
     time.sleep(10)
 
     # Link account
-    all_buttons = driver.find_elements(By.XPATH, "/html[1]/body[1]/div[4]/div[1]/section[1]/div[1]/div[2]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[3]/section[1]/div[1]/div[1]/form[1]/div[1]/div[1]/div[1]/div[1]/article[2]/div[2]/p[1]/div[1]/div[1]/div[1]/lightning-datatable[1]/div[2]/div[1]/div[1]/table[1]/tbody[1]/tr/td/lightning-primitive-cell-factory/span/div/lightning-primitive-cell-button/lightning-button/button")
+    all_buttons = driver.find_elements(By.XPATH, "(//button[@title='Link'][normalize-space()='Link'])")
     for button in all_buttons:
-        try:
-            if button.is_enabled():
-                button.click()
-                break
-        except:
-            pass
+        driver.execute_script("arguments[0].scrollIntoView();", button)
+        if button.is_enabled():
+            button.click()
+            time.sleep(1)
+            break
+
     time.sleep(10)
 
     try:
