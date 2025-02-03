@@ -60,5 +60,5 @@ def test_package_installation(driver, config):
             print("Dakota Package Present")
             assert True
     else:
-        print("Package not found")
+        pass
     driver.quit()
