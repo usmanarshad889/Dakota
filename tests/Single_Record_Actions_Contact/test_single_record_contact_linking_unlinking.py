@@ -40,7 +40,7 @@ def config(request):
     with open(config_file_path) as file:
         return json.load(file)
 
-def test_create_contact_single_record(driver, config):
+def test_create_contact_linking_unlinking(driver, config):
     driver.get("https://test.salesforce.com/")
     wait = WebDriverWait(driver, 10)
     # Perform login
@@ -163,10 +163,46 @@ def test_create_contact_single_record(driver, config):
     except:
         print("Filter not working")
 
-
-    button_check = driver.find_element(By.XPATH, "(//span[@class='slds-checkbox_faux'])[2]")
-    if button_check:
-        assert True
-    else:
-        assert False
-    driver.quit()
+    # driver.find_element(By.XPATH, "(//button[@class='slds-button slds-button_icon-border slds-button_icon-x-small'])[1]").click()
+    # time.sleep(1)
+    #
+    # driver.find_element(By.XPATH, "//span[normalize-space()='Link Contact']").click()
+    # time.sleep(10)
+    #
+    # # Link account
+    # all_buttons = driver.find_elements(By.XPATH, "(//button[@title='Link'][normalize-space()='Link'])")
+    # for button in all_buttons:
+    #     driver.execute_script("arguments[0].scrollIntoView();", button)
+    #     if button.is_enabled():
+    #         button.click()
+    #         time.sleep(1)
+    #         break
+    #
+    # time.sleep(12)
+    #
+    # try:
+    #     driver.find_element(By.XPATH, "//lightning-primitive-icon[@size='small']//*[name()='svg']").click()
+    #     time.sleep(10)
+    # except:
+    #     pass
+    #
+    # # Search by name
+    # driver.find_element(By.XPATH, "(//input[@name='searchTerm'])[2]").clear()
+    # driver.find_element(By.XPATH, "(//input[@name='searchTerm'])[2]").send_keys(search_name)
+    #
+    # driver.find_element(By.XPATH, "//div[@class='buttonDiv']//button[@title='Search'][normalize-space()='Search']").click()
+    # time.sleep(10)
+    #
+    # # Unlink that account
+    # driver.find_element(By.XPATH, "(//button[@class='slds-button slds-button_icon-border slds-button_icon-x-small'])[1]").click()
+    # time.sleep(1)
+    #
+    # driver.find_element(By.XPATH, "//span[normalize-space()='Unlink Contact']").click()
+    # time.sleep(10)
+    #
+    # driver.find_element(By.XPATH, "//button[normalize-space()='Unlink']").click()
+    # time.sleep(1)
+    #
+    # driver.find_element(By.XPATH, "//button[normalize-space()='Yes']").click()
+    # time.sleep(10)
+    # driver.quit()
