@@ -163,10 +163,9 @@ def test_create_contact_single_record(driver, config):
     except:
         print("Filter not working")
 
-
-    # button_check = driver.find_element(By.XPATH, "(//span[@class='slds-checkbox_faux'])[2]")
-    # if button_check:
-    #     assert True
-    # else:
-    #     assert False
-    # driver.quit()
+    button_check = driver.find_element(By.XPATH, "(//span[@class='slds-checkbox_faux'])[2]")
+    if button_check:
+        assert True
+    else:
+        assert False
+    driver.quit()

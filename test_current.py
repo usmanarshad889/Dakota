@@ -1,5 +1,7 @@
 import time
 import pytest
+import allure
+from allure_commons.types import AttachmentType
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -23,8 +25,10 @@ def config(request):
     with open(config_file_path) as file:
         return json.load(file)
 
-def test_create_account_single_record(driver, config):
-    # Navigate to login page of fuse app
+
+@allure.severity(allure.severity_level.CRITICAL)
+def test_authentication_correct_credentials(driver, config):
+    # Navigate to login page
     driver.get(config["base_url"])
     wait = WebDriverWait(driver, 10)
 
@@ -37,40 +41,46 @@ def test_create_account_single_record(driver, config):
 
     login_button = wait.until(EC.element_to_be_clickable((By.ID, "Login")))
     login_button.click()
-    time.sleep(3)
-
-    # Navigate to Market Place Search
-    driver.get(f"{config["base_url"]}lightning/n/Marketplace__Dakota_Search")
-    time.sleep(13)
-
-    # Search by name
-    driver.find_element(By.XPATH, "//input[@name='searchTerm']").send_keys("Funcef")
-    driver.find_element(By.XPATH, "//button[@title='Search']").click()
-    time.sleep(10)
-
-    driver.find_element(By.XPATH, "(//button[@class='slds-button slds-button_icon-border slds-button_icon-x-small'])[1]").click()
     time.sleep(1)
 
-    driver.find_element(By.XPATH, "//span[normalize-space()='Link Account']").click()
-    time.sleep(10)
+    # Navigate to installed pakages setup
+    driver.get(f"{config["base_url"]}lightning/n/Marketplace__Dakota_Setup")
 
-    # driver.find_element(By.XPATH, "//input[@name='SearchBar']").send_keys("Test")
-    # driver.find_element(By.XPATH, "//button[@class='slds-button slds-button_brand'][normalize-space()='Search']").click()
-    # time.sleep(5)
-
-    # Link account
-    all_buttons = driver.find_elements(By.XPATH, "(//button[@title='Link'][normalize-space()='Link'])")
-    for button in all_buttons:
-        driver.execute_script("arguments[0].scrollIntoView();", button)
-        if button.is_enabled():
-            button.click()
-            time.sleep(1)
-            break
-
-    time.sleep(10)
-
+    # Click on Authentication svg button
     try:
-        driver.find_element(By.XPATH, "//lightning-primitive-icon[@size='small']//*[name()='svg']").click()
-        time.sleep(5)
+        element = WebDriverWait(driver, 20).until(
+            EC.presence_of_element_located((By.XPATH, "(//*[name()='svg'][@class='slds-button__icon'])[3]"))
+        )
+        element.click()
     except:
         pass
+    time.sleep(1)
+
+    # Verify the Authentication with correct Credentials
+    driver.find_element(By.XPATH, "//input[@name='Username']").clear()
+    driver.find_element(By.XPATH, "//input[@name='Username']").send_keys("Fuse Upgrade")
+    driver.find_element(By.XPATH, "//input[@name='Password']").clear()
+    driver.find_element(By.XPATH, "//input[@name='Password']").send_keys("rolus009")
+    driver.find_element(By.XPATH, "//input[@name='AuthorizationURL']").clear()
+    driver.find_element(By.XPATH, "//input[@name='AuthorizationURL']").send_keys("https://marketplace-dakota-uat.herokuapp.com")
+
+    try:
+        driver.find_element(By.XPATH, "//button[@value='Connect']").click()
+        time.sleep(1)
+    except:
+        print("fail first")
+
+    try:
+        driver.find_element(By.XPATH, "(//button[normalize-space()='Connect'])[1]").click()
+        time.sleep(1)
+    except:
+        print("Button clicked successfully in first try")
+
+    toast = WebDriverWait(driver, 8).until(EC.presence_of_element_located((By.XPATH, "//span[@class='toastMessage forceActionsText']")))
+    print(f"Toast message : {toast.text}")
+    if toast.text.lower() == "dakota marketplace account connected successfully.":
+        assert True
+    else:
+        allure.attach(driver.get_screenshot_as_png(), name="test_authentication", attachment_type=AttachmentType.PNG)
+        assert False
+    driver.quit()

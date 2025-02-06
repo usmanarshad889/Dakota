@@ -1,5 +1,7 @@
 import time
 import pytest
+import allure
+from allure_commons.types import AttachmentType
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -23,6 +25,8 @@ def config(request):
     with open(config_file_path) as file:
         return json.load(file)
 
+
+@allure.severity(allure.severity_level.CRITICAL)
 def test_authentication_correct_credentials(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])
