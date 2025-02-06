@@ -1,2 +1,4 @@
 selenium
 pytest
+pytest -v -s --alluredir="path" test_current.py
+allure serve "path"

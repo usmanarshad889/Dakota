@@ -70,7 +70,7 @@ def test_pre_installation_1(driver, config):
 
 
     # Navigate to Deliver ability Setup
-    driver.get("https://dakotanetworks--sand2024.sandbox.my.salesforce-setup.com/lightning/setup/OrgEmailSettings/home")
+    driver.get(f"{config["base_url"]}lightning/setup/OrgEmailSettings/home")
     time.sleep(15)
 
     # Switch to iframe
