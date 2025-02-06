@@ -1,3 +1,5 @@
+import os
+import openpyxl
 import time
 import random
 import string
@@ -5,7 +7,6 @@ import pytest
 from faker import Faker
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import Select
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
@@ -107,6 +108,24 @@ def test_display_icon_unlinking(driver, config):
     # click on save button
     driver.find_element(By.XPATH, "//button[@name='SaveEdit']").click()
     time.sleep(10)
+
+    # Define the Excel file path
+    file_path = "test_data.xlsx"
+
+    # Check if the file exists
+    if os.path.exists(file_path):
+        workbook = openpyxl.load_workbook(file_path)
+        sheet = workbook.active
+    else:
+        workbook = openpyxl.Workbook()
+        sheet = workbook.active
+        sheet.append(["Name", "Email", "Phone"])  # Add header row if file is new
+
+    # Append the generated data to the Excel file
+    sheet.append([name_var, email_var, phone_var])
+
+    # Save the file
+    workbook.save(file_path)
 
     # Navigate to login page of fuse app
     driver.get(config["base_url"])
