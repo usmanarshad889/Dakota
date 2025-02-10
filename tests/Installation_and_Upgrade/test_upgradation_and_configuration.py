@@ -41,7 +41,7 @@ def test_upgrade_and_configuration(driver, config):
     time.sleep(3)
 
     # Navigate to installed pakages setup
-    driver.get("https://dakotanetworks--fuseupgrad.sandbox.lightning.force.com/lightning/n/Marketplace__Dakota_Setup")
+    driver.get(f"{config['base_url']}lightning/n/Marketplace__Dakota_Setup")
     time.sleep(15)
 
     try:
@@ -124,7 +124,7 @@ def test_upgrade_and_configuration(driver, config):
     time.sleep(15)
 
     # Navigate to Upgrade Link
-    driver.get("https://dakotanetworks--fuseupgrad.sandbox.lightning.force.com/packaging/installPackage.apexp?p0=04tKf000000Y1Ew")
+    driver.get(f"{config['base_url']}packaging/installPackage.apexp?p0=04tKf000000Y1Ew")
     time.sleep(15)
 
     if driver.title == "Install Package":

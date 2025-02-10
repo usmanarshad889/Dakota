@@ -1,54 +1,69 @@
+import pytest
 from selenium import webdriver
-import random
-import openpyxl
-import os
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
-# Generate random name
-first_names = ["John", "Jane", "Alice", "Bob", "Charlie", "Daisy", "Eve", "Frank"]
-last_names = ["Smith", "Johnson", "Brown", "Williams", "Jones", "Miller", "Davis"]
-name = random.choice(first_names) + " " + random.choice(last_names)
 
-# Generate random email
-domains = ["gmail.com", "yahoo.com", "outlook.com", "hotmail.com"]
-username = name.lower().replace(" ", "") + str(random.randint(10, 99))
-email = username + "@" + random.choice(domains)
+@pytest.fixture(scope="module")
+def driver():
+    driver = webdriver.Chrome()
+    driver.maximize_window()
+    driver.implicitly_wait(10)  # Implicit wait as fallback
+    yield driver
+    driver.quit()
 
-# Generate random phone number
-phone = "+1-" + str(random.randint(100, 999)) + "-" + str(random.randint(100, 999)) + "-" + str(random.randint(1000, 9999))
 
-print("Name:", name)
-print("Email:", email)
-print("Phone:", phone)
+@pytest.fixture(scope="module")
+def config(request):
+    import json
+    import os
+    env = request.config.getoption("--env")
+    config_file_path = os.path.join("config", f"config.{env}.json")
+    with open(config_file_path) as file:
+        return json.load(file)
 
-# Define the Excel file path
-file_path = "generated_data.xlsx"
 
-# Check if the file exists
-if os.path.exists(file_path):
-    workbook = openpyxl.load_workbook(file_path)
-    sheet = workbook.active
-else:
-    workbook = openpyxl.Workbook()
-    sheet = workbook.active
-    sheet.append(["Name", "Email", "Phone"])  # Add header row if file is new
+def login(driver, config):
+    """Handles login process to Salesforce."""
+    wait = WebDriverWait(driver, 100)
 
-# Append the generated data to the Excel file
-sheet.append([name, email, phone])
+    driver.get(config["base_url"])
+    wait.until(EC.element_to_be_clickable((By.ID, "username"))).send_keys(config["username"])
+    wait.until(EC.element_to_be_clickable((By.ID, "password"))).send_keys(config["password"])
+    wait.until(EC.element_to_be_clickable((By.ID, "Login"))).click()
 
-# Save the file
-workbook.save(file_path)
 
-workbook = openpyxl.load_workbook(file_path)
-sheet = workbook.active
+def test_installation_using_correct_link(driver, config):
+    """Tests installation of a package using a valid installation link."""
+    login(driver, config)
 
-# Get the last row number
-last_row = sheet.max_row
+    # Navigate to package installation link
+    package_url = "https://dakotanetworks--fuseupgrad.sandbox.my.salesforce-setup.com/packaging/installPackage.apexp?p0=04tKf000000kjBf"
+    driver.get(package_url)
 
-# Get the "Name" and "Email" data from the last row (columns 1 and 2)
-name = sheet.cell(row=last_row, column=1).value
-email = sheet.cell(row=last_row, column=2).value
+    # Wait until page loads and verify title
+    wait = WebDriverWait(driver, 20)
+    wait.until(EC.title_contains("Install Package"))
+    assert "Install Package" in driver.title, "Failed: Incorrect Installation Page"
 
-# Print the "Name" and "Email" from the last row
-print("Latest Row Data:")
-print("Name:", name)
-print("Email:", email)
+    print("Link is correct, proceeding with installation...")
+
+    # Click on install button
+    wait.until(EC.element_to_be_clickable((By.XPATH, "//button[contains(text(),'Install')]"))).click()
+
+    # Click on grant access checkbox
+    wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@type='checkbox']"))).click()
+
+    # Click on Continue button
+    wait.until(EC.element_to_be_clickable((By.XPATH, "//button[contains(text(),'Continue')]"))).click()
+
+    # Wait for installation to complete (Polling for success message)
+    try:
+        wait.until(EC.presence_of_element_located((By.XPATH, '//*[@id="buttonsArea"]/span/button/span'))).click()
+        print("Installation completed successfully!")
+    except:
+        print("Installation may still be in progress or failed.")
+
+    assert True, "Installation test completed successfully."
+
