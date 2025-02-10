@@ -19,23 +19,25 @@ def driver():
 def test_authentication_correct_credentials(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])
-    wait = WebDriverWait(driver, 20)
+    wait = WebDriverWait(driver, 10)
 
     # Perform login
     username = wait.until(EC.element_to_be_clickable((By.ID, "username")))
     username.send_keys(config["username"])
+
     password = wait.until(EC.element_to_be_clickable((By.ID, "password")))
     password.send_keys(config["password"])
+
     login_button = wait.until(EC.element_to_be_clickable((By.ID, "Login")))
     login_button.click()
     time.sleep(1)
 
-    # Navigate to installed pakages setup
-    driver.get(f"{config["base_url"]}lightning/n/Marketplace__Dakota_Setup")
+    # Navigate to installed packages setup
+    driver.get(f"{config['base_url']}lightning/n/Marketplace__Dakota_Setup")
 
     # Click on Authentication svg button
     try:
-        element = wait.until(
+        element = WebDriverWait(driver, 20).until(
             EC.presence_of_element_located((By.XPATH, "(//*[name()='svg'][@class='slds-button__icon'])[3]"))
         )
         element.click()
@@ -63,10 +65,11 @@ def test_authentication_correct_credentials(driver, config):
     except:
         print("Button clicked successfully in first try")
 
-    toast = wait.until(EC.presence_of_element_located((By.XPATH, "//span[@class='toastMessage forceActionsText']")))
+    toast = WebDriverWait(driver, 8).until(EC.presence_of_element_located((By.XPATH, "//span[@class='toastMessage forceActionsText']")))
     print(f"Toast message : {toast.text}")
     if toast.text.lower() == "dakota marketplace account connected successfully.":
         assert True
     else:
+        allure.attach(driver.get_screenshot_as_png(), name="test_authentication", attachment_type=AttachmentType.PNG)
         assert False
     driver.quit()

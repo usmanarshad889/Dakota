@@ -1,5 +1,7 @@
 import time
 import pytest
+import allure
+from allure_commons.types import AttachmentType
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select
@@ -21,28 +23,16 @@ def driver():
     yield driver
     driver.quit()
 
-# Fixture to load the configuration
-@pytest.fixture(scope="module")
-def config(request):
-    import json
-    import os
-    env = request.config.getoption("--env")
-    config_file_path = os.path.join("config", f"config.{env}.json")
-    with open(config_file_path) as file:
-        return json.load(file)
-
 def test_data_sync(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])
-    wait = WebDriverWait(driver, 10)
+    wait = WebDriverWait(driver, 20)
 
     # Perform login
     username = wait.until(EC.element_to_be_clickable((By.ID, "username")))
     username.send_keys(config["username"])
-
     password = wait.until(EC.element_to_be_clickable((By.ID, "password")))
     password.send_keys(config["password"])
-
     login_button = wait.until(EC.element_to_be_clickable((By.ID, "Login")))
     login_button.click()
     time.sleep(3)
@@ -50,7 +40,7 @@ def test_data_sync(driver, config):
     driver.get(f"{config["base_url"]}lightning/n/Marketplace__Dakota_Setup")
 
     try:
-        element = WebDriverWait(driver, 20).until(
+        element = wait.until(
             EC.element_to_be_clickable((By.XPATH, "(//*[name()='svg'][@class='slds-button__icon'])[4]"))
         )
         element.click()
@@ -141,11 +131,11 @@ def test_data_sync(driver, config):
 
     try:
         # Using class name (if applicable)
-        element = WebDriverWait(driver, 10).until(
+        element = wait.until(
             EC.element_to_be_clickable((By.XPATH, "(//*[name()='svg'][@class='slds-button__icon'])[4]"))
         )
         element.click()
-        print("Clicked using CLASS_NAME")
+        print("Element clicked successfully")
     except:
         pass
     time.sleep(1)

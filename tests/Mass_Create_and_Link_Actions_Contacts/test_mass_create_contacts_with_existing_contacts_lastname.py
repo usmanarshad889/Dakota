@@ -14,28 +14,16 @@ def driver():
     yield driver
     driver.quit()
 
-# Fixture to load the configuration
-@pytest.fixture(scope="module")
-def config(request):
-    import json
-    import os
-    env = request.config.getoption("--env")
-    config_file_path = os.path.join("config", f"config.{env}.json")
-    with open(config_file_path) as file:
-        return json.load(file)
-
 def test_mass_create_for_existing_contacts_lastname(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])
-    wait = WebDriverWait(driver, 10)
+    wait = WebDriverWait(driver, 20)
 
     # Perform login
     username = wait.until(EC.element_to_be_clickable((By.ID, "username")))
     username.send_keys(config["username"])
-
     password = wait.until(EC.element_to_be_clickable((By.ID, "password")))
     password.send_keys(config["password"])
-
     login_button = wait.until(EC.element_to_be_clickable((By.ID, "Login")))
     login_button.click()
     time.sleep(3)
@@ -45,7 +33,7 @@ def test_mass_create_for_existing_contacts_lastname(driver, config):
     # time.sleep(13)
 
     # Switch to Contact Tab
-    contact_ele = WebDriverWait(driver, 20).until(EC.element_to_be_clickable((By.XPATH, "//li[@title='Contacts']")))
+    contact_ele = wait.until(EC.element_to_be_clickable((By.XPATH, "//li[@title='Contacts']")))
     contact_ele.click()
     time.sleep(5)
 

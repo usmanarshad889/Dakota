@@ -1,5 +1,7 @@
 import time
 import pytest
+import allure
+from allure_commons.types import AttachmentType
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select
@@ -14,28 +16,16 @@ def driver():
     yield driver
     driver.quit()
 
-# Fixture to load the configuration
-@pytest.fixture(scope="module")
-def config(request):
-    import json
-    import os
-    env = request.config.getoption("--env")
-    config_file_path = os.path.join("config", f"config.{env}.json")
-    with open(config_file_path) as file:
-        return json.load(file)
-
 def test_upgrade_and_configuration(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])
-    wait = WebDriverWait(driver, 10)
+    wait = WebDriverWait(driver, 20)
 
     # Perform login
     username = wait.until(EC.element_to_be_clickable((By.ID, "username")))
     username.send_keys(config["username"])
-
     password = wait.until(EC.element_to_be_clickable((By.ID, "password")))
     password.send_keys(config["password"])
-
     login_button = wait.until(EC.element_to_be_clickable((By.ID, "Login")))
     login_button.click()
     time.sleep(3)
@@ -45,7 +35,7 @@ def test_upgrade_and_configuration(driver, config):
     time.sleep(15)
 
     try:
-        element = WebDriverWait(driver, 10).until(
+        element = wait.until(
             EC.element_to_be_clickable((By.XPATH, "(//*[name()='svg'][@class='slds-button__icon'])[4]"))
         )
         element.click()
@@ -125,29 +115,22 @@ def test_upgrade_and_configuration(driver, config):
 
     # Navigate to Upgrade Link
     driver.get(f"{config['base_url']}packaging/installPackage.apexp?p0=04tKf000000Y1Ew")
-    time.sleep(15)
+    time.sleep(5)
 
     if driver.title == "Install Package":
         print("Link is correct")
 
-        # Click on install button
+        # Click on update button
         driver.find_element(By.XPATH, "//button[@title='Upgrade']").click()
-        time.sleep(100)
-
-        try:
-            driver.find_element(By.XPATH, "//button[@type='button']").click()
-            time.sleep(5)
-        except:
-            pass
-
-        time.sleep(2)
+        button = WebDriverWait(driver, 100).until(EC.element_to_be_clickable((By.XPATH, "//button[@type='button']")))
+        button.click()
+        time.sleep(3)
 
         # Navigate to installed pakages setup
         driver.get(f"{config["base_url"]}lightning/n/Marketplace__Dakota_Setup")
-        time.sleep(15)
 
         try:
-            element = WebDriverWait(driver, 10).until(
+            element = WebDriverWait(driver, 20).until(
                 EC.element_to_be_clickable((By.XPATH, "(//*[name()='svg'][@class='slds-button__icon'])[4]"))
             )
             element.click()

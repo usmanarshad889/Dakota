@@ -1,0 +1,22 @@
+{
+  "sandbox": {
+    "base_url": "https://dakotanetworks--fuseupgrad.sandbox.my.salesforce-setup.com/",
+    "username": "draftsf@draftdata.com.fuseupgrad",
+    "password": "LOWYqfakgQ8oo"
+  },
+  "production": {
+    "base_url": "https://dakotanetworks--fuseupgrad.sandbox.my.salesforce-setup.com/",
+    "username": "draftsf@draftdata.com.production",
+    "password": "LOWYrtyrtygQ8oo"
+  },
+    "staging": {
+    "base_url": "https://dakotanetworks--fuseupgrad.sandbox.my.salesforce-setup.com/",
+    "username": "draftsf@draftdata.com.fuseupgrad",
+    "password": "LOWYqfakrtryoo"
+  },
+    "demo": {
+    "base_url": "https://dakotanetworks--fuseupgrad.sandbox.my.salesforce-setup.com/",
+    "username": "draftsf@draftdata.com.demo",
+    "password": "LOWYrtertyrtQ8oo"
+  }
+}

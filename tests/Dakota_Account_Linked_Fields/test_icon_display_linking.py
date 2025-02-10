@@ -4,11 +4,14 @@ import openpyxl
 import os
 import string
 import pytest
+import allure
+from allure_commons.types import AttachmentType
 from faker import Faker
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+
 
 # Generate Random Name, Email and Phone
 fake = Faker()
@@ -33,19 +36,10 @@ def driver():
     yield driver
     driver.quit()
 
-# Fixture to load the configuration
-@pytest.fixture(scope="module")
-def config(request):
-    import json
-    import os
-    env = request.config.getoption("--env")
-    config_file_path = os.path.join("config", f"config.{env}.json")
-    with open(config_file_path) as file:
-        return json.load(file)
-
 def test_display_icon_linking(driver, config):
     driver.get("https://test.salesforce.com/")
-    wait = WebDriverWait(driver, 10)
+    wait = WebDriverWait(driver, 20)
+
     # Perform login
     username = wait.until(EC.element_to_be_clickable((By.ID, "username")))
     username.send_keys("draftsf@draftdata.com.uat")
@@ -57,24 +51,24 @@ def test_display_icon_linking(driver, config):
 
     # Move to account Tab and click on new button
     driver.get("https://dakotanetworks--uat.sandbox.lightning.force.com/lightning/o/Account/list?filterName=__Recent")
-    new_button = WebDriverWait(driver, 20).until(EC.element_to_be_clickable((By.XPATH, "//div[@title='New']")))
+    new_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@title='New']")))
     new_button.click()
     time.sleep(2)
 
     # Select a record type
-    new_button = WebDriverWait(driver, 20).until(EC.element_to_be_clickable((By.XPATH, "//button[@class='slds-button slds-button_neutral slds-button slds-button_brand uiButton']")))
+    new_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@class='slds-button slds-button_neutral slds-button slds-button_brand uiButton']")))
     new_button.click()
 
     # Select account name
-    name_field = WebDriverWait(driver, 20).until(EC.element_to_be_clickable((By.XPATH, "//input[@name='Name']")))
+    name_field =wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='Name']")))
     name_field.send_keys(name_var)
 
     # Select phone
-    field = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//input[@name='Phone']")))
+    field = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='Phone']")))
     field.send_keys(phone_var)
 
     # Select website
-    field = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//input[@name='Website']")))
+    field = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='Website']")))
     field.send_keys(email_var)
 
     element = driver.find_element(By.XPATH, "//input[@name='Website']")

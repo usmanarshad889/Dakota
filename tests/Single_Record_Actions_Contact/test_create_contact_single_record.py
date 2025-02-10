@@ -1,6 +1,8 @@
 import time
 import random
 import pytest
+import allure
+from allure_commons.types import AttachmentType
 from faker import Faker
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -30,19 +32,10 @@ def driver():
     yield driver
     driver.quit()
 
-# Fixture to load the configuration
-@pytest.fixture(scope="module")
-def config(request):
-    import json
-    import os
-    env = request.config.getoption("--env")
-    config_file_path = os.path.join("config", f"config.{env}.json")
-    with open(config_file_path) as file:
-        return json.load(file)
-
 def test_create_contact_single_record(driver, config):
     driver.get("https://test.salesforce.com/")
-    wait = WebDriverWait(driver, 10)
+    wait = WebDriverWait(driver, 20)
+
     # Perform login
     username = wait.until(EC.element_to_be_clickable((By.ID, "username")))
     username.send_keys("draftsf@draftdata.com.uat")
@@ -54,20 +47,20 @@ def test_create_contact_single_record(driver, config):
 
     # Move to account Tab and click on new button
     driver.get("https://dakotanetworks--uat.sandbox.lightning.force.com/lightning/o/Contact/list")
-    new_button = WebDriverWait(driver, 20).until(EC.element_to_be_clickable((By.XPATH, "//div[@title='New']")))
+    new_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@title='New']")))
     new_button.click()
     time.sleep(2)
 
     # Select a record type
-    new_button = WebDriverWait(driver, 20).until(EC.element_to_be_clickable((By.XPATH, "//button[@class='slds-button slds-button_neutral slds-button slds-button_brand uiButton']")))
+    new_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@class='slds-button slds-button_neutral slds-button slds-button_brand uiButton']")))
     new_button.click()
 
     # Select account name
-    name_field = WebDriverWait(driver, 20).until(EC.element_to_be_clickable((By.XPATH, "//input[@name='Phone']")))
+    name_field = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='Phone']")))
     name_field.send_keys(phone)
 
     # Select phone
-    field = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//input[@name='MobilePhone']")))
+    field = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='MobilePhone']")))
     field.send_keys(mobile)
 
     element = driver.find_element(By.XPATH, "//input[@name='city']")
@@ -81,7 +74,6 @@ def test_create_contact_single_record(driver, config):
     time.sleep(1)
 
     # SELECT Account type
-    wait = WebDriverWait(driver, 10)
     input_field = wait.until(EC.visibility_of_element_located((By.XPATH, "//input[@placeholder='Search Accounts...']")))
     input_field.clear()
     input_field.send_keys("Test Contacts")
@@ -90,7 +82,7 @@ def test_create_contact_single_record(driver, config):
     time.sleep(2)
 
     # Select account name
-    salutation_field = WebDriverWait(driver, 20).until(EC.element_to_be_clickable((By.XPATH, "//button[@name='salutation']")))
+    salutation_field = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@name='salutation']")))
     salutation_field.click()
     time.sleep(1)
     driver.find_element(By.XPATH, "//lightning-base-combobox-item[@data-value='Mr.']").click()
@@ -119,15 +111,12 @@ def test_create_contact_single_record(driver, config):
 
     # Navigate to login page of fuse app
     driver.get(config["base_url"])
-    wait = WebDriverWait(driver, 10)
 
     # Perform login
     username = wait.until(EC.element_to_be_clickable((By.ID, "username")))
     username.send_keys(config["username"])
-
     password = wait.until(EC.element_to_be_clickable((By.ID, "password")))
     password.send_keys(config["password"])
-
     login_button = wait.until(EC.element_to_be_clickable((By.ID, "Login")))
     login_button.click()
     time.sleep(3)
@@ -135,10 +124,10 @@ def test_create_contact_single_record(driver, config):
     # Navigate to Market Place Search
     driver.get(f"{config["base_url"]}lightning/n/Marketplace__Dakota_Search")
 
-    WebDriverWait(driver, 20).until(EC.element_to_be_clickable((By.XPATH, "//a[@data-label='Contacts']"))).click()
+    wait.until(EC.element_to_be_clickable((By.XPATH, "//a[@data-label='Contacts']"))).click()
     time.sleep(5)
     driver.refresh()
-    WebDriverWait(driver, 20).until(EC.element_to_be_clickable((By.XPATH, "//a[@data-label='Contacts']"))).click()
+    wait.until(EC.element_to_be_clickable((By.XPATH, "//a[@data-label='Contacts']"))).click()
     time.sleep(15)
 
     try:
@@ -151,7 +140,7 @@ def test_create_contact_single_record(driver, config):
         print("Filter not working")
 
     driver.refresh()
-    WebDriverWait(driver, 20).until(EC.element_to_be_clickable((By.XPATH, "//a[@data-label='Contacts']"))).click()
+    wait.until(EC.element_to_be_clickable((By.XPATH, "//a[@data-label='Contacts']"))).click()
     time.sleep(15)
 
     try:
