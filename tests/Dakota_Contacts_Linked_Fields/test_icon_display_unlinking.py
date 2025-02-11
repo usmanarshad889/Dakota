@@ -22,7 +22,7 @@ suffix = random.choice(['Jr.', 'Sr.', 'III', 'PhD', 'MD', 'Esq.'])
 email = fake.email()
 title = fake.job()
 contact_type = random.choice(['Personal', 'Business', 'Emergency', 'Billing'])
-search_name = "Test" + " " + last_name + " " + suffix
+search_name = "Test" + " " + last_name
 
 @pytest.fixture(scope="module")
 def driver():

@@ -4,7 +4,6 @@ import allure
 from allure_commons.types import AttachmentType
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import Select
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
@@ -39,27 +38,26 @@ def test_search_contact_name(driver, config):
     time.sleep(7)
 
     # Click on Search Button
-    driver.find_element(By.XPATH,
-                        "//div[contains(@class,'filterInnerDiv')]//button[contains(@title,'Search')][normalize-space()='Search']").click()
+    driver.find_element(By.XPATH,"//div[contains(@class,'filterInnerDiv')]//button[contains(@title,'Search')][normalize-space()='Search']").click()
     time.sleep(5)
 
     # Copy the Contact Name text
-    contact_name = driver.find_element(By.XPATH,
-                                       "//body[1]/div[4]/div[1]/section[1]/div[1]/div[2]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/article[1]/div[2]/p[1]/div[1]/div[1]/div[1]/lightning-datatable[1]/div[2]/div[1]/div[1]/table[1]/tbody[1]/tr[1]/td[2]")
+    contact_name = driver.find_element(By.XPATH,"//body[1]/div[4]/div[1]/section[1]/div[1]/div[2]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/article[1]/div[2]/p[1]/div[1]/div[1]/div[1]/lightning-datatable[1]/div[2]/div[1]/div[1]/table[1]/tbody[1]/tr[1]/td[2]")
     contact_name_text = contact_name.text
+    words = contact_name_text.split()  # Splitting the string into words
+    first_two_letters = words[0] + " " + words[1]
+
 
     # Search Account name
-    driver.find_element(By.XPATH, "(//input[@placeholder='Contact Name'])").send_keys(contact_name_text)
+    driver.find_element(By.XPATH, "(//input[@placeholder='Contact Name'])").send_keys(first_two_letters)
     time.sleep(1)
 
     # Click on Search Button
-    driver.find_element(By.XPATH,
-                        "//div[contains(@class,'filterInnerDiv')]//button[contains(@title,'Search')][normalize-space()='Search']").click()
+    driver.find_element(By.XPATH,"//div[contains(@class,'filterInnerDiv')]//button[contains(@title,'Search')][normalize-space()='Search']").click()
     time.sleep(5)
 
     # Copy the Search Contact Name text
-    contact_name = driver.find_element(By.XPATH,
-                                       "//body[1]/div[4]/div[1]/section[1]/div[1]/div[2]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/article[1]/div[2]/p[1]/div[1]/div[1]/div[1]/lightning-datatable[1]/div[2]/div[1]/div[1]/table[1]/tbody[1]/tr[1]/td[2]")
+    contact_name = driver.find_element(By.XPATH,"//body[1]/div[4]/div[1]/section[1]/div[1]/div[2]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/article[1]/div[2]/p[1]/div[1]/div[1]/div[1]/lightning-datatable[1]/div[2]/div[1]/div[1]/table[1]/tbody[1]/tr[1]/td[2]")
     search_contact_name_text = contact_name.text
 
     if contact_name_text == search_contact_name_text:

@@ -114,7 +114,9 @@ def test_upgrade_and_configuration(driver, config):
     time.sleep(15)
 
     # Navigate to Upgrade Link
-    driver.get(f"{config['base_url']}packaging/installPackage.apexp?p0=04tKf000000Y1Ew")
+    # driver.get(f"{config['base_url']}packaging/installPackage.apexp?p0=04tKf000000Y1Ew")
+    driver.get(f"{config['base_url']}packaging/installPackage.apexp?p0=04tKf000000Y1FB")
+
     time.sleep(5)
 
     if driver.title == "Install Package":
