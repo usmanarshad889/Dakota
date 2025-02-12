@@ -53,20 +53,19 @@ def test_authentication_correct_credentials(driver, config):
 
     try:
         driver.find_element(By.XPATH, "//button[@value='Connect']").click()
-        time.sleep(1)
     except:
         print("fail first")
 
     try:
         driver.find_element(By.XPATH, "(//button[normalize-space()='Connect'])[1]").click()
-        time.sleep(1)
     except:
         print("Button clicked successfully in first try")
 
+    time.sleep(2)
+
     toast = wait.until(EC.presence_of_element_located((By.XPATH, "//span[@class='toastMessage forceActionsText']")))
     print(f"Toast message : {toast.text}")
-    if toast.text.lower() == "dakota marketplace account connected successfully.":
-        assert True
-    else:
-        assert False
-    driver.quit()
+
+    assert toast.text.lower() == "dakota marketplace account connected successfully.", f"Test failed: {toast.text}"
+    # Attach a screenshot of the final state
+    allure.attach(driver.get_screenshot_as_png(), name="Final_State_Screenshot", attachment_type=AttachmentType.PNG)

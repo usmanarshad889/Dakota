@@ -2,3 +2,7 @@ selenium
 pytest
 pytest -v -s --alluredir=r"C:\Users\usmaan.arshad\PycharmProjects\PythonProject\reports"
 allure serve "path"
+
+pytest --html=report.html
+
+pytest -v -s --alluredir="C:\Users\usmaan.arshad\PycharmProjects\PythonProject\reports" tests/Authentication tests/Dakota_Account_Linked_Fields tests/Dakota_Contacts_Linked_Fields tests/Dakota_Home_Tab tests/Data_Sync_and_Notifications_and_Mapping tests/Mass_Create_and_Link_Actions_Account tests/Mass_Create_and_Link_Actions_Contacts tests/Permission_Sets tests/Search_Functionality_Account tests/Search_Functionality_Contacts tests/Single_Record_Actions_Account tests/Single_Record_Actions_Contact
