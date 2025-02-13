@@ -3,6 +3,8 @@ import pytest
 import allure
 from allure_commons.types import AttachmentType
 from selenium import webdriver
+from selenium.common import NoSuchElementException
+from selenium.common import TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -16,6 +18,8 @@ def driver():
     driver.quit()
 
 @allure.severity(allure.severity_level.CRITICAL)
+@allure.feature("Authentication - Correct Credentials")
+@allure.story("Validate successful authentication with correct credentials for the Heroku.")
 def test_authentication_correct_credentials(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])
@@ -28,18 +32,21 @@ def test_authentication_correct_credentials(driver, config):
     password.send_keys(config["password"])
     login_button = wait.until(EC.element_to_be_clickable((By.ID, "Login")))
     login_button.click()
-    time.sleep(1)
 
     # Navigate to installed pakages setup
     driver.get(f"{config["base_url"]}lightning/n/Marketplace__Dakota_Setup")
 
     # Click on Authentication svg button
     try:
+        # Wait for full page load
+        wait.until(lambda d: d.execute_script("return document.readyState") == "complete")
+
         element = wait.until(
-            EC.presence_of_element_located((By.XPATH, "(//*[name()='svg'][@class='slds-button__icon'])[3]"))
+            EC.element_to_be_clickable((By.XPATH, "(//*[name()='svg'][@class='slds-button__icon'])[3]"))
         )
         element.click()
-    except:
+    except (NoSuchElementException, TimeoutException) as e:
+        print(f"Message: {type(e).__name__}")
         pass
     time.sleep(1)
 
@@ -53,19 +60,25 @@ def test_authentication_correct_credentials(driver, config):
 
     try:
         driver.find_element(By.XPATH, "//button[@value='Connect']").click()
-    except:
-        print("fail first")
+    except (NoSuchElementException, TimeoutException) as e:
+        print(f"Message: {type(e).__name__}")
+        print("Connect button is not clicked in the first attempt")
+        pass
 
     try:
         driver.find_element(By.XPATH, "(//button[normalize-space()='Connect'])[1]").click()
-    except:
-        print("Button clicked successfully in first try")
+    except (NoSuchElementException, TimeoutException) as e:
+        print(f"Message: {type(e).__name__}")
+        print("Connect button clicked successfully in first attempt")
+        pass
 
     time.sleep(2)
 
     toast = wait.until(EC.presence_of_element_located((By.XPATH, "//span[@class='toastMessage forceActionsText']")))
     print(f"Toast message : {toast.text}")
 
+    # Verify the Toast message
     assert toast.text.lower() == "dakota marketplace account connected successfully.", f"Test failed: {toast.text}"
+
     # Attach a screenshot of the final state
     allure.attach(driver.get_screenshot_as_png(), name="Final_State_Screenshot", attachment_type=AttachmentType.PNG)

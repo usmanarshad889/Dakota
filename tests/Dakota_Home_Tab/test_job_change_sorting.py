@@ -34,7 +34,8 @@ def test_job_change_sorting(driver, config):
 
     # Navigate to Dakota Home Page
     driver.get(f"{config["base_url"]}lightning/n/Marketplace__Home")
-    time.sleep(12)
+    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "(//a[@class='slds-tabs_default__link'])[1]")))
+    print(f"Section Name : {btn.text}")
 
     """Extracts and converts date strings to datetime objects"""
     xpath = '''/html[1]/body[1]/div[4]/div[1]/section[1]/div[1]/div[2]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/marketplace-dakota-home-page-main[1]/div[1]/div[1]/div[1]/c-dakota-contact-updates[1]/div[1]/lightning-tabset[1]/div[1]/slot[1]/lightning-tab[1]/slot[1]/c-dakota-job-and-role-changes[1]/div[1]/div[1]/c-custom-datatable[1]/div[2]/div[1]/div[1]/table[1]/tbody[1]/tr/td[8]/lightning-primitive-cell-factory[1]/span[1]/div[1]/lightning-base-formatted-text'''
