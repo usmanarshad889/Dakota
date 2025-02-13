@@ -18,8 +18,8 @@ def driver():
     driver.quit()
 
 @allure.severity(allure.severity_level.CRITICAL)
-@allure.feature("Dakota Home Tab - Job Changes (Linking and Creation of account)")
-@allure.story("Test linking and creation of accounts and contacts directly from Job Changes.")
+@allure.feature("Dakota Home Tab - Job Changes (Link Contact)")
+@allure.story("Test linking of accounts directly from Job Changes.")
 def test_job_change_linking_creation_of_account(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

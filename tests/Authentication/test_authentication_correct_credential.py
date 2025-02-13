@@ -51,7 +51,7 @@ def test_authentication_correct_credentials(driver, config):
     time.sleep(1)
 
     # Verify the Authentication with correct Credentials
-    driver.find_element(By.XPATH, "//input[@name='Username']").clear()
+    wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='Username']"))).clear()
     driver.find_element(By.XPATH, "//input[@name='Username']").send_keys("Fuse Upgrade")
     driver.find_element(By.XPATH, "//input[@name='Password']").clear()
     driver.find_element(By.XPATH, "//input[@name='Password']").send_keys("rolus009")
@@ -59,14 +59,14 @@ def test_authentication_correct_credentials(driver, config):
     driver.find_element(By.XPATH, "//input[@name='AuthorizationURL']").send_keys("https://marketplace-dakota-uat.herokuapp.com")
 
     try:
-        driver.find_element(By.XPATH, "//button[@value='Connect']").click()
+        wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@value='Connect']"))).click()
     except (NoSuchElementException, TimeoutException) as e:
         print(f"Message: {type(e).__name__}")
         print("Connect button is not clicked in the first attempt")
         pass
 
     try:
-        driver.find_element(By.XPATH, "(//button[normalize-space()='Connect'])[1]").click()
+        wait.until(EC.element_to_be_clickable((By.XPATH, "(//button[normalize-space()='Connect'])[1]"))).click()
     except (NoSuchElementException, TimeoutException) as e:
         print(f"Message: {type(e).__name__}")
         print("Connect button clicked successfully in first attempt")
