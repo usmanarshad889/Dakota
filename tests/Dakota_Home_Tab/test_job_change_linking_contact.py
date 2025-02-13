@@ -72,6 +72,7 @@ def test_job_change_linking_creation_of_account(driver, config):
     # Click on first enabled button
     for button in enabled_buttons:
         driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", button)
+        time.sleep(1)
         button.click()
         time.sleep(1)
 
