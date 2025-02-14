@@ -1,9 +1,6 @@
 import time
 import pytest
 import allure
-import random
-import string
-from allure_commons.types import AttachmentType
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.common import NoSuchElementException
@@ -21,9 +18,9 @@ def driver():
     driver.quit()
 
 @allure.severity(allure.severity_level.CRITICAL)
-@allure.feature("Dakota Home Tab - Job Changes (Create Account Firm Left)")
-@allure.story("Test creation of accounts directly from Job Changes - Firm Left")
-def test_job_change_creation_of_account_firm_left(driver, config):
+@allure.feature("Dakota Home Tab - Role Changes (Link Account)")
+@allure.story("Test linking of accounts directly from Role Changes - Account Name")
+def test_role_change_linking_contact(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])
     wait = WebDriverWait(driver, 20)
@@ -40,11 +37,12 @@ def test_job_change_creation_of_account_firm_left(driver, config):
     driver.get(f"{config["base_url"]}lightning/n/Marketplace__Home")
 
     # Print Section name
-    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "(//a[@class='slds-tabs_default__link'])[1]")))
+    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//li[@title='Role Changes']")))
     print(f"Section Name : {btn.text}")
+    btn.click()
 
-    # Locate all Firm Left Names
-    xpath = '''/html[1]/body[1]/div[4]/div[1]/section[1]/div[1]/div[2]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/marketplace-dakota-home-page-main[1]/div[1]/div[1]/div[1]/c-dakota-contact-updates[1]/div[1]/lightning-tabset[1]/div[1]/slot[1]/lightning-tab[1]/slot[1]/c-dakota-job-and-role-changes[1]/div[1]/div[1]/c-custom-datatable[1]/div[2]/div[1]/div[1]/table[1]/tbody[1]/tr/td[4]/lightning-primitive-cell-factory[1]/span[1]/div[1]/lightning-primitive-custom-cell[1]/c-custom-link-field[1]/lightning-button[1]/button[1]'''
+    # Locate all Account Names
+    xpath = '''/html[1]/body[1]/div[4]/div[1]/section[1]/div[1]/div[2]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/marketplace-dakota-home-page-main[1]/div[1]/div[1]/div[1]/c-dakota-contact-updates[1]/div[1]/lightning-tabset[1]/div[1]/slot[1]/lightning-tab[2]/slot[1]/c-dakota-job-and-role-changes[1]/div[1]/div[1]/c-custom-datatable[1]/div[2]/div[1]/div[1]/table[1]/tbody[1]/tr/td[4]/lightning-primitive-cell-factory[1]/span[1]/div[1]/lightning-primitive-custom-cell[1]/c-custom-link-field[1]/lightning-button[1]/button[1]'''
     elements = wait.until(EC.presence_of_all_elements_located((By.XPATH, xpath)))
 
     # Click on first unlinked account
@@ -81,43 +79,26 @@ def test_job_change_creation_of_account_firm_left(driver, config):
         break
 
 
-    # Click on Create Account and Related Contact
-    link_btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[normalize-space()='Create Account & Related Contacts']")))
+    # Click on linked Account
+    link_btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[normalize-space()='Link Account']")))
     link_btn.click()
-    time.sleep(15)
 
-    # Check if "Create Account" button exists
-    create_account_buttons = driver.find_elements(By.XPATH, "//button[normalize-space()='Create Account']")
+    # Locate All Link account
+    all_buttons = wait.until(EC.presence_of_all_elements_located((By.XPATH, "(//button[@title='Link'][normalize-space()='Link'])")))
 
-    if create_account_buttons:
-        create_account = wait.until(EC.element_to_be_clickable(create_account_buttons[0]))
-        create_account.click()
+    # Check if all buttons are disabled
+    enabled_buttons = [button for button in all_buttons if button.is_enabled()]
+    assert enabled_buttons, "Test Failed: All 'Link' buttons are disabled. No action can be performed."
 
-        # Wait for toast message
-        toast_message = wait.until(EC.element_to_be_clickable((By.XPATH, "//span[@class='toastMessage slds-text-heading--small forceActionsText']")))
-        print(f"Toast message: {toast_message.text}")
+    # Click on first enabled button
+    for button in enabled_buttons:
+        driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", button)
+        button.click()
+        time.sleep(2)
 
-        # Verify the Toast message
-        assert "are inserted successfully" in toast_message.text.lower(), f"Test failed: {toast_message.text}"
+        toast_message = wait.until(EC.element_to_be_clickable(
+            (By.XPATH, "//span[@class='toastMessage slds-text-heading--small forceActionsText']")))
+        print(f"Actual Toast Text : {toast_message.text}")
 
-        # Attach a screenshot of the final state
-        allure.attach(driver.get_screenshot_as_png(), name="Final_State_Screenshot", attachment_type=AttachmentType.PNG)
-
-    else:
-        # Add Account with Related Contact(s)
-        check_box = wait.until(EC.element_to_be_clickable((By.XPATH, "(//span[@class='slds-checkbox_faux'])[2]")))
-        check_box.click()
-
-        # click on save/create button
-        save_btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[normalize-space()='Save and Create']")))
-        save_btn.click()
-
-        # Wait for toast message
-        toast_message = wait.until(EC.element_to_be_clickable((By.XPATH, "//span[@class='toastMessage slds-text-heading--small forceActionsText']")))
-        print(f"Toast message: {toast_message.text}")
-
-        # Verify the Toast message
-        assert "are inserted successfully" in toast_message.text.lower(), f"Test failed: {toast_message.text}"
-
-        # Attach a screenshot of the final state
-        allure.attach(driver.get_screenshot_as_png(), name="Final_State_Screenshot", attachment_type=AttachmentType.PNG)
+        assert toast_message.text.strip().lower() == "account successfully linked", f"Contact not clicked: {toast_message.text}"
+        break  # Stop after clicking the first enabled button

@@ -41,9 +41,9 @@ def driver():
     driver.quit()
 
 @allure.severity(allure.severity_level.CRITICAL)
-@allure.feature("Dakota Home Tab - Job Changes (Create Contact)")
-@allure.story("Test Creation of contacts directly from Job Changes.")
-def test_job_change_creation_of_account(driver, config):
+@allure.feature("Dakota Home Tab - Ask Dakota, Create Contact")
+@allure.story("Test creation of contacts directly from member comment")
+def test_member_comment_create_contact_from_contact(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])
     wait = WebDriverWait(driver, 20)
@@ -60,11 +60,17 @@ def test_job_change_creation_of_account(driver, config):
     driver.get(f"{config["base_url"]}lightning/n/Marketplace__Home")
 
     # Print Section name
-    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "(//a[@class='slds-tabs_default__link'])[1]")))
+    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//span[@class='title-div'][normalize-space()='Ask Dakota']")))
+    driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'start'});", btn)
+    time.sleep(1)
     print(f"Section Name : {btn.text}")
 
-    # Locate all Contacts name
-    xpath = '''/html[1]/body[1]/div[4]/div[1]/section[1]/div[1]/div[2]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/marketplace-dakota-home-page-main[1]/div[1]/div[1]/div[1]/c-dakota-contact-updates[1]/div[1]/lightning-tabset[1]/div[1]/slot[1]/lightning-tab[1]/slot[1]/c-dakota-job-and-role-changes[1]/div[1]/div[1]/c-custom-datatable[1]/div[2]/div[1]/div[1]/table[1]/tbody[1]/tr/td[2]/lightning-primitive-cell-factory[1]/span[1]/div[1]/lightning-primitive-custom-cell[1]/c-custom-link-field[1]/lightning-button[1]/button[1]'''
+    # Click on View all button
+    view_all = wait.until(EC.element_to_be_clickable((By.XPATH, "(//a[contains(text(),'View All')])[2]")))
+    view_all.click()
+
+    # Locate all Contact Names
+    xpath = '''/html[1]/body[1]/div[4]/div[1]/section[1]/div[1]/div[2]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/marketplace-comments-relatedto-acc-con-homepage-view-all[1]/article[1]/div[2]/div[1]/div/div[1]/div[2]/p[2]/b[1]/a[1]'''
     elements = wait.until(EC.presence_of_all_elements_located((By.XPATH, xpath)))
 
     # Click on first unlinked account
@@ -73,11 +79,10 @@ def test_job_change_creation_of_account(driver, config):
             # Skip elements with zero size
             size = element.size
             if size['width'] == 0 or size['height'] == 0:
-                print("Skipping element with zero size")
                 continue
             driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", element)
             time.sleep(2)
-            account_name = element.text.strip()
+            contact_name = element.text.strip()
             element.click()
 
             # Check if the account has right permission or not
@@ -86,7 +91,7 @@ def test_job_change_creation_of_account(driver, config):
                 toast_message = toast.text
                 # Check if the message is "You do not have permission rights to access this record."
                 if toast_message == "You do not have permission rights to access this record.":
-                    print(f"Permission error for account: {account_name}. Trying next element...")
+                    print(f"Permission error for account: {contact_name}. Trying next element...")
                     time.sleep(5)
                     continue  # Skip to the next element in the loop
             except (NoSuchElementException, TimeoutException) as e:
@@ -94,8 +99,8 @@ def test_job_change_creation_of_account(driver, config):
                 pass
 
             wait.until(
-                EC.visibility_of_element_located((By.XPATH, f"//h2[normalize-space()='Account: {account_name}']")))
-            print(f"Clicked Account Name: {account_name}")
+                EC.visibility_of_element_located((By.XPATH, f"//h2[normalize-space()='Contact: {contact_name}']")))
+            print(f"Clicked Account Name: {contact_name}")
         except (NoSuchElementException, TimeoutException) as e:
             print(f"Error: {type(e).__name__} while clicking {element.text}")
         break

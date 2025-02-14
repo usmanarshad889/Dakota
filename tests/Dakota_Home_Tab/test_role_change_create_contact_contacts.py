@@ -21,9 +21,9 @@ def driver():
     driver.quit()
 
 @allure.severity(allure.severity_level.CRITICAL)
-@allure.feature("Dakota Home Tab - Job Changes (Create Account Firm Left)")
-@allure.story("Test creation of accounts directly from Job Changes - Firm Left")
-def test_job_change_creation_of_account_firm_left(driver, config):
+@allure.feature("Dakota Home Tab - Job Changes (Create Account from Account)")
+@allure.story("Test creation of accounts directly from Job Changes - Account Name")
+def test_role_change_creation_of_account_from_account(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])
     wait = WebDriverWait(driver, 20)
@@ -40,11 +40,12 @@ def test_job_change_creation_of_account_firm_left(driver, config):
     driver.get(f"{config["base_url"]}lightning/n/Marketplace__Home")
 
     # Print Section name
-    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "(//a[@class='slds-tabs_default__link'])[1]")))
+    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//li[@title='Role Changes']")))
     print(f"Section Name : {btn.text}")
+    btn.click()
 
-    # Locate all Firm Left Names
-    xpath = '''/html[1]/body[1]/div[4]/div[1]/section[1]/div[1]/div[2]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/marketplace-dakota-home-page-main[1]/div[1]/div[1]/div[1]/c-dakota-contact-updates[1]/div[1]/lightning-tabset[1]/div[1]/slot[1]/lightning-tab[1]/slot[1]/c-dakota-job-and-role-changes[1]/div[1]/div[1]/c-custom-datatable[1]/div[2]/div[1]/div[1]/table[1]/tbody[1]/tr/td[4]/lightning-primitive-cell-factory[1]/span[1]/div[1]/lightning-primitive-custom-cell[1]/c-custom-link-field[1]/lightning-button[1]/button[1]'''
+    # Locate all Account Names
+    xpath = '''/html[1]/body[1]/div[4]/div[1]/section[1]/div[1]/div[2]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/marketplace-dakota-home-page-main[1]/div[1]/div[1]/div[1]/c-dakota-contact-updates[1]/div[1]/lightning-tabset[1]/div[1]/slot[1]/lightning-tab[2]/slot[1]/c-dakota-job-and-role-changes[1]/div[1]/div[1]/c-custom-datatable[1]/div[2]/div[1]/div[1]/table[1]/tbody[1]/tr/td[4]/lightning-primitive-cell-factory[1]/span[1]/div[1]/lightning-primitive-custom-cell[1]/c-custom-link-field[1]/lightning-button[1]/button[1]'''
     elements = wait.until(EC.presence_of_all_elements_located((By.XPATH, xpath)))
 
     # Click on first unlinked account
@@ -57,7 +58,7 @@ def test_job_change_creation_of_account_firm_left(driver, config):
                 continue
             driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", element)
             time.sleep(2)
-            account_name = element.text.strip()
+            contact_name = element.text.strip()
             element.click()
 
             # Check if the account has right permission or not
@@ -66,7 +67,7 @@ def test_job_change_creation_of_account_firm_left(driver, config):
                 toast_message = toast.text
                 # Check if the message is "You do not have permission rights to access this record."
                 if toast_message == "You do not have permission rights to access this record.":
-                    print(f"Permission error for account: {account_name}. Trying next element...")
+                    print(f"Permission error for account: {contact_name}. Trying next element...")
                     time.sleep(5)
                     continue  # Skip to the next element in the loop
             except (NoSuchElementException, TimeoutException) as e:
@@ -74,8 +75,8 @@ def test_job_change_creation_of_account_firm_left(driver, config):
                 pass
 
             wait.until(
-                EC.visibility_of_element_located((By.XPATH, f"//h2[normalize-space()='Account: {account_name}']")))
-            print(f"Clicked Account Name: {account_name}")
+                EC.visibility_of_element_located((By.XPATH, f"//h2[normalize-space()='Contact: {contact_name}']")))
+            print(f"Clicked Account Name: {contact_name}")
         except (NoSuchElementException, TimeoutException) as e:
             print(f"Error: {type(e).__name__} while clicking {element.text}")
         break
