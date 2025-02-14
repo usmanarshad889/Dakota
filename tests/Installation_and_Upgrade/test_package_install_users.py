@@ -15,7 +15,10 @@ def driver():
     yield driver
     driver.quit()
 
-def test_installation_users_list(driver, config):
+@allure.severity(allure.severity_level.CRITICAL)
+@allure.feature("Managed Package Installation")
+@allure.story("Confirm the package displays install options for different user groups")
+def test_package_install_users(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])
     wait = WebDriverWait(driver, 20)
@@ -27,11 +30,10 @@ def test_installation_users_list(driver, config):
     password.send_keys(config["password"])
     login_button = wait.until(EC.element_to_be_clickable((By.ID, "Login")))
     login_button.click()
-    time.sleep(5)
 
     # Navigate to correct link of installed package
-    driver.get("https://dakotanetworks--fuseupgrad.sandbox.my.salesforce-setup.com/packaging/installPackage.apexp?p0=04tKf000000kjBf")
-    time.sleep(15)
+    driver.get(f"{config["base_url"]}packaging/installPackage.apexp?p0=04tKf000000kjBf")
+    time.sleep(5)
 
     if driver.title == "Install Package":
         print("Link is correct")
@@ -40,9 +42,9 @@ def test_installation_users_list(driver, config):
         assert False
 
     #  Copy All users text
-    admin_user = driver.find_element(By.XPATH, "//div[contains(text(),'Install for Admins Only')]")
-    all_user = driver.find_element(By.XPATH, "//div[contains(text(),'Install for All Users')]")
-    specific_user = driver.find_element(By.XPATH, "//div[contains(text(),'Install for Specific Profiles...')]")
+    admin_user = wait.until(EC.element_to_be_clickable((By.XPATH, "//div[contains(text(),'Install for Admins Only')]")))
+    all_user = wait.until(EC.element_to_be_clickable((By.XPATH, "//div[contains(text(),'Install for All Users')]")))
+    specific_user = wait.until(EC.element_to_be_clickable((By.XPATH, "//div[contains(text(),'Install for Specific Profiles...')]")))
 
     # Verify users
     if admin_user.text.lower() == "install for admins only" and all_user.text.lower() == "install for all users" and specific_user.text.lower() == "install for specific profiles...":
@@ -55,5 +57,3 @@ def test_installation_users_list(driver, config):
     else:
         print("Test Case Fail")
         assert False
-
-    driver.quit()

@@ -15,6 +15,9 @@ def driver():
     yield driver
     driver.quit()
 
+@allure.severity(allure.severity_level.CRITICAL)
+@allure.feature("Package uninstallation")
+@allure.story("Verify the uninstallation of managed package")
 def test_package_uninstallation(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])
@@ -27,14 +30,12 @@ def test_package_uninstallation(driver, config):
     password.send_keys(config["password"])
     login_button = wait.until(EC.element_to_be_clickable((By.ID, "Login")))
     login_button.click()
-    time.sleep(3)
 
     # Navigate to installed package
     driver.get(f"{config["base_url"]}lightning/setup/ImportedPackage/home")
-    time.sleep(15)
 
     # Switch to iframe
-    iframe_element = driver.find_element(By.XPATH,"//iframe[@title='Installed Packages ~ Salesforce - Enterprise Edition']")
+    iframe_element = wait.until(EC.element_to_be_clickable((By.XPATH,"//iframe[@title='Installed Packages ~ Salesforce - Enterprise Edition']")))
     driver.switch_to.frame(iframe_element)
     time.sleep(1)
 
@@ -60,61 +61,61 @@ def test_package_uninstallation(driver, config):
                 # Click on the found element in the same row
                 print(another_element.text)
                 another_element.click()
-                time.sleep(15)
                 break  # Exit loop once found
         except:
             pass
     driver.switch_to.default_content()
-    time.sleep(2)
+    time.sleep(1)
 
 
     # Switch to iframe
-    iframe_element = driver.find_element(By.XPATH,"//iframe[@title='Uninstalling a Package ~ Salesforce - Enterprise Edition']")
+    iframe_element = wait.until(EC.element_to_be_clickable((By.XPATH,"//iframe[@title='Uninstalling a Package ~ Salesforce - Enterprise Edition']")))
     driver.switch_to.frame(iframe_element)
     time.sleep(1)
 
     driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-    time.sleep(4)
+    time.sleep(1)
 
-    driver.find_element(By.XPATH, "//input[@name='p5']").click()
-    driver.find_element(By.XPATH, "//input[@name='save']").click()
+    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='p5']")))
+    btn.click()
+    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='save']")))
+    btn.click()
     time.sleep(10)
 
     driver.switch_to.default_content()
     time.sleep(1)
 
     # Switch to iframe
-    iframe_element = driver.find_element(By.XPATH,"//iframe[contains(@title,'Installed Packages ~ Salesforce - Enterprise Edition')]")
+    iframe_element = wait.until(EC.element_to_be_clickable((By.XPATH,"//iframe[contains(@title,'Installed Packages ~ Salesforce - Enterprise Edition')]")))
     driver.switch_to.frame(iframe_element)
     time.sleep(1)
 
     driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
     time.sleep(1)
 
-    uninstalled_status = driver.find_element(By.XPATH, "/html[1]/body[1]/div[4]/div[1]/div[1]/div[2]/table[1]/tbody[1]/tr[2]/td[5]")
+    uninstalled_status = wait.until(EC.element_to_be_clickable((By.XPATH, "/html[1]/body[1]/div[4]/div[1]/div[1]/div[2]/table[1]/tbody[1]/tr[2]/td[5]")))
     print(uninstalled_status.text)
     driver.switch_to.default_content()
     time.sleep(100)
 
     driver.refresh()
-    time.sleep(15)
+    time.sleep(5)
+
     # Switch to iframe
-    iframe_element = driver.find_element(By.XPATH,
-                                         "//iframe[contains(@title,'Installed Packages ~ Salesforce - Enterprise Edition')]")
+    iframe_element = wait.until(EC.element_to_be_clickable((By.XPATH,"//iframe[contains(@title,'Installed Packages ~ Salesforce - Enterprise Edition')]")))
     driver.switch_to.frame(iframe_element)
     time.sleep(1)
 
     driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
     time.sleep(1)
 
-    uninstalled_status = driver.find_element(By.XPATH,
-                                             "/html[1]/body[1]/div[4]/div[1]/div[1]/div[2]/table[1]/tbody[1]/tr[2]/td[5]")
+    uninstalled_status = wait.until(EC.element_to_be_clickable((By.XPATH,"/html[1]/body[1]/div[4]/div[1]/div[1]/div[2]/table[1]/tbody[1]/tr[2]/td[5]")))
     print(uninstalled_status.text)
 
-    driver.find_element(By.XPATH, "//a[normalize-space()='Del']").click()
+    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//a[normalize-space()='Del']")))
+    btn.click()
     time.sleep(2)
 
     alert_app = driver.switch_to.alert
     alert_app.accept()
-    time.sleep(10)
-    driver.quit()
+    time.sleep(3)

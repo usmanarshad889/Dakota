@@ -15,7 +15,10 @@ def driver():
     yield driver
     driver.quit()
 
-def test_installation_using_incorrect_link(driver, config):
+@allure.severity(allure.severity_level.MINOR)
+@allure.feature("Managed Package Installation")
+@allure.story("Verify errors are handled gracefully for incorrect or invalid package links")
+def test_invalid_package_link(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])
     wait = WebDriverWait(driver, 20)
@@ -23,23 +26,22 @@ def test_installation_using_incorrect_link(driver, config):
     # Perform login
     username = wait.until(EC.element_to_be_clickable((By.ID, "username")))
     username.send_keys(config["username"])
-
     password = wait.until(EC.element_to_be_clickable((By.ID, "password")))
     password.send_keys(config["password"])
-
     login_button = wait.until(EC.element_to_be_clickable((By.ID, "Login")))
     login_button.click()
+
+    # Navigate to the package installation link
+    package_url = "https://dakotanetworks--fuseupgrad.sandbox.my.salesforce-setup.com/packaging/installPackage000kjBf"
+    driver.get(package_url)
     time.sleep(5)
 
-    # Navigate to correct link of installed package
-    driver.get("https://dakotanetworks--fuseupgrad.sandbox.my.salesforce-setup.com/packaging/installPackage000kjBf")
-    time.sleep(15)
+    # Wait for the page title to load
+    wait.until(EC.title_is(driver.title))
 
-    if driver.title == "Install Package":
-        print("Link is correct")
-        assert False
-    else:
-        print("Install Package Link is not correct")
-        driver.quit()
-        assert True
-
+    # Assertion with screenshot on failure
+    try:
+        assert driver.title != "Install Package", "Package installation link is correct, expected it to be incorrect."
+    except AssertionError as e:
+        allure.attach(driver.get_screenshot_as_png(), name="AssertionFailure", attachment_type=AttachmentType.PNG)
+        pytest.fail(str(e))
