@@ -135,7 +135,10 @@ def test_single_record_linking_unlinking(driver, config):
     # Define the stopping condition element
     stopping_condition_locator = (By.XPATH, "(//span[@class='slds-checkbox_faux'])[2]")
 
-    while True:
+    max_attempts = 5
+    attempts = 0
+
+    while attempts < max_attempts:
         # Refresh page and clear cookies
         driver.delete_all_cookies()
         driver.refresh()
@@ -159,6 +162,11 @@ def test_single_record_linking_unlinking(driver, config):
         # If element is found, exit the while loop
         if driver.find_elements(*stopping_condition_locator):
             break
+
+        attempts += 1  # Increment attempt counter
+
+    # Fail test if maximum attempts reached and condition is not met
+    assert attempts < max_attempts, "Test failed: Stopping condition not met after 5 attempts"
 
     # Check for checkboxes after exiting loop
     checkboxes = driver.find_elements(By.XPATH, "(//span[@class='slds-checkbox_faux'])[2]")
