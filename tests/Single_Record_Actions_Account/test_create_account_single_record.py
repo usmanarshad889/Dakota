@@ -6,10 +6,12 @@ import allure
 from allure_commons.types import AttachmentType
 from faker import Faker
 from selenium import webdriver
+from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import Select
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.common import NoSuchElementException, TimeoutException
+
 
 # Generate Random Name, Email and Phone
 fake = Faker()
@@ -45,7 +47,6 @@ def test_create_account_single_record(driver, config):
     password.send_keys("Rolustech@99")
     login_button = wait.until(EC.element_to_be_clickable((By.ID, "Login")))
     login_button.click()
-    time.sleep(3)
 
     # Move to account Tab and click on new button
     driver.get("https://dakotanetworks--uat.sandbox.lightning.force.com/lightning/o/Account/list?filterName=__Recent")
@@ -54,7 +55,8 @@ def test_create_account_single_record(driver, config):
     time.sleep(2)
 
     # Select a record type
-    driver.find_element(By.XPATH, "//button[@class='slds-button slds-button_neutral slds-button slds-button_brand uiButton']").click()
+    record_type = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@class='slds-button slds-button_neutral slds-button slds-button_brand uiButton']")))
+    record_type.click()
 
     # Select account name
     name_field = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='Name']")))
@@ -68,38 +70,50 @@ def test_create_account_single_record(driver, config):
     field = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='Website']")))
     field.send_keys(email_var)
 
-    element = driver.find_element(By.XPATH, "//input[@name='Website']")
+    element = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='Website']")))
     driver.execute_script("arguments[0].scrollIntoView();", element)
     time.sleep(1)
 
-    element = driver.find_element(By.XPATH, "//input[@name='AUM__c']")
+    element = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='AUM__c']")))
     element.send_keys("10000")
     driver.execute_script("arguments[0].scrollIntoView();", element)
     time.sleep(1)
 
-    element = driver.find_element(By.XPATH, "//input[@name='Average_Ticket_Size__c']")
+    element = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='Average_Ticket_Size__c']")))
     driver.execute_script("arguments[0].scrollIntoView();", element)
 
-    element = driver.find_element(By.XPATH, "//input[@name='Total_Participants__c']")
+    element = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='Total_Participants__c']")))
     driver.execute_script("arguments[0].scrollIntoView();", element)
 
-    element = driver.find_element(By.XPATH, "//input[@name='Trial_Start_Date__c']")
+    element = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='Trial_Start_Date__c']")))
     driver.execute_script("arguments[0].scrollIntoView();", element)
 
-    element = driver.find_element(By.XPATH, "//input[@name='Copyright__c']")
+    element = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='Copyright__c']")))
     driver.execute_script("arguments[0].scrollIntoView();", element)
 
-    element = driver.find_element(By.XPATH, "//input[@name='SEC_Registered_Date__c']")
+    element = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='SEC_Registered_Date__c']")))
     driver.execute_script("arguments[0].scrollIntoView();", element)
+    time.sleep(1)
 
     element = driver.find_element(By.XPATH, "//input[@name='X100_Marketplace__c']")
     element.click()
-    time.sleep(1)
 
     # click on save button
-    driver.find_element(By.XPATH, "//button[@name='SaveEdit']").click()
-    time.sleep(10)
+    save_btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@name='SaveEdit']")))
+    save_btn.click()
+    time.sleep(2)
 
+    # Verify toast_message
+    toast = wait.until(EC.element_to_be_clickable((By.XPATH, "//span[@class='toastMessage slds-text-heading--small forceActionsText']")))
+    toast_massage = toast.text
+    print(f"Actual Toast : {toast_massage}")
+
+    assert "was created" in toast_massage.lower().strip() , f"Error while creating account : {toast_massage}"
+
+    # Now Clear data and refresh the page
+    driver.delete_all_cookies()
+    driver.refresh()
+    time.sleep(2)
 
 
     # Navigate to login page of fuse app
@@ -113,32 +127,40 @@ def test_create_account_single_record(driver, config):
     password.send_keys(config["password"])
     login_button = wait.until(EC.element_to_be_clickable((By.ID, "Login")))
     login_button.click()
-    time.sleep(3)
 
     # Navigate to Market Place Search
-    driver.get(f"{config["base_url"]}lightning/n/Marketplace__Dakota_Search")
-    time.sleep(5)
+    driver.get(f"{config['base_url']}lightning/n/Marketplace__Dakota_Search")
+    time.sleep(3)
 
-    driver.refresh()
-    time.sleep(15)
+    # Define the stopping condition element
+    stopping_condition_locator = (By.XPATH, "(//span[@class='slds-checkbox_faux'])[2]")
 
-    # Search by name
-    driver.find_element(By.XPATH, "//input[@name='searchTerm']").send_keys(name_var)
-    driver.find_element(By.XPATH, "//button[@title='Search']").click()
-    time.sleep(10)
+    while True:
+        # Refresh page and clear cookies
+        driver.delete_all_cookies()
+        driver.refresh()
 
-    driver.refresh()
-    time.sleep(15)
+        # Wait for search input and enter the search term
+        name_input = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='searchTerm']")))
+        name_input.clear()
+        name_input.send_keys(name_var)
 
-    # Search by name
-    driver.find_element(By.XPATH, "//input[@name='searchTerm']").send_keys(name_var)
-    driver.find_element(By.XPATH, "//button[@title='Search']").click()
-    time.sleep(10)
+        search_element = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@title='Search']")))
 
+        # Double-click search button multiple times until condition is met
+        actions = ActionChains(driver)
+        for _ in range(3):
+            if driver.find_elements(*stopping_condition_locator):
+                print("Stopping condition met. Exiting loop.")
+                break
 
-    button_check = driver.find_element(By.XPATH, "(//span[@class='slds-checkbox_faux'])[2]")
-    if button_check:
-        assert True
-    else:
-        assert False
-    driver.quit()
+            actions.double_click(search_element).perform()
+
+        # If element is found, exit the while loop
+        if driver.find_elements(*stopping_condition_locator):
+            break
+
+    # Check for checkboxes after exiting loop
+    checkboxes = driver.find_elements(By.XPATH, "(//span[@class='slds-checkbox_faux'])[2]")
+    assert len(checkboxes) > 0, "Checkbox not found or not visible"
+    time.sleep(2)

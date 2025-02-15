@@ -1,8 +1,6 @@
 import time
 import pytest
 import allure
-import random
-import string
 from allure_commons.types import AttachmentType
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -54,7 +52,6 @@ def test_role_change_creation_of_account_from_account(driver, config):
             # Skip elements with zero size
             size = element.size
             if size['width'] == 0 or size['height'] == 0:
-                print("Skipping element with zero size")
                 continue
             driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", element)
             time.sleep(2)
@@ -75,7 +72,7 @@ def test_role_change_creation_of_account_from_account(driver, config):
                 pass
 
             wait.until(
-                EC.visibility_of_element_located((By.XPATH, f"//h2[normalize-space()='Contact: {contact_name}']")))
+                EC.visibility_of_element_located((By.XPATH, f"//h2[normalize-space()='Account: {contact_name}']")))
             print(f"Clicked Account Name: {contact_name}")
         except (NoSuchElementException, TimeoutException) as e:
             print(f"Error: {type(e).__name__} while clicking {element.text}")

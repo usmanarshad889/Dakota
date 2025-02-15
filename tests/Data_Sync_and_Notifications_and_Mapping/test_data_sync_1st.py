@@ -26,7 +26,7 @@ def driver():
 def test_data_sync(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])
-    wait = WebDriverWait(driver, 20)
+    wait = WebDriverWait(driver, 30)
 
     # Perform login
     username = wait.until(EC.element_to_be_clickable((By.ID, "username")))
@@ -35,7 +35,6 @@ def test_data_sync(driver, config):
     password.send_keys(config["password"])
     login_button = wait.until(EC.element_to_be_clickable((By.ID, "Login")))
     login_button.click()
-    time.sleep(3)
 
     driver.get(f"{config["base_url"]}lightning/n/Marketplace__Dakota_Setup")
 
@@ -46,10 +45,9 @@ def test_data_sync(driver, config):
         element.click()
     except:
         pass
-    time.sleep(1)
 
     # Click on Auto Sync Field Updates
-    inactive_button = driver.find_element(By.XPATH, "//span[@class='slds-checkbox_off']")
+    inactive_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//span[@class='slds-checkbox_off']")))
     if inactive_button.text == "Inactive":
         driver.find_element(By.XPATH, "//span[@class='slds-checkbox_faux']").click()
         time.sleep(1)
