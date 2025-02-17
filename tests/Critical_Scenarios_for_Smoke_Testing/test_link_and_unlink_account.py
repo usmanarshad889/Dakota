@@ -5,7 +5,6 @@ from allure_commons.types import AttachmentType
 from selenium import webdriver
 from selenium.common import NoSuchElementException, TimeoutException
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.devtools.v85.network import replay_xhr
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -18,7 +17,7 @@ def driver():
     yield driver
     driver.quit()
 
-def test_mass_create_link_account_by_crd(driver, config):
+def test_link_unlink_account(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])
     wait = WebDriverWait(driver, 30)
@@ -51,9 +50,13 @@ def test_mass_create_link_account_by_crd(driver, config):
     time.sleep(5)
     btn.click()
 
-    # Click on ALL CHECKBOX
-    all_box = wait.until(EC.element_to_be_clickable((By.XPATH, "(//span[@class='slds-checkbox_faux'])[1]")))
-    all_box.click()
+    # store account name
+    account_field = wait.until(EC.element_to_be_clickable((By.XPATH, "//tbody/tr[1]/td[2]")))
+    account_name = account_field.text
+
+    # Click on first account name checkbox
+    first_box = wait.until(EC.element_to_be_clickable((By.XPATH, "(//span[contains(@class,'slds-checkbox_faux')])[2]")))
+    first_box.click()
 
     # Click on linked account
     dropdown = wait.until(EC.element_to_be_clickable((By.XPATH, "//select[@name='MassUploadActions']")))
@@ -63,18 +66,54 @@ def test_mass_create_link_account_by_crd(driver, config):
     # Click on linked account
     dropdown = wait.until(EC.element_to_be_clickable((By.XPATH, "(//select[@class='slds-select'])[4]")))
     dropdown_option = Select(dropdown)
-    dropdown_option.select_by_visible_text("Dakota CRD#")
+    dropdown_option.select_by_visible_text("Dakota Name")
 
     try:
         dropdown = wait.until(EC.element_to_be_clickable((By.XPATH, "(//select[@class='slds-select'])[5]")))
         dropdown_option = Select(dropdown)
-        dropdown_option.select_by_visible_text("CRD#")
+        dropdown_option.select_by_visible_text("Account Name")
     except (NoSuchElementException, TimeoutException) as e:
         print(f"Error: {type(e).__name__}")
         pass
 
-    wait.until(EC.element_to_be_clickable((By.XPATH, "//button[contains(@class,'slds-button slds-button_neutral slds-button slds-button--brand')][normalize-space()='Search']"))).click()
+    wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@class='slds-button slds-button_neutral slds-button slds-button--brand '][normalize-space()='Search']"))).click()
     time.sleep(8)
+
+    # Check if it is already mapped
+    cross_icon = driver.find_elements(By.XPATH, "(//lightning-primitive-icon[@variant='bare'])[129]")
+
+    if not cross_icon:
+        # Select account name
+        search_fld = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@placeholder='Search by Name']")))
+        search_fld.click()
+        search_fld.send_keys("Test")
+
+        try:
+            btn = wait.until(EC.element_to_be_clickable((By.XPATH, "(//span[contains(text(),'test')])[1]")))
+            btn.click()
+        except (NoSuchElementException, TimeoutException) as e:
+            print(f"Error: {type(e).__name__}")
+            print("1")
+            pass
+
+        try:
+            # search_fld.send_keys("Test Contacts")
+            btn = wait.until(EC.element_to_be_clickable((By.XPATH, "(//div[@class='some-class']//span[contains(text(),' ')])[1]")))
+            btn.click()
+        except (NoSuchElementException, TimeoutException) as e:
+            print(f"Error: {type(e).__name__}")
+            print("2")
+            pass
+
+        try:
+            # search_fld.send_keys("Test Contacts")
+            btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@class='some-class']//span[contains(text(),' ')]")))
+            btn.click()
+        except (NoSuchElementException, TimeoutException) as e:
+            print(f"Error: {type(e).__name__}")
+            print("3")
+            pass
+
 
 
     # Click on linked account
