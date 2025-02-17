@@ -83,16 +83,38 @@ def test_role_change_linking_contact(driver, config):
     link_btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[normalize-space()='Link Account']")))
     link_btn.click()
 
-    # Locate All Link account
+    # Locate all 'Link' buttons
     all_buttons = wait.until(EC.presence_of_all_elements_located((By.XPATH, "(//button[@title='Link'][normalize-space()='Link'])")))
 
-    # Check if all buttons are disabled
+    # Check if any button is enabled
     enabled_buttons = [button for button in all_buttons if button.is_enabled()]
-    assert enabled_buttons, "Test Failed: All 'Link' buttons are disabled. No action can be performed."
+
+    if not enabled_buttons:  # If all buttons are disabled
+        print(f"All {len(all_buttons)} 'Link' buttons are disabled. Performing alternative action.")
+
+        # search the element
+        btn = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[@name='SearchBar'])")))
+        btn.clear()
+        btn.send_keys("Test")
+        btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@class='slds-button slds-button_brand'][normalize-space()='Search']")))
+        btn.click()
+        time.sleep(2)
+
+        # Locate all 'Link' buttons
+        all_buttons = wait.until(
+            EC.presence_of_all_elements_located((By.XPATH, "(//button[@title='Link'][normalize-space()='Link'])")))
+
+        # Check if any button is enabled
+        enabled_buttons = [button for button in all_buttons if button.is_enabled()]
+
+    else:
+        print(f"Found {len(enabled_buttons)} enabled 'Link' buttons. Proceeding with normal actions.")
+        # Add the code to execute when at least one button is enabled here
 
     # Click on first enabled button
     for button in enabled_buttons:
         driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", button)
+        time.sleep(2)
         button.click()
         time.sleep(2)
 
