@@ -9,6 +9,7 @@ from allure_commons.types import AttachmentType
 from faker import Faker
 from selenium import webdriver
 from selenium.common import NoSuchElementException, TimeoutException
+from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -222,7 +223,7 @@ def test_display_icon_unlinking(driver, config):
         toast_message = wait.until(EC.element_to_be_clickable((By.XPATH, "//span[@class='toastMessage slds-text-heading--small forceActionsText']")))
         print(f"Actual Toast Text : {toast_message.text}")
 
-        assert toast_message.text.strip() == "Contact successfully linked", f"Contact not clicked: {toast_message.text}"
+        assert toast_message.text.strip() == "Account successfully linked", f"Toast Message: {toast_message.text}"
         break  # Stop after clicking the first enabled button
 
     try:
@@ -232,12 +233,15 @@ def test_display_icon_unlinking(driver, config):
     except (NoSuchElementException, TimeoutException) as e:
         print(f"Error: {type(e).__name__}")
         pass
+    time.sleep(5)
 
     # Search by name
-    wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='searchTerm']"))).clear()
-    wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='searchTerm']"))).send_keys(name_var)
-
-    wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@title='Search']"))).click()
+    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='searchTerm']")))
+    btn.clear()
+    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='searchTerm']")))
+    btn.send_keys(name_var)
+    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@title='Search']")))
+    btn.click()
 
     # Check for SVG after exiting loop
     svg_element = driver.find_elements(By.XPATH,
@@ -261,7 +265,7 @@ def test_display_icon_unlinking(driver, config):
         (By.XPATH, "//span[@class='toastMessage slds-text-heading--small forceActionsText']")))
     print(f"Actual Toast Text : {toast_message.text}")
 
-    assert toast_message.text.strip() == "Account successfully unlinked", f"Contact not clicked: {toast_message.text}"
+    assert toast_message.text.strip() == "Account successfully unlinked", f"Toast Message: {toast_message.text}"
 
     # Check for SVG after exiting loop
     svg_element = driver.find_elements(By.XPATH,

@@ -220,7 +220,7 @@ def test_refresh_page_icon(driver, config):
         toast_message = wait.until(EC.element_to_be_clickable((By.XPATH, "//span[@class='toastMessage slds-text-heading--small forceActionsText']")))
         print(f"Actual Toast Text : {toast_message.text}")
 
-        assert toast_message.text.strip() == "Contact successfully linked", f"Contact not clicked: {toast_message.text}"
+        assert toast_message.text.strip() == "Account successfully linked", f"Toast Message: {toast_message.text}"
         break  # Stop after clicking the first enabled button
 
     try:
@@ -237,10 +237,12 @@ def test_refresh_page_icon(driver, config):
     time.sleep(5)
 
     # Search by name
-    wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='searchTerm']"))).clear()
-    wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='searchTerm']"))).send_keys(name_var)
-
-    wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@title='Search']"))).click()
+    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='searchTerm']")))
+    btn.clear()
+    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='searchTerm']")))
+    btn.send_keys(name_var)
+    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@title='Search']")))
+    btn.click()
 
     # Check for SVG after exiting loop
     svg_element = driver.find_elements(By.XPATH, "//tbody/tr[1]/th[1]/lightning-primitive-cell-factory[1]/span[1]/div[1]/lightning-icon[1]/span[1]/lightning-primitive-icon[1]//*[name()='svg']")
