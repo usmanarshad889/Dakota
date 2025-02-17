@@ -266,6 +266,24 @@ def test_display_icon_unlinking(driver, config):
     print(f"Actual Toast Text : {toast_message.text}")
 
     assert toast_message.text.strip() == "Account successfully unlinked", f"Toast Message: {toast_message.text}"
+    time.sleep(2)
+
+    try:
+        cancel_btn = wait.until(
+            EC.element_to_be_clickable((By.XPATH, "//lightning-primitive-icon[@size='small']//*[name()='svg']")))
+        cancel_btn.click()
+    except (NoSuchElementException, TimeoutException) as e:
+        print(f"Error: {type(e).__name__}")
+        pass
+    time.sleep(5)
+
+    # Search by name
+    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='searchTerm']")))
+    btn.clear()
+    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='searchTerm']")))
+    btn.send_keys(name_var)
+    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@title='Search']")))
+    btn.click()
 
     # Check for SVG after exiting loop
     svg_element = driver.find_elements(By.XPATH,
