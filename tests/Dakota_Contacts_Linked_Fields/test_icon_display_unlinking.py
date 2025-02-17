@@ -286,6 +286,7 @@ def test_icon_display_unlinking(driver, config):
         pass
     time.sleep(5)
 
+
     # Search by name
     btn = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[@name='searchTerm'])[2]")))
     btn.clear()

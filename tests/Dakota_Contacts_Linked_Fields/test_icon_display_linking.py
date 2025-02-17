@@ -246,7 +246,6 @@ def test_icon_display_linking(driver, config):
         pass
 
 
-
     # Search by name
     btn = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[@name='searchTerm'])[2]")))
     btn.clear()
