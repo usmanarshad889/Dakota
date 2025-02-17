@@ -226,14 +226,17 @@ def test_display_icon_unlinking(driver, config):
         assert toast_message.text.strip() == "Account successfully linked", f"Toast Message: {toast_message.text}"
         break  # Stop after clicking the first enabled button
 
-    try:
-        cancel_btn = wait.until(
-            EC.element_to_be_clickable((By.XPATH, "//lightning-primitive-icon[@size='small']//*[name()='svg']")))
-        cancel_btn.click()
-    except (NoSuchElementException, TimeoutException) as e:
-        print(f"Error: {type(e).__name__}")
-        pass
-    time.sleep(5)
+    for r in range(1, 3):
+        try:
+            cancel_btn = wait.until(EC.element_to_be_clickable(
+                (By.XPATH, f"(//lightning-primitive-icon[@size='small']//*[name()='svg'])[{r}]")))
+            cancel_btn.click()
+            print(f"Clicked on cancel button {r}")
+            break  # Exit loop after the first successful click
+        except (NoSuchElementException, TimeoutException) as e:
+            print(f"Error: {type(e).__name__} while trying button {r}")
+            pass
+    time.sleep(3)
 
     # Search by name
     btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='searchTerm']")))
@@ -268,14 +271,17 @@ def test_display_icon_unlinking(driver, config):
     assert toast_message.text.strip() == "Account successfully unlinked", f"Toast Message: {toast_message.text}"
     time.sleep(2)
 
-    try:
-        cancel_btn = wait.until(
-            EC.element_to_be_clickable((By.XPATH, "//lightning-primitive-icon[@size='small']//*[name()='svg']")))
-        cancel_btn.click()
-    except (NoSuchElementException, TimeoutException) as e:
-        print(f"Error: {type(e).__name__}")
-        pass
-    time.sleep(5)
+    for r in range(1, 3):
+        try:
+            cancel_btn = wait.until(EC.element_to_be_clickable(
+                (By.XPATH, f"(//lightning-primitive-icon[@size='small']//*[name()='svg'])[{r}]")))
+            cancel_btn.click()
+            print(f"Clicked on cancel button {r}")
+            break  # Exit loop after the first successful click
+        except (NoSuchElementException, TimeoutException) as e:
+            print(f"Error: {type(e).__name__} while trying button {r}")
+            pass
+    time.sleep(3)
 
     # Search by name
     btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='searchTerm']")))

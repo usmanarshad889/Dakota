@@ -277,15 +277,17 @@ def test_icon_display_unlinking(driver, config):
     assert toast_message.text.strip() == "Contact successfully unlinked", f"Contact not clicked: {toast_message.text}"
     time.sleep(1)
 
-    try:
-        cancel_btn = wait.until(
-            EC.element_to_be_clickable((By.XPATH, "//lightning-primitive-icon[@size='small']//*[name()='svg']")))
-        cancel_btn.click()
-    except (NoSuchElementException, TimeoutException) as e:
-        print(f"Error: {type(e).__name__}")
-        pass
-    time.sleep(5)
-
+    for r in range(1, 3):
+        try:
+            cancel_btn = wait.until(EC.element_to_be_clickable(
+                (By.XPATH, f"(//lightning-primitive-icon[@size='small']//*[name()='svg'])[{r}]")))
+            cancel_btn.click()
+            print(f"Clicked on cancel button {r}")
+            break  # Exit loop after the first successful click
+        except (NoSuchElementException, TimeoutException) as e:
+            print(f"Error: {type(e).__name__} while trying button {r}")
+            pass
+    time.sleep(3)
 
     # Search by name
     btn = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[@name='searchTerm'])[2]")))
