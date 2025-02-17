@@ -8,6 +8,8 @@ import allure
 from allure_commons.types import AttachmentType
 from faker import Faker
 from selenium import webdriver
+from selenium.common import NoSuchElementException, TimeoutException
+from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -47,7 +49,6 @@ def test_display_icon_linking(driver, config):
     password.send_keys("Rolustech@99")
     login_button = wait.until(EC.element_to_be_clickable((By.ID, "Login")))
     login_button.click()
-    time.sleep(3)
 
     # Move to account Tab and click on new button
     driver.get("https://dakotanetworks--uat.sandbox.lightning.force.com/lightning/o/Account/list?filterName=__Recent")
@@ -56,11 +57,11 @@ def test_display_icon_linking(driver, config):
     time.sleep(2)
 
     # Select a record type
-    new_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@class='slds-button slds-button_neutral slds-button slds-button_brand uiButton']")))
-    new_button.click()
+    record_type = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@class='slds-button slds-button_neutral slds-button slds-button_brand uiButton']")))
+    record_type.click()
 
     # Select account name
-    name_field =wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='Name']")))
+    name_field = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='Name']")))
     name_field.send_keys(name_var)
 
     # Select phone
@@ -71,136 +72,171 @@ def test_display_icon_linking(driver, config):
     field = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='Website']")))
     field.send_keys(email_var)
 
-    element = driver.find_element(By.XPATH, "//input[@name='Website']")
+    element = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='Website']")))
     driver.execute_script("arguments[0].scrollIntoView();", element)
     time.sleep(1)
 
-    element = driver.find_element(By.XPATH, "//input[@name='AUM__c']")
+    element = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='AUM__c']")))
     element.send_keys("10000")
     driver.execute_script("arguments[0].scrollIntoView();", element)
     time.sleep(1)
 
-    element = driver.find_element(By.XPATH, "//input[@name='Average_Ticket_Size__c']")
+    element = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='Average_Ticket_Size__c']")))
     driver.execute_script("arguments[0].scrollIntoView();", element)
 
-    element = driver.find_element(By.XPATH, "//input[@name='Total_Participants__c']")
+    element = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='Total_Participants__c']")))
     driver.execute_script("arguments[0].scrollIntoView();", element)
 
-    element = driver.find_element(By.XPATH, "//input[@name='Trial_Start_Date__c']")
+    element = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='Trial_Start_Date__c']")))
     driver.execute_script("arguments[0].scrollIntoView();", element)
 
-    element = driver.find_element(By.XPATH, "//input[@name='Copyright__c']")
+    element = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='Copyright__c']")))
     driver.execute_script("arguments[0].scrollIntoView();", element)
 
-    element = driver.find_element(By.XPATH, "//input[@name='SEC_Registered_Date__c']")
+    element = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='SEC_Registered_Date__c']")))
     driver.execute_script("arguments[0].scrollIntoView();", element)
+    time.sleep(1)
 
     element = driver.find_element(By.XPATH, "//input[@name='X100_Marketplace__c']")
     element.click()
-    time.sleep(1)
 
     # click on save button
-    driver.find_element(By.XPATH, "//button[@name='SaveEdit']").click()
-    time.sleep(10)
+    save_btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@name='SaveEdit']")))
+    save_btn.click()
+    time.sleep(2)
 
-    # Define the Excel file path
-    file_path = "test_data.xlsx"
+    # Verify toast_message
+    toast = wait.until(EC.element_to_be_clickable((By.XPATH, "//span[@class='toastMessage slds-text-heading--small forceActionsText']")))
+    toast_massage = toast.text
+    print(f"Actual Toast : {toast_massage}")
 
-    # Check if the file exists
-    if os.path.exists(file_path):
-        workbook = openpyxl.load_workbook(file_path)
-        sheet = workbook.active
-    else:
-        workbook = openpyxl.Workbook()
-        sheet = workbook.active
-        sheet.append(["Name", "Email", "Phone"])  # Add header row if file is new
+    assert "was created" in toast_massage.lower().strip() , f"Error while creating account : {toast_massage}"
 
-    # Append the generated data to the Excel file
-    sheet.append([name_var, email_var, phone_var])
+    # Now Clear data and refresh the page
+    driver.delete_all_cookies()
+    driver.refresh()
+    time.sleep(2)
 
-    # Save the file
-    workbook.save(file_path)
 
     # Navigate to login page of fuse app
     driver.get(config["base_url"])
-    wait = WebDriverWait(driver, 10)
+    wait = WebDriverWait(driver, 20)
 
     # Perform login
     username = wait.until(EC.element_to_be_clickable((By.ID, "username")))
     username.send_keys(config["username"])
-
     password = wait.until(EC.element_to_be_clickable((By.ID, "password")))
     password.send_keys(config["password"])
-
     login_button = wait.until(EC.element_to_be_clickable((By.ID, "Login")))
     login_button.click()
-    time.sleep(3)
 
     # Navigate to Market Place Search
-    driver.get(f"{config["base_url"]}lightning/n/Marketplace__Dakota_Search")
-    time.sleep(5)
+    driver.get(f"{config['base_url']}lightning/n/Marketplace__Dakota_Search")
+    time.sleep(3)
 
-    driver.refresh()
-    time.sleep(15)
+    # Define the stopping condition element
+    stopping_condition_locator = (By.XPATH, "(//span[@class='slds-checkbox_faux'])[2]")
 
-    # Search by name
-    driver.find_element(By.XPATH, "//input[@name='searchTerm']").send_keys(name_var)
-    driver.find_element(By.XPATH, "//button[@title='Search']").click()
-    time.sleep(10)
+    max_attempts = 5
+    attempts = 0
 
-    driver.refresh()
-    time.sleep(15)
+    while attempts < max_attempts:
+        # Refresh page and clear cookies
+        driver.delete_all_cookies()
+        driver.refresh()
 
-    # Search by name
-    driver.find_element(By.XPATH, "//input[@name='searchTerm']").send_keys(name_var)
-    driver.find_element(By.XPATH, "//button[@title='Search']").click()
-    time.sleep(10)
+        # Wait for search input and enter the search term
+        name_input = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='searchTerm']")))
+        name_input.clear()
+        name_input.send_keys(name_var)
 
-    # Test the icon
-    svg_icon = driver.find_elements(By.XPATH, "//tbody/tr[1]/th[1]/lightning-primitive-cell-factory[1]/span[1]/div[1]/lightning-icon[1]/span[1]/lightning-primitive-icon[1]//*[name()='svg']")
-    if svg_icon:
-        assert False
-    else:
-        assert True
+        search_element = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@title='Search']")))
 
-    driver.find_element(By.XPATH, "(//button[@class='slds-button slds-button_icon-border slds-button_icon-x-small'])[1]").click()
-    time.sleep(1)
+        # Double-click search button multiple times until condition is met
+        actions = ActionChains(driver)
+        for _ in range(3):
+            if driver.find_elements(*stopping_condition_locator):
+                print("Stopping condition met. Exiting loop.")
+                break
 
-    driver.find_element(By.XPATH, "//span[normalize-space()='Link Account']").click()
-    time.sleep(10)
+            actions.double_click(search_element).perform()
 
-    # Search account
-    driver.find_element(By.XPATH, "//input[@placeholder='Search Accounts']").send_keys("Test")
-    driver.find_element(By.XPATH, "//div[contains(@class,'resetButtonDiv')]//button[contains(@type,'button')][normalize-space()='Search']").click()
-    time.sleep(5)
-
-    # Link account
-    all_buttons = driver.find_elements(By.XPATH, "(//button[@title='Link'][normalize-space()='Link'])")
-    for button in all_buttons:
-        driver.execute_script("arguments[0].scrollIntoView();", button)
-        if button.is_enabled():
-            button.click()
-            time.sleep(1)
+        # If element is found, exit the while loop
+        if driver.find_elements(*stopping_condition_locator):
             break
 
-    time.sleep(10)
+        attempts += 1  # Increment attempt counter
+
+    # Fail test if maximum attempts reached and condition is not met
+    assert attempts < max_attempts, "Test failed: Stopping condition not met after 5 attempts"
+
+    # Check for SVG after exiting loop
+    svg_element = driver.find_elements(By.XPATH, "//tbody/tr[1]/th[1]/lightning-primitive-cell-factory[1]/span[1]/div[1]/lightning-icon[1]/span[1]/lightning-primitive-icon[1]//*[name()='svg']")
+    assert len(svg_element) == 0, "Link icon not found or not visible"
+    time.sleep(1)
+
+    new_button = wait.until(EC.element_to_be_clickable((By.XPATH, "(//button[@class='slds-button slds-button_icon-border slds-button_icon-x-small'])[1]")))
+    new_button.click()
+    time.sleep(1)
+
+    new_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//span[normalize-space()='Link Account']")))
+    new_button.click()
+
+    # Locate all 'Link' buttons
+    all_buttons = wait.until(EC.presence_of_all_elements_located((By.XPATH, "(//button[@title='Link'][normalize-space()='Link'])")))
+
+    # Check if any button is enabled
+    enabled_buttons = [button for button in all_buttons if button.is_enabled()]
+
+    if not enabled_buttons:  # If all buttons are disabled
+        print(f"All {len(all_buttons)} 'Link' buttons are disabled. Performing alternative action.")
+
+        # search the element
+        btn = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[@name='SearchBar'])")))
+        btn.clear()
+        btn.send_keys("Test")
+        btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@class='slds-button slds-button_brand'][normalize-space()='Search']")))
+        btn.click()
+        time.sleep(2)
+
+        # Locate all 'Link' buttons
+        all_buttons = wait.until(
+            EC.presence_of_all_elements_located((By.XPATH, "(//button[@title='Link'][normalize-space()='Link'])")))
+
+        # Check if any button is enabled
+        enabled_buttons = [button for button in all_buttons if button.is_enabled()]
+
+    else:
+        print(f"Found {len(enabled_buttons)} enabled 'Link' buttons. Proceeding with normal actions.")
+        # Add the code to execute when at least one button is enabled here
+
+    # Click on first enabled button
+    for button in enabled_buttons:
+        driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", button)
+        time.sleep(2)
+        button.click()
+        time.sleep(2)
+
+        toast_message = wait.until(EC.element_to_be_clickable((By.XPATH, "//span[@class='toastMessage slds-text-heading--small forceActionsText']")))
+        print(f"Actual Toast Text : {toast_message.text}")
+
+        assert toast_message.text.strip() == "Contact successfully linked", f"Contact not clicked: {toast_message.text}"
+        break  # Stop after clicking the first enabled button
 
     try:
-        driver.find_element(By.XPATH, "//lightning-primitive-icon[@size='small']//*[name()='svg']").click()
-        time.sleep(5)
-    except:
+        cancel_btn = wait.until(
+            EC.element_to_be_clickable((By.XPATH, "//lightning-primitive-icon[@size='small']//*[name()='svg']")))
+        cancel_btn.click()
+    except (NoSuchElementException, TimeoutException) as e:
+        print(f"Error: {type(e).__name__}")
         pass
 
     # Search by name
-    driver.find_element(By.XPATH, "//input[@name='searchTerm']").clear()
-    driver.find_element(By.XPATH, "//input[@name='searchTerm']").send_keys(name_var)
+    wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='searchTerm']"))).clear()
+    wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='searchTerm']"))).send_keys(name_var)
+    wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@title='Search']"))).click()
 
-    driver.find_element(By.XPATH, "//button[@title='Search']").click()
-    time.sleep(10)
-
-    # Test the icon
-    svg_icon = driver.find_elements(By.XPATH, "//tbody/tr[1]/th[1]/lightning-primitive-cell-factory[1]/span[1]/div[1]/lightning-icon[1]/span[1]/lightning-primitive-icon[1]//*[name()='svg']")
-    if svg_icon:
-        assert True
-    else:
-        assert False
+    # Check for SVG after exiting loop
+    svg_element = driver.find_elements(By.XPATH, "//tbody/tr[1]/th[1]/lightning-primitive-cell-factory[1]/span[1]/div[1]/lightning-icon[1]/span[1]/lightning-primitive-icon[1]//*[name()='svg']")
+    assert len(svg_element) > 0, "Link icon not found or not visible"
+    time.sleep(1)

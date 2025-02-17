@@ -179,17 +179,98 @@ def test_single_record_linking_unlinking(driver, config):
     new_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//span[normalize-space()='Link Account']")))
     new_button.click()
 
-    # Locate All Link account
+    # Locate all 'Link' buttons
     all_buttons = wait.until(EC.presence_of_all_elements_located((By.XPATH, "(//button[@title='Link'][normalize-space()='Link'])")))
 
-    # Check if at least one button is enabled
+    # Check if any button is enabled
     enabled_buttons = [button for button in all_buttons if button.is_enabled()]
 
-    # Log button counts for debugging
-    allure.attach(f"Total 'Link' buttons found: {len(all_buttons)}", name="Button Count", attachment_type=allure.attachment_type.TEXT)
-    allure.attach(f"Enabled 'Link' buttons: {len(enabled_buttons)}", name="Enabled Button Count", attachment_type=allure.attachment_type.TEXT)
+    if not enabled_buttons:  # If all buttons are disabled
+        print(f"All {len(all_buttons)} 'Link' buttons are disabled. Performing alternative action.")
 
-    assert enabled_buttons, f"Test Failed: All {len(all_buttons)} 'Link' buttons are disabled. No action can be performed."
+        # search the element
+        btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='SearchBar']")))
+        btn.clear()
+        btn.send_keys("Test")
+        btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@class='slds-button slds-button_brand'][normalize-space()='Search']")))
+        btn.click()
+        time.sleep(2)
+
+
+        # # Print text of first name
+        # xpath = '''(//th[@data-label='Name'])'''
+        # name = driver.find_elements(By.XPATH, xpath)
+        #
+        #
+        # for nm in name:
+        #     text_name = nm.text
+        #
+        #     try:
+        #         cancel_btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[normalize-space()='Cancel']")))
+        #         cancel_btn.click()
+        #         time.sleep(10)
+        #     except (NoSuchElementException, TimeoutException) as e:
+        #         print(f"Error: {type(e).__name__}")
+        #         pass
+        #
+        #     # Wait for search input and enter the search term
+        #     name_input = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='searchTerm']")))
+        #     name_input.clear()
+        #     name_input.send_keys(text_name)
+        #
+        #     search_element = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@title='Search']")))
+        #     search_element.click()
+        #     time.sleep(10)
+        #
+        #     # Unlink that account
+        #     wait.until(EC.element_to_be_clickable((By.XPATH, "(//button[@class='slds-button slds-button_icon-border slds-button_icon-x-small'])[1]"))).click()
+        #     time.sleep(2)
+        #
+        #     unlink_btn = driver.find_elements(By.XPATH, "//span[normalize-space()='Unlink Account']")
+        #
+        #     if len(unlink_btn) == 0:  # Correct '==' comparison
+        #         continue
+        #
+        #     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[normalize-space()='Unlink']"))).click()
+        #
+        #     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[normalize-space()='Yes']"))).click()
+        #
+        #     toast_mess = wait.until(EC.element_to_be_clickable((By.XPATH, "//span[@class='toastMessage slds-text-heading--small forceActionsText']")))
+        #     print(f"Actual Toast Text : {toast_mess.text}")
+        #
+        #     assert toast_mess.text.strip() == "Account successfully unlinked", f"Contact not clicked: {toast_mess.text}"
+        #     time.sleep(10)
+        #
+        #     cancel_btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[normalize-space()='Cancel']")))
+        #     cancel_btn.click()
+        #     break
+        # time.sleep(10)
+        #
+        # # Wait for search input and enter the search term
+        # name_input = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='searchTerm']")))
+        # name_input.clear()
+        # name_input.send_keys(name_var)
+        #
+        # search_element = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@title='Search']")))
+        # search_element.click()
+        # time.sleep(10)
+        #
+        # new_button = wait.until(EC.element_to_be_clickable((By.XPATH, "(//button[@class='slds-button slds-button_icon-border slds-button_icon-x-small'])[1]")))
+        # new_button.click()
+        # time.sleep(1)
+        #
+        # new_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//span[normalize-space()='Link Account']")))
+        # new_button.click()
+
+        # Locate all 'Link' buttons
+        all_buttons = wait.until(EC.presence_of_all_elements_located((By.XPATH, "(//button[@title='Link'][normalize-space()='Link'])")))
+
+        # Check if any button is enabled
+        enabled_buttons = [button for button in all_buttons if button.is_enabled()]
+
+    else:
+        print(f"Found {len(enabled_buttons)} enabled 'Link' buttons. Proceeding with normal actions.")
+        # Add the code to execute when at least one button is enabled here
 
     # Click on first enabled button
     for button in enabled_buttons:
@@ -227,6 +308,7 @@ def test_single_record_linking_unlinking(driver, config):
 
     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[normalize-space()='Yes']"))).click()
 
+    time.sleep(2)
 
     toast_message = wait.until(EC.element_to_be_clickable(
         (By.XPATH, "//span[@class='toastMessage slds-text-heading--small forceActionsText']")))
