@@ -237,7 +237,7 @@ def test_refresh_page_icon(driver, config):
     time.sleep(5)
 
     # Search by name
-    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='searchTerm']")))
+    btn = WebDriverWait(driver, 30).until(EC.element_to_be_clickable((By.XPATH, "//input[@name='searchTerm']")))
     btn.clear()
     btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='searchTerm']")))
     btn.send_keys(name_var)
