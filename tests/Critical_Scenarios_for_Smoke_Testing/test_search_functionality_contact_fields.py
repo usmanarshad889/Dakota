@@ -1,0 +1,267 @@
+import time
+import random
+import string
+import pytest
+import allure
+from allure_commons.types import AttachmentType
+from faker import Faker
+from selenium import webdriver
+from selenium.common import NoSuchElementException, TimeoutException
+from selenium.webdriver import ActionChains
+from selenium.webdriver.support.ui import Select
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
+
+# Initialize Faker
+fake = Faker()
+phone = f"{random.randint(100,999)}-{random.randint(100,999)}-{random.randint(1000,9999)}"
+mobile = f"{random.randint(100,999)}-{random.randint(100,999)}-{random.randint(1000,9999)}"
+mailing_address = fake.address()
+account_name = fake.company()
+name = fake.name()
+first_name = fake.first_name()
+last_name = fake.last_name()
+suffix = random.choice(['Jr.', 'Sr.', 'III', 'PhD', 'MD', 'Esq.'])
+email = fake.email()
+title = fake.job()
+contact_type = random.choice(['Personal', 'Business', 'Emergency', 'Billing'])
+search_name = "Test" + " " + last_name
+full_name = "Test" + " " + last_name + " " + suffix
+print(full_name)
+
+
+@pytest.fixture(scope="module")
+def driver():
+    driver = webdriver.Chrome()
+    driver.maximize_window()
+    driver.implicitly_wait(10)
+    yield driver
+    driver.quit()
+
+
+def test_search_functionality_contact_fields(driver, config):
+    driver.get("https://test.salesforce.com/")
+    wait = WebDriverWait(driver, 20)
+
+    # Perform login
+    username = wait.until(EC.element_to_be_clickable((By.ID, "username")))
+    username.send_keys("draftsf@draftdata.com.uat")
+    password = wait.until(EC.element_to_be_clickable((By.ID, "password")))
+    password.send_keys("Rolustech@99")
+    login_button = wait.until(EC.element_to_be_clickable((By.ID, "Login")))
+    login_button.click()
+
+    # Move to account Tab and click on new button
+    driver.get("https://dakotanetworks--uat.sandbox.lightning.force.com/lightning/o/Contact/list")
+    new_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@title='New']")))
+    new_button.click()
+
+    # Select a record type
+    new_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@class='slds-button slds-button_neutral slds-button slds-button_brand uiButton']")))
+    new_button.click()
+
+    # Select account name
+    name_field = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='Phone']")))
+    name_field.send_keys(phone)
+
+    # Select phone
+    field = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='MobilePhone']")))
+    field.send_keys(mobile)
+
+    element = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='city']")))
+    driver.execute_script("arguments[0].scrollIntoView();", element)
+
+    element = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='LinkedIn_URL__c']")))
+    driver.execute_script("arguments[0].scrollIntoView();", element)
+
+    element = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='GHIN__c']")))
+    driver.execute_script("arguments[0].scrollIntoView();", element)
+    time.sleep(1)
+
+    # SELECT Account type
+    input_field = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@placeholder='Search Accounts...']")))
+    input_field.clear()
+    input_field.send_keys("Test Contacts")
+    dropdown_option = wait.until(EC.element_to_be_clickable((By.XPATH, "(//lightning-base-combobox-item[@role='option'])[2]")))
+    dropdown_option.click()
+
+    # Select account name
+    salutation_field = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@name='salutation']")))
+    salutation_field.click()
+    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//lightning-base-combobox-item[@data-value='Mr.']")))
+    btn.click()
+
+    # Select First name
+    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='firstName']")))
+    btn.send_keys("Test")
+    # driver.find_element(By.XPATH, "//input[@name='middleName']").send_keys(middle_name)
+    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='lastName']")))
+    btn.send_keys(last_name)
+    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='suffix']")))
+    btn.send_keys(suffix)
+
+    element = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='Email']")))
+    driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", element)
+    time.sleep(2)
+
+    for r in range(1, 101):  # XPath indices start from 1
+        try:
+            element = driver.find_element(By.XPATH, f"(//input[@name='Marketplace_Verified_Contact__c'])[{r}]")
+            element.click()
+            print(f"Clicked element {r}")
+            break  # Stop after the first successful click
+        except NoSuchElementException:
+            print(f"Element {r} not found, trying next...")
+
+    wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='Email']"))).send_keys(email)
+    wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='Title']"))).send_keys(title)
+    wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@aria-label='Contact Type']"))).click()
+    wait.until(EC.element_to_be_clickable((By.XPATH, "//lightning-base-combobox-item[@data-value='Administrator']"))).click()
+
+    # click on save button
+    save_btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@name='SaveEdit']")))
+    save_btn.click()
+
+    time.sleep(2)
+
+    # Verify toast_message
+    toast = wait.until(EC.element_to_be_clickable((By.XPATH, "//span[@class='toastMessage slds-text-heading--small forceActionsText']")))
+    toast_massage = toast.text
+    print(f"Actual Toast : {toast_massage}")
+
+    assert "was created" in toast_massage.lower().strip() , f"Error while creating contact : {toast_massage}"
+    time.sleep(1)
+
+    # Navigate to login page of fuse app
+    driver.get(config["base_url"])
+
+    # Perform login
+    username = wait.until(EC.element_to_be_clickable((By.ID, "username")))
+    username.send_keys(config["username"])
+    password = wait.until(EC.element_to_be_clickable((By.ID, "password")))
+    password.send_keys(config["password"])
+    login_button = wait.until(EC.element_to_be_clickable((By.ID, "Login")))
+    login_button.click()
+    time.sleep(3)
+
+    # Navigate to Market Place Search
+    driver.get(f"{config["base_url"]}lightning/n/Marketplace__Dakota_Search")
+
+    # Define the stopping condition element
+    stopping_condition_locator = (By.XPATH, "(//span[@class='slds-checkbox_faux'])[2]")
+
+    max_attempts = 5
+    attempts = 0
+
+    while attempts < max_attempts:
+        # Refresh page and clear cookies
+        driver.delete_all_cookies()
+        driver.refresh()
+        wait.until(EC.element_to_be_clickable((By.XPATH, "//a[@data-label='Contacts']"))).click()
+
+        # Wait for search input and enter the search term
+        name_input = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[@name='searchTerm'])[2]")))
+        name_input.clear()
+        name_input.send_keys(search_name)
+
+        search_element = wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@class='buttonDiv']//button[@title='Search'][normalize-space()='Search']")))
+
+        # Double-click search button multiple times until condition is met
+        actions = ActionChains(driver)
+        for _ in range(3):
+            if driver.find_elements(*stopping_condition_locator):
+                print("Stopping condition met. Exiting loop.")
+                break
+
+            actions.double_click(search_element).perform()
+
+        # If element is found, exit the while loop
+        if driver.find_elements(*stopping_condition_locator):
+            break
+
+        attempts += 1  # Increment attempt counter
+
+    # Fail test if maximum attempts reached and condition is not met
+    assert attempts < max_attempts, "Test failed: Stopping condition not met after 5 attempts"
+
+    # Verify Contact name filter
+    checkboxes = driver.find_elements(By.XPATH, "(//span[@class='slds-checkbox_faux'])[2]")
+    assert len(checkboxes) > 0, "Checkbox not found or not visible"
+    print("Contact name filter verified")
+    time.sleep(1)
+
+
+    # Verify AUM range
+    aum_start = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='FROM']")))
+    aum_start.send_keys("9999")
+    aum_end = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='To']")))
+    aum_end.send_keys("10001")
+    search_element = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@title='Search']")))
+    search_element.click()
+    # Verify AUM range filter
+    checkboxes = driver.find_elements(By.XPATH, "(//span[@class='slds-checkbox_faux'])[2]")
+    assert len(checkboxes) > 0, "Checkbox not found or not visible"
+    time.sleep(1)
+    print("AUM range filter verified")
+
+
+    # Verify Metro Area
+    metro_area = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@placeholder='Select Metro Area(s)']")))
+    metro_area.click()
+    value_field = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[contains(@placeholder,'Filter values..')])[1]")))
+    value_field.send_keys(first_line)
+    sco_value = wait.until(EC.element_to_be_clickable((By.XPATH, f"(//li[@data-name='{first_line}'])")))
+    sco_value.click()
+    search_element = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@title='Search']")))
+    search_element.click()
+    # Verify Metro Area Filter
+    checkboxes = driver.find_elements(By.XPATH, "(//span[@class='slds-checkbox_faux'])[2]")
+    assert len(checkboxes) > 0, "Checkbox not found or not visible"
+    time.sleep(1)
+    print("Metro Area filter verified")
+
+
+    # Verify State
+    state_src = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@placeholder='Select State(s)']")))
+    state_src.click()
+    value_field = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[contains(@placeholder,'Filter values..')])[3]")))
+    value_field.send_keys(state_name)
+    fl_value = wait.until(EC.element_to_be_clickable((By.XPATH, f"(//li[@data-name='{state_name}'])")))
+    fl_value.click()
+    search_element = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@title='Search']")))
+    search_element.click()
+    # Verify State filter
+    checkboxes = driver.find_elements(By.XPATH, "(//span[@class='slds-checkbox_faux'])[2]")
+    assert len(checkboxes) > 0, "Checkbox not found or not visible"
+    time.sleep(1)
+    print("State filter verified")
+
+
+    # Verify Type
+    state_src = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@placeholder='Select Type(s)']")))
+    state_src.click()
+    value_field = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[contains(@placeholder,'Filter values..')])[4]")))
+    value_field.send_keys("Bank")
+    bank_value = wait.until(EC.element_to_be_clickable((By.XPATH, f"(//li[@data-name='Bank'])")))
+    bank_value.click()
+    search_element = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@title='Search']")))
+    search_element.click()
+    # Verify Type filter
+    checkboxes = driver.find_elements(By.XPATH, "(//span[@class='slds-checkbox_faux'])[2]")
+    assert len(checkboxes) > 0, "Checkbox not found or not visible"
+    time.sleep(1)
+    print("Type filter verified")
+
+
+    # Verify CRD
+    crd = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='CRD NUMBER']")))
+    crd.send_keys("3546")
+    search_element = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@title='Search']")))
+    search_element.click()
+    # Verify CRD filter
+    checkboxes = driver.find_elements(By.XPATH, "(//span[@class='slds-checkbox_faux'])[2]")
+    assert len(checkboxes) > 0, "Checkbox not found or not visible"
+    time.sleep(1)
+    print("CRD filter verified")

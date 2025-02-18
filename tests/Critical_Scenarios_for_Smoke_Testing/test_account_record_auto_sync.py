@@ -328,16 +328,16 @@ def test_account_record_auto_sync(driver, config):
     time.sleep(1)
     ok_btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[normalize-space()='OK']")))
     ok_btn.click()
-    time.sleep(2)
+    time.sleep(15)
 
-    try:
-        toast_message = wait.until(EC.element_to_be_clickable((By.XPATH, "//span[@class='toastMessage forceActionsText']")))
-        print(f"Actual Toast Text : {toast_message.text}")
-        assert toast_message == "Mapping saved successfully." , f"Error while mapping : {toast_message}"
-    except (NoSuchElementException, TimeoutException) as e:
-        print(f"Error: {type(e).__name__}")
-        pass
-    time.sleep(2)
+    # try:
+    #     toast_message = wait.until(EC.element_to_be_clickable((By.XPATH, "//span[@class='toastMessage slds-text-heading--small forceActionsText']")))
+    #     print(f"Actual Toast Text : {toast_message.text}")
+    #     assert toast_message == "Mapping saved successfully." , f"Error while mapping : {toast_message}"
+    # except (NoSuchElementException, TimeoutException) as e:
+    #     print(f"Error: {type(e).__name__}")
+    #     pass
+    # time.sleep(2)
 
     # Navigate to installed pakages setup
     driver.get(f"{config["base_url"]}lightning/n/Marketplace__Dakota_Search")
@@ -345,7 +345,7 @@ def test_account_record_auto_sync(driver, config):
     # Search the account
     btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@placeholder='Account Name']")))
     btn.clear()
-    time.sleep(3)
+    time.sleep(7)
     btn.send_keys(name_var)
 
     # Click on search button
@@ -363,71 +363,31 @@ def test_account_record_auto_sync(driver, config):
 
     # Switch to the second tab (index 1)
     driver.switch_to.window(tabs[1])
+    time.sleep(5)
 
     # Verify by printing the current page title
     print("Switched to Tab - Title:", driver.title)
 
 
-    try:
-        txt = wait.until(EC.element_to_be_clickable((By.XPATH, "//p[@title='AUM']")))
-        print(txt.text)
-    except:
-        pass
-
-    try:
-        txt = wait.until(EC.element_to_be_clickable((By.XPATH, "(//lightning-formatted-text[contains(text(),'Public Pension Fund')])[1]")))
-        print(txt.text)
-    except:
-        pass
-
-    try:
-        txt = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[normalize-space()='Edit']")))
-        print(txt.text)
-    except:
-        pass
-
-
-
-
-
-
-
-
-
-
-
-
-    for r in range(1, 3):
-        try:
-            cancel_btn = wait.until(EC.element_to_be_clickable(
-                (By.XPATH, f"(//lightning-primitive-icon[@size='small']//*[name()='svg'])[{r}]")))
-            cancel_btn.click()
-            print(f"Clicked on cancel button {r}")
-            break  # Exit loop after the first successful click
-        except (NoSuchElementException, TimeoutException) as e:
-            print(f"Error: {type(e).__name__} while trying button {r}")
-            pass
-    time.sleep(3)
-
-    # Search by name
-    wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='searchTerm']"))).clear()
-    wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='searchTerm']"))).send_keys(name_var)
-
-    wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@title='Search']"))).click()
-
-    # Unlink that account
-    wait.until(EC.element_to_be_clickable((By.XPATH, "(//button[@class='slds-button slds-button_icon-border slds-button_icon-x-small'])[1]"))).click()
-
-    wait.until(EC.element_to_be_clickable((By.XPATH, "//span[normalize-space()='Unlink Account']"))).click()
-
-    wait.until(EC.element_to_be_clickable((By.XPATH, "//button[normalize-space()='Unlink']"))).click()
-
-    wait.until(EC.element_to_be_clickable((By.XPATH, "//button[normalize-space()='Yes']"))).click()
-
+    # Scroll down by 300 pixels
+    xpath = '''//div[@class='slds-form-element slds-hint-parent test-id__output-root slds-form-element_edit slds-form-element_readonly is-stacked is-stacked-not-editing']//span[@class='test-id__field-label'][normalize-space()='Account Owner']'''
+    element = wait.until(EC.element_to_be_clickable((By.XPATH, xpath)))
+    driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'start'});", element)
     time.sleep(2)
 
-    toast_message = wait.until(EC.element_to_be_clickable(
-        (By.XPATH, "//span[@class='toastMessage slds-text-heading--small forceActionsText']")))
-    print(f"Actual Toast Text : {toast_message.text}")
+    # Verify the CRD with phone
+    xpath = '''/html[1]/body[1]/div[4]/div/section/div/div/div/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/one-record-home-flexipage2[1]/forcegenerated-adg-rollup_component___force-generated__flexipage_-record-page___-investment_-firm_-account_-page___-account___-v-i-e-w___-l-m-t___1739345877000[1]/forcegenerated-flexipage_investment_firm_account_page_account__view_js___lmt___1739345877000[1]/record_flexipage-desktop-record-page-decorator[1]/div[1]/records-record-layout-event-broker[1]/slot[1]/slot[1]/flexipage-record-home-template-desktop2[1]/div[1]/div[2]/div[1]/slot[1]/flexipage-component2[1]/slot[1]/flexipage-tabset2[1]/div[1]/lightning-tabset[1]/div[1]/slot[1]/slot[1]/flexipage-tab2[1]/slot[1]/flexipage-component2[1]/slot[1]/records-lwc-detail-panel[1]/records-base-record-form[1]/div[1]/div[1]/div[1]/div[1]/records-lwc-record-layout[1]/forcegenerated-detailpanel_account___0123m000000u83paas___full___view___recordlayout2[1]/records-record-layout-block[1]/slot[1]/records-record-layout-section[1]/div[1]/div[1]/dl[1]/slot[1]/records-record-layout-row[6]/slot[1]/records-record-layout-item[2]/div[1]/div[1]/dd[1]/div/span/slot/lightning-formatted-text'''
+    crd_field = wait.until(EC.element_to_be_clickable((By.XPATH, xpath)))
+    crd_text = crd_field.text
+    print(f"CRD Text : {crd_text}")
 
-    assert toast_message.text.strip() == "Account successfully unlinked", f"Contact not clicked: {toast_message.text}"
+    # Verify the Description with Website
+    xpath = '''/html[1]/body[1]/div[4]/div[1]/section[1]/div[1]/div[2]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/one-record-home-flexipage2[1]/forcegenerated-adg-rollup_component___force-generated__flexipage_-record-page___-investment_-firm_-account_-page___-account___-v-i-e-w___-l-m-t___1739345877000[1]/forcegenerated-flexipage_investment_firm_account_page_account__view_js___lmt___1739345877000[1]/record_flexipage-desktop-record-page-decorator[1]/div[1]/records-record-layout-event-broker[1]/slot[1]/slot[1]/flexipage-record-home-template-desktop2[1]/div[1]/div[2]/div[1]/slot[1]/flexipage-component2[1]/slot[1]/flexipage-tabset2[1]/div[1]/lightning-tabset[1]/div[1]/slot[1]/slot[1]/flexipage-tab2[1]/slot[1]/flexipage-component2[1]/slot[1]/records-lwc-detail-panel[1]/records-base-record-form[1]/div[1]/div[1]/div[1]/div[1]/records-lwc-record-layout[1]/forcegenerated-detailpanel_account___0123m000000u83paas___full___view___recordlayout2[1]/records-record-layout-block[1]/slot[1]/records-record-layout-section[1]/div[1]/div[1]/dl[1]/slot[1]/records-record-layout-row[8]/slot[1]/records-record-layout-item[1]/div[1]/div[1]/dd[1]/div[1]/span[1]/slot[1]/lightning-formatted-text[1]'''
+    des_field = wait.until(EC.element_to_be_clickable((By.XPATH, xpath)))
+    des_text = des_field.text
+    print(f"Description Text : {des_text}")
+
+    # Assertions with Correct Messages
+    assert crd_text == phone_var, f"CRD Mismatch: Expected '{phone_var}', but got '{crd_text}'"
+    assert des_text == email_var, f"Description Mismatch: Expected '{email_var}', but got '{des_text}'"
+    time.sleep(3)

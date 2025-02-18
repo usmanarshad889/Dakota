@@ -8,25 +8,40 @@ driver = webdriver.Chrome()
 driver.maximize_window()
 driver.implicitly_wait(10)
 
-driver.get("https://dakotanetworks--fuseupgrad.sandbox.my.salesforce-setup.com/")
+driver.get("https://dakotanetworks--uat.sandbox.lightning.force.com/")
 
 wait = WebDriverWait(driver, 20)
 username = wait.until(EC.element_to_be_clickable((By.ID, "username")))
-username.send_keys("draftsf@draftdata.com.fuseupgrad")
+username.send_keys("draftsf@draftdata.com.uat")
 password = wait.until(EC.element_to_be_clickable((By.ID, "password")))
-password.send_keys("LOWYqfakgQ8oo")
+password.send_keys("Rolustech@99")
 login_button = wait.until(EC.element_to_be_clickable((By.ID, "Login")))
 login_button.click()
 
-btn = wait.until(EC.element_to_be_clickable((By.XPATH, "(//a[@class='slds-tabs_default__link'])[1]")))
+driver.get("https://dakotanetworks--uat.sandbox.lightning.force.com/lightning/o/Contact/list?filterName=00BWF0000006vQD2AY")
+
+btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@title='New']")))
+btn.click()
+
+btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//span[normalize-space()='Next']")))
+btn.click()
+
+btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@type='text' and @placeholder='Search People...']")))
+btn.click()
+btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//records-record-layout-lookup[@data-input-element-id='input-field']//li[2]")))
+btn.click()
+
+element = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='postalCode']")))
+driver.execute_script("arguments[0].scrollIntoView();", element)
+
+
+element = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='LinkedIn_URL__c']")))
+driver.execute_script("arguments[0].scrollIntoView();", element)
+time.sleep(1)
+
+
+btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@placeholder='Search Accounts...']")))
+btn.click()
+btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@class='slds-grid slds-size_1-of-1 label-stacked']//records-record-layout-lookup[@data-input-element-id='input-field']//li[2]")))
 print(btn.text)
-print("")
-
-xpath = '''/html[1]/body[1]/div[4]/div[1]/section[1]/div[1]/div[2]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/marketplace-dakota-home-page-main[1]/div[1]/div[1]/div[1]/c-dakota-contact-updates[1]/div[1]/lightning-tabset[1]/div[1]/slot[1]/lightning-tab[1]/slot[1]/c-dakota-job-and-role-changes[1]/div[1]/div[1]/c-custom-datatable[1]/div[2]/div[1]/div[1]/table[1]/tbody[1]/tr/td[2]/lightning-primitive-cell-factory[1]/span[1]/div[1]/lightning-primitive-custom-cell[1]/c-custom-link-field[1]/lightning-button[1]/button[1]'''
-all_elements = wait.until(EC.presence_of_all_elements_located((By.XPATH, xpath)))
-
-for element in all_elements:
-    driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", element)
-    time.sleep(1)
-    element.click()
-    break
+btn.click()
