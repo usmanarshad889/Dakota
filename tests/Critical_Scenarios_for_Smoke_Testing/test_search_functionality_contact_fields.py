@@ -73,6 +73,18 @@ def test_search_functionality_contact_fields(driver, config):
     element = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='city']")))
     driver.execute_script("arguments[0].scrollIntoView();", element)
 
+    # Select city
+    field = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='city']")))
+    field.send_keys("Miami")
+
+    # Select state
+    field = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='province']")))
+    field.send_keys("Florida")
+
+    # Select country
+    field = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='country']")))
+    field.send_keys("United States")
+
     element = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='LinkedIn_URL__c']")))
     driver.execute_script("arguments[0].scrollIntoView();", element)
 
@@ -85,6 +97,7 @@ def test_search_functionality_contact_fields(driver, config):
     input_field.clear()
     input_field.send_keys("Test Contacts")
     dropdown_option = wait.until(EC.element_to_be_clickable((By.XPATH, "(//lightning-base-combobox-item[@role='option'])[2]")))
+    print(dropdown_option.text)
     dropdown_option.click()
 
     # Select account name
@@ -120,10 +133,54 @@ def test_search_functionality_contact_fields(driver, config):
     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@aria-label='Contact Type']"))).click()
     wait.until(EC.element_to_be_clickable((By.XPATH, "//lightning-base-combobox-item[@data-value='Administrator']"))).click()
 
+    # Select Asset Class Coverage
+    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@aria-label='Asset Class Coverage']")))
+    btn.click()
+    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//lightning-base-combobox-item[@data-value='Commodities']")))
+    btn.click()
+
+    element = wait.until(EC.element_to_be_clickable((By.XPATH, "//label[normalize-space()='Territory']")))
+    driver.execute_script("arguments[0].scrollIntoView();", element)
+    time.sleep(1)
+
+    # Select Channel Focus
+    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//span[@title='Banks']")))
+    btn.click()
+    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "(//button[@title='Move to Chosen'])[3]")))
+    btn.click()
+
+    # Select Metro Area
+    field = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@placeholder='Search Metro Areas...']")))
+    field.click()
+    field.send_keys("Bosto")
+    time.sleep(5)
+    values = driver.find_elements(By.XPATH, "(//lightning-base-combobox-item[@role='option'])")
+    index_to_use = None  # Store index of "Boston"
+    for index, s in enumerate(values, start=1):
+        # print(f"{index}: {s.text.strip()}")
+        # If "Boston" is found anywhere in the list, store its index
+        if "Boston" in s.text.strip():
+            index_to_use = index
+            break  # Stop searching after finding the first "Boston"
+    # Click the element if "Boston" was found
+    if index_to_use is not None:
+        print(f"Using index {index_to_use} to click 'Boston'.")
+        try:
+            element = wait.until(EC.element_to_be_clickable(
+                (By.XPATH, f"(//lightning-base-combobox-item[@role='option'])[{index_to_use}]")))
+            first_line = element.text.splitlines()[0] if element.text.strip() else "No text found"
+            # print(f"First line of selected element: {first_line}")
+            element.click()
+        except Exception as e:
+            print(f"Error: {type(e).__name__}")
+            pass
+    else:
+        print("Boston was not found in the list.")
+    time.sleep(1)
+
     # click on save button
     save_btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@name='SaveEdit']")))
     save_btn.click()
-
     time.sleep(2)
 
     # Verify toast_message
@@ -132,7 +189,7 @@ def test_search_functionality_contact_fields(driver, config):
     print(f"Actual Toast : {toast_massage}")
 
     assert "was created" in toast_massage.lower().strip() , f"Error while creating contact : {toast_massage}"
-    time.sleep(1)
+    time.sleep(2)
 
     # Navigate to login page of fuse app
     driver.get(config["base_url"])
@@ -193,75 +250,105 @@ def test_search_functionality_contact_fields(driver, config):
     time.sleep(1)
 
 
-    # Verify AUM range
-    aum_start = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='FROM']")))
-    aum_start.send_keys("9999")
-    aum_end = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='To']")))
-    aum_end.send_keys("10001")
-    search_element = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@title='Search']")))
+    # Verify account name filter
+    acc_name = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='accountName']")))
+    acc_name.send_keys("test")
+    acc_name.click()
+    search_element = wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@class='buttonDiv']//button[@title='Search'][normalize-space()='Search']")))
     search_element.click()
-    # Verify AUM range filter
+
+    # Verify Account name filter
     checkboxes = driver.find_elements(By.XPATH, "(//span[@class='slds-checkbox_faux'])[2]")
     assert len(checkboxes) > 0, "Checkbox not found or not visible"
+    print("Account name filter verified")
     time.sleep(1)
-    print("AUM range filter verified")
 
 
-    # Verify Metro Area
-    metro_area = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@placeholder='Select Metro Area(s)']")))
-    metro_area.click()
-    value_field = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[contains(@placeholder,'Filter values..')])[1]")))
-    value_field.send_keys(first_line)
-    sco_value = wait.until(EC.element_to_be_clickable((By.XPATH, f"(//li[@data-name='{first_line}'])")))
-    sco_value.click()
-    search_element = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@title='Search']")))
+    # Verify Coverage Area
+    cov_area = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[@placeholder='Select Coverage Area(s)'])")))
+    cov_area.click()
+    value_field = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[@placeholder='Filter values..'])[5]")))
+    value_field.send_keys("Commodities")
+    com_value = wait.until(EC.element_to_be_clickable((By.XPATH, f"(//li[@data-name='Commodities'])")))
+    com_value.click()
+
+    search_element = wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@class='buttonDiv']//button[@title='Search'][normalize-space()='Search']")))
     search_element.click()
+
+    # Verify Coverage Area filter
+    checkboxes = driver.find_elements(By.XPATH, "(//span[@class='slds-checkbox_faux'])[2]")
+    assert len(checkboxes) > 0, "Checkbox not found or not visible"
+    print("Coverage Area filter is verified")
+    time.sleep(1)
+
+
+    # Verify Channel Focus
+    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@placeholder='Select Channel Focus']")))
+    btn.click()
+    value_field = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[@placeholder='Filter values..'])[6]")))
+    value_field.send_keys("Banks")
+    btn = wait.until(EC.element_to_be_clickable((By.XPATH, f"(//li[@data-name='Banks'])")))
+    btn.click()
+
+    search_element = wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@class='buttonDiv']//button[@title='Search'][normalize-space()='Search']")))
+    search_element.click()
+
+    # Verify Channel Focus filter
+    checkboxes = driver.find_elements(By.XPATH, "(//span[@class='slds-checkbox_faux'])[2]")
+    assert len(checkboxes) > 0, "Checkbox not found or not visible"
+    print("Channel Focus filter is verified")
+    time.sleep(1)
+
+
     # Verify Metro Area Filter
+    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[contains(@placeholder,'Select Metro Area(s)')])[2]")))
+    btn.click()
+    value_field = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[contains(@placeholder,'Filter values..')])[7]")))
+    value_field.send_keys("Boston")
+    btn = wait.until(EC.element_to_be_clickable((By.XPATH, f"(//li[@data-name='Boston'])[2]")))
+    btn.click()
+
+    search_element = wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@class='buttonDiv']//button[@title='Search'][normalize-space()='Search']")))
+    search_element.click()
+
+    # Verify Metro Area filter
     checkboxes = driver.find_elements(By.XPATH, "(//span[@class='slds-checkbox_faux'])[2]")
     assert len(checkboxes) > 0, "Checkbox not found or not visible"
+    print("Metro Area filter is verified")
     time.sleep(1)
-    print("Metro Area filter verified")
 
 
-    # Verify State
-    state_src = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@placeholder='Select State(s)']")))
-    state_src.click()
-    value_field = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[contains(@placeholder,'Filter values..')])[3]")))
-    value_field.send_keys(state_name)
-    fl_value = wait.until(EC.element_to_be_clickable((By.XPATH, f"(//li[@data-name='{state_name}'])")))
-    fl_value.click()
-    search_element = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@title='Search']")))
+    # Verify State Filter
+    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[contains(@placeholder,'Select State(s)')])[2]")))
+    btn.click()
+    value_field = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[contains(@placeholder,'Filter values..')])[9]")))
+    value_field.send_keys("Florida")
+    btn = wait.until(EC.element_to_be_clickable((By.XPATH, f"(//li[@data-name='Florida'])[2]")))
+    btn.click()
+
+    search_element = wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@class='buttonDiv']//button[@title='Search'][normalize-space()='Search']")))
     search_element.click()
+
     # Verify State filter
     checkboxes = driver.find_elements(By.XPATH, "(//span[@class='slds-checkbox_faux'])[2]")
     assert len(checkboxes) > 0, "Checkbox not found or not visible"
+    print("State filter is verified")
     time.sleep(1)
-    print("State filter verified")
 
 
-    # Verify Type
-    state_src = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@placeholder='Select Type(s)']")))
-    state_src.click()
-    value_field = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[contains(@placeholder,'Filter values..')])[4]")))
-    value_field.send_keys("Bank")
-    bank_value = wait.until(EC.element_to_be_clickable((By.XPATH, f"(//li[@data-name='Bank'])")))
-    bank_value.click()
-    search_element = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@title='Search']")))
+    # Verify Contact Type Filter
+    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[contains(@placeholder,'Select Type(s)')])[2]")))
+    btn.click()
+    value_field = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[contains(@placeholder,'Filter values..')])[10]")))
+    value_field.send_keys("Administrator")
+    btn = wait.until(EC.element_to_be_clickable((By.XPATH, f"(//li[@data-name='Administrator'])")))
+    btn.click()
+
+    search_element = wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@class='buttonDiv']//button[@title='Search'][normalize-space()='Search']")))
     search_element.click()
-    # Verify Type filter
+
+    # Verify Contact Type filter
     checkboxes = driver.find_elements(By.XPATH, "(//span[@class='slds-checkbox_faux'])[2]")
     assert len(checkboxes) > 0, "Checkbox not found or not visible"
+    print("Contact Type filter is verified")
     time.sleep(1)
-    print("Type filter verified")
-
-
-    # Verify CRD
-    crd = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='CRD NUMBER']")))
-    crd.send_keys("3546")
-    search_element = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@title='Search']")))
-    search_element.click()
-    # Verify CRD filter
-    checkboxes = driver.find_elements(By.XPATH, "(//span[@class='slds-checkbox_faux'])[2]")
-    assert len(checkboxes) > 0, "Checkbox not found or not visible"
-    time.sleep(1)
-    print("CRD filter verified")

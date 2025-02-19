@@ -34,7 +34,7 @@ def test_job_change_sorting(driver, config):
 
     # Navigate to Dakota Home Page
     driver.get(f"{config["base_url"]}lightning/n/Marketplace__Home")
-    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "(//a[@class='slds-tabs_default__link'])[1]")))
+    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//li[@title='Job Changes']")))
     print(f"Section Name : {btn.text}")
 
     """Extracts and converts date strings to datetime objects"""
@@ -49,6 +49,7 @@ def test_job_change_sorting(driver, config):
         text = element.text.strip()
         try:
             date_obj = datetime.strptime(text, "%m/%d/%Y")  # Convert to datetime object
+            print(date_obj)
             date_list.append(date_obj)
         except ValueError:
             allure.attach(f"Invalid date format: {text}", "❌ Date Parsing Error", allure.attachment_type.TEXT)

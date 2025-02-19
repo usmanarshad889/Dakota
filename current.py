@@ -1,4 +1,5 @@
 import time
+import requests
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
@@ -20,28 +21,14 @@ login_button.click()
 
 driver.get("https://dakotanetworks--uat.sandbox.lightning.force.com/lightning/o/Contact/list?filterName=00BWF0000006vQD2AY")
 
-btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@title='New']")))
-btn.click()
+API_URL = "https://dakotanetworks--uat.sandbox.li\ui-instrumentation-components-beacon.InstrumentationBeacon.sendData=1"  # Replace with actual API URL
 
-btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//span[normalize-space()='Next']")))
-btn.click()
-
-btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@type='text' and @placeholder='Search People...']")))
-btn.click()
-btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//records-record-layout-lookup[@data-input-element-id='input-field']//li[2]")))
-btn.click()
-
-element = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='postalCode']")))
-driver.execute_script("arguments[0].scrollIntoView();", element)
-
-
-element = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='LinkedIn_URL__c']")))
-driver.execute_script("arguments[0].scrollIntoView();", element)
-time.sleep(1)
-
-
-btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@placeholder='Search Accounts...']")))
-btn.click()
-btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@class='slds-grid slds-size_1-of-1 label-stacked']//records-record-layout-lookup[@data-input-element-id='input-field']//li[2]")))
-print(btn.text)
-btn.click()
+"""Check API status and return True if it's up, False otherwise"""
+try:
+    response = requests.get(API_URL, timeout=20)
+    if response.status_code == 200:
+        print("✅ API is UP!")
+    else:
+        print(f"❌ API is DOWN! Status Code: {response.status_code}")
+except requests.exceptions.RequestException as e:
+    print(f"❌ API check failed: {e}")
