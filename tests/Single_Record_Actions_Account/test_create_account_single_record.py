@@ -50,6 +50,7 @@ def test_create_account_single_record(driver, config):
     # Move to account Tab and click on new button
     driver.get("https://dakotanetworks--uat.sandbox.lightning.force.com/lightning/o/Account/list?filterName=__Recent")
     new_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@title='New']")))
+    time.sleep(1)
     new_button.click()
     time.sleep(2)
 
