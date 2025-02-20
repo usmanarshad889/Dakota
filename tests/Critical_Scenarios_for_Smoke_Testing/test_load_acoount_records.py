@@ -2,11 +2,9 @@ import time
 import pytest
 import allure
 from allure_commons.types import AttachmentType
-from faker import Faker
 from selenium import webdriver
 from selenium.common import NoSuchElementException, TimeoutException
 from selenium.webdriver import ActionChains
-from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -20,7 +18,7 @@ def driver():
     yield driver
     driver.quit()
 
-def test_search_functionality_account_fields(driver, config):
+def test_load_account_records(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])
     wait = WebDriverWait(driver, 20)
@@ -89,4 +87,3 @@ def test_search_functionality_account_fields(driver, config):
         print(f"{index}: {name.text}")
 
     time.sleep(5)
-

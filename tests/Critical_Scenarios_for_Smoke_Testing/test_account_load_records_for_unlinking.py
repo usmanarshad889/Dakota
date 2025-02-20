@@ -2,11 +2,9 @@ import time
 import pytest
 import allure
 from allure_commons.types import AttachmentType
-from faker import Faker
 from selenium import webdriver
 from selenium.common import NoSuchElementException, TimeoutException
 from selenium.webdriver import ActionChains
-from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -20,7 +18,7 @@ def driver():
     yield driver
     driver.quit()
 
-def test_search_functionality_account_fields(driver, config):
+def test_load_linked_account_records(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])
     wait = WebDriverWait(driver, 20)
@@ -89,4 +87,9 @@ def test_search_functionality_account_fields(driver, config):
         print(f"{index}: {name.text}")
 
     time.sleep(5)
+
+    # Verify the linked icon
+    xpath = '''/html[1]/body[1]/div[4]/div[1]/section[1]/div[1]/div[2]/div[2]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/article[1]/div[2]/p[1]/div[1]/div[1]/div[1]/lightning-datatable[1]/div[2]/div[1]/div[1]/table[1]/tbody[1]/tr/th[1]/lightning-primitive-cell-factory[1]/span/div/lightning-icon/span/lightning-primitive-icon/*[name()='svg']/*[name()='g']/*[name()='path']'''
+    all_linked_icons = driver.find_elements(By.XPATH, xpath)
+
 
