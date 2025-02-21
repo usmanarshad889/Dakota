@@ -5,7 +5,6 @@ from allure_commons.types import AttachmentType
 from selenium import webdriver
 from selenium.common import TimeoutException
 from selenium.webdriver.support.ui import Select
-
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -20,7 +19,7 @@ def driver():
     yield driver
     driver.quit()
 
-def test_load_account_linked(driver, config):
+def test_load_accounts_all(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])
     wait = WebDriverWait(driver, 20)
@@ -47,7 +46,7 @@ def test_load_account_linked(driver, config):
     # Select linked accounts from filter
     dropdown = wait.until(EC.element_to_be_clickable((By.XPATH, "//select[@name='DisplayCriteria']")))
     dropdown_option = Select(dropdown)
-    dropdown_option.select_by_visible_text("Linked Accounts")
+    dropdown_option.select_by_visible_text("All Accounts")
     time.sleep(1)
 
     button = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@title='Search']")))
@@ -101,10 +100,7 @@ def test_load_account_linked(driver, config):
     xpath = '''//tbody/tr/th[1]/lightning-primitive-cell-factory[1]/span[1]/div[1]/lightning-icon[1]'''
     all_linked_icons = driver.find_elements(By.XPATH, xpath)
 
-    print(f"Actual Displayed Accounts: {len(names)}")
-    print(f"Actual Displayed Icons: {len(all_linked_icons)}")
+    print(f"Displayed Accounts: {len(names)}")
+    print(f"Displayed Icons: {len(all_linked_icons)}")
 
-    assert len(all_linked_icons) == len(names), (
-        f"Mismatch in linked accounts verification: "
-        f"Expected {len(names)} icons but found {len(all_linked_icons)}."
-    )
+    assert len(names) >= 500 , f"Actual Accounts : {len(names)} but expected was 500"

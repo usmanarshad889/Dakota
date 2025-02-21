@@ -3,7 +3,8 @@ import pytest
 import allure
 from allure_commons.types import AttachmentType
 from selenium import webdriver
-from selenium.common import NoSuchElementException, TimeoutException
+from selenium.common import TimeoutException
+from selenium.webdriver.support.ui import Select
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -18,7 +19,7 @@ def driver():
     yield driver
     driver.quit()
 
-def test_load_linked_account_records(driver, config):
+def test_load_account_unlinked(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])
     wait = WebDriverWait(driver, 20)
@@ -41,6 +42,13 @@ def test_load_linked_account_records(driver, config):
     button = wait.until(EC.visibility_of_element_located((By.XPATH, "//button[@title='Search']")))
     print(f"Button Text : {button.text}")
     time.sleep(8)
+
+    # Select linked accounts from filter
+    dropdown = wait.until(EC.element_to_be_clickable((By.XPATH, "//select[@name='DisplayCriteria']")))
+    dropdown_option = Select(dropdown)
+    dropdown_option.select_by_visible_text("Unlinked Accounts")
+    time.sleep(1)
+
     button = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@title='Search']")))
     button.click()
 
@@ -89,7 +97,10 @@ def test_load_linked_account_records(driver, config):
     time.sleep(5)
 
     # Verify the linked icon
-    xpath = '''/html[1]/body[1]/div[4]/div[1]/section[1]/div[1]/div[2]/div[2]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/article[1]/div[2]/p[1]/div[1]/div[1]/div[1]/lightning-datatable[1]/div[2]/div[1]/div[1]/table[1]/tbody[1]/tr/th[1]/lightning-primitive-cell-factory[1]/span/div/lightning-icon/span/lightning-primitive-icon/*[name()='svg']/*[name()='g']/*[name()='path']'''
+    xpath = '''//tbody/tr/th[1]/lightning-primitive-cell-factory[1]/span[1]/div[1]/lightning-icon[1]'''
     all_linked_icons = driver.find_elements(By.XPATH, xpath)
 
+    print(f"Actual Displayed Accounts: {len(names)}")
+    print(f"Actual Displayed Icons: {len(all_linked_icons)}")
 
+    assert len(all_linked_icons) <= 0 , f"Found Linked icons : {len(all_linked_icons)}"

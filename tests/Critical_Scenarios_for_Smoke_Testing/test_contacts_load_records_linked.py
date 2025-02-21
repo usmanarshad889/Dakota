@@ -5,7 +5,6 @@ from allure_commons.types import AttachmentType
 from selenium import webdriver
 from selenium.common import TimeoutException
 from selenium.webdriver.support.ui import Select
-
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -20,7 +19,7 @@ def driver():
     yield driver
     driver.quit()
 
-def test_load_account_linked(driver, config):
+def test_load_contacts_linked(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])
     wait = WebDriverWait(driver, 20)
@@ -37,29 +36,30 @@ def test_load_account_linked(driver, config):
     driver.get(f"{config['base_url']}lightning/n/Marketplace__Dakota_Search")
 
     # Print Current Tab
-    tab = wait.until(EC.element_to_be_clickable((By.XPATH, "//li[@title='Accounts']")))
+    tab = wait.until(EC.element_to_be_clickable((By.XPATH, "//li[@title='Contacts']")))
     print(f"Current Tab : {tab.text}")
+    tab.click()
 
-    button = wait.until(EC.visibility_of_element_located((By.XPATH, "//button[@title='Search']")))
+    button = wait.until(EC.visibility_of_element_located((By.XPATH, "//div[@class='buttonDiv']//button[@title='Search'][normalize-space()='Search']")))
     print(f"Button Text : {button.text}")
     time.sleep(8)
 
     # Select linked accounts from filter
-    dropdown = wait.until(EC.element_to_be_clickable((By.XPATH, "//select[@name='DisplayCriteria']")))
+    dropdown = wait.until(EC.element_to_be_clickable((By.XPATH, "(//select[@name='DisplayCriteria'])[2]")))
     dropdown_option = Select(dropdown)
-    dropdown_option.select_by_visible_text("Linked Accounts")
+    dropdown_option.select_by_visible_text("Linked Contacts")
     time.sleep(1)
 
-    button = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@title='Search']")))
+    button = wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@class='buttonDiv']//button[@title='Search'][normalize-space()='Search']")))
     button.click()
 
-    # Wait for account names to load
+    # Wait for contacts names to load
     time.sleep(5)
     prev_count = 0
     max_records = 500  # Stop when we reach 500 records
 
     while True:
-        # Get all account names
+        # Get all contact names
         names = wait.until(EC.presence_of_all_elements_located((By.XPATH, "//tbody/tr/td[2]")))
         new_count = len(names)
 
@@ -101,7 +101,7 @@ def test_load_account_linked(driver, config):
     xpath = '''//tbody/tr/th[1]/lightning-primitive-cell-factory[1]/span[1]/div[1]/lightning-icon[1]'''
     all_linked_icons = driver.find_elements(By.XPATH, xpath)
 
-    print(f"Actual Displayed Accounts: {len(names)}")
+    print(f"Actual Displayed Contacts: {len(names)}")
     print(f"Actual Displayed Icons: {len(all_linked_icons)}")
 
     assert len(all_linked_icons) == len(names), (
