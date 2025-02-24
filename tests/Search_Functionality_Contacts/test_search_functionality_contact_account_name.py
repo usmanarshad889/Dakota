@@ -3,10 +3,13 @@ import pytest
 import allure
 from allure_commons.types import AttachmentType
 from selenium import webdriver
-from selenium.webdriver.common.by import By
+from selenium.common import TimeoutException
 from selenium.webdriver.support.ui import Select
+from selenium.webdriver import ActionChains
+from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+
 
 @pytest.fixture(scope="module")
 def driver():
@@ -16,10 +19,11 @@ def driver():
     yield driver
     driver.quit()
 
-def test_search_contact_account_name(driver, config):
+def test_search_functionality_by_contact_account_name(driver, config):
+    wait = WebDriverWait(driver, 20)
+
     # Navigate to login page
     driver.get(config["base_url"])
-    wait = WebDriverWait(driver, 20)
 
     # Perform login
     username = wait.until(EC.element_to_be_clickable((By.ID, "username")))
@@ -28,41 +32,40 @@ def test_search_contact_account_name(driver, config):
     password.send_keys(config["password"])
     login_button = wait.until(EC.element_to_be_clickable((By.ID, "Login")))
     login_button.click()
-    time.sleep(3)
 
-    # Navigate to Marketplace Search
-    driver.get(f"{config["base_url"]}lightning/n/Marketplace__Dakota_Search")
-    time.sleep(15)
+    # Navigate to the contact search page
+    driver.get(f"{config['base_url']}lightning/n/Marketplace__Dakota_Search")
 
-    # Navigate to Contacts Tab
-    driver.find_element(By.XPATH, "//li[@title='Contacts']").click()
-    time.sleep(7)
+    # Select the Contacts tab and print its text
+    tab = wait.until(EC.element_to_be_clickable((By.XPATH, "//li[@title='Contacts']")))
+    print(f"Current Tab : {tab.text}")
+    tab.click()
 
-    # Click on Search Button
-    driver.find_element(By.XPATH,
-                        "//div[contains(@class,'filterInnerDiv')]//button[contains(@title,'Search')][normalize-space()='Search']").click()
-    time.sleep(5)
+    # Enter the account name "Test"
+    account_input = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[@placeholder='Account Name'])[2]")))
+    account_input.send_keys("Test")
 
-    # Copy the Contact-Account Name text
-    contact_name = driver.find_element(By.XPATH,
-                                       "//body[1]/div[4]/div[1]/section[1]/div[1]/div[2]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/article[1]/div[2]/p[1]/div[1]/div[1]/div[1]/lightning-datatable[1]/div[2]/div[1]/div[1]/table[1]/tbody[1]/tr[1]/td[4]")
-    contact_name_text = contact_name.text
+    # Wait for the results to load
+    time.sleep(8)
 
-    # Search Account name
-    driver.find_element(By.XPATH, "//input[@name='accountName']").send_keys(contact_name_text)
-    time.sleep(1)
+    # Click the Search button and print its text
+    search_button = wait.until(EC.visibility_of_element_located(
+        (By.XPATH, "//div[@class='buttonDiv']//button[@title='Search'][normalize-space()='Search']")
+    ))
+    print(f"Button Text : {search_button.text}")
+    search_button.click()
 
-    # Click on Search Button
-    driver.find_element(By.XPATH,
-                        "//div[contains(@class,'filterInnerDiv')]//button[contains(@title,'Search')][normalize-space()='Search']").click()
-    time.sleep(5)
+    # Extract all contacts names text using a simpler XPath
+    account_names = wait.until(EC.presence_of_all_elements_located(
+        (By.XPATH, "//lightning-datatable//tbody/tr/td[4]")
+    ))
 
-    # Copy the Search Contact Name text
-    contact_name = driver.find_element(By.XPATH,
-                                       "//body[1]/div[4]/div[1]/section[1]/div[1]/div[2]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/article[1]/div[2]/p[1]/div[1]/div[1]/div[1]/lightning-datatable[1]/div[2]/div[1]/div[1]/table[1]/tbody[1]/tr[1]/td[4]")
-    search_contact_name_text = contact_name.text
+    # Assert that at least one account is found
+    assert len(account_names) > 0, "No account name found in the search results"
 
-    if contact_name_text == search_contact_name_text:
-        assert True
-    else:
-        assert False
+    # Check that all returned account names contain the text "test"
+    for account in account_names:
+        account_text = account.text.strip().lower()
+        print(f"Contact: {account_text}")
+        assert "test" in account_text, f"Account name '{account.text}' does not contain 'test'"
+    time.sleep(2)

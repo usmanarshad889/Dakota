@@ -17,9 +17,10 @@ def driver():
     driver.quit()
 
 def test_search_coverage_area(driver, config):
+    wait = WebDriverWait(driver, 20)
+
     # Navigate to login page
     driver.get(config["base_url"])
-    wait = WebDriverWait(driver, 20)
 
     # Perform login
     username = wait.until(EC.element_to_be_clickable((By.ID, "username")))
@@ -28,59 +29,84 @@ def test_search_coverage_area(driver, config):
     password.send_keys(config["password"])
     login_button = wait.until(EC.element_to_be_clickable((By.ID, "Login")))
     login_button.click()
-    time.sleep(3)
 
-    # Navigate to Marketplace Search
-    driver.get(f"{config["base_url"]}lightning/n/Marketplace__Dakota_Search")
-    time.sleep(15)
+    # Navigate to the contact search page
+    driver.get(f"{config['base_url']}lightning/n/Marketplace__Dakota_Search")
 
-    # Navigate to Contacts Tab
-    driver.find_element(By.XPATH, "//li[@title='Contacts']").click()
-    time.sleep(7)
+    # Select the Contacts tab and print its text
+    tab = wait.until(EC.element_to_be_clickable((By.XPATH, "//li[@title='Contacts']")))
+    print(f"Current Tab : {tab.text}")
+    tab.click()
 
-    # Select Coverage Area filter
-    button = wait.until(EC.presence_of_element_located(
-        (By.XPATH, "//div[3]//div[1]//div[2]//div[1]//div[1]//div[1]//input[1]")))
-    driver.execute_script("arguments[0].click();", button)
-    time.sleep(2)
-
-    driver.find_element(By.XPATH, "(//input[contains(@placeholder,'Filter values..')])[5]").send_keys("Generalist")
-    time.sleep(2)
-
-    button = wait.until(EC.presence_of_element_located(
-        (By.XPATH, "//body[1]/div[4]/div[1]/section[1]/div[1]/div[2]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[3]/div[1]/div[2]/div[1]/div[1]/div[2]/ul[1]/div[1]/li[7]/div[1]")))
-    driver.execute_script("arguments[0].click();", button)
-    time.sleep(3)
-
-    # Click on Search Button
-    driver.find_element(By.XPATH,
-                        "//div[contains(@class,'filterInnerDiv')]//button[contains(@title,'Search')][normalize-space()='Search']").click()
+    # Wait for the results to load
     time.sleep(8)
 
-    # Select Contact Type filter
-    state = driver.find_element(By.XPATH, "//body[1]/div[4]/div[1]/section[1]/div[1]/div[2]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[9]/div[1]/div[2]/div[1]/div[1]/div[1]")
-    state.click()
+    # Select Coverage Area field
+    cov_input = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[@placeholder='Select Coverage Area(s)'])")))
+    cov_input.click()
+    filter_input = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[@placeholder='Filter values..'])[5]")))
+    filter_input.send_keys("Commodities")
+    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//li[@data-id='Commodities']")))
+    btn.click()
+
+
+    # Click the Search button and print its text
+    search_button = wait.until(EC.visibility_of_element_located(
+        (By.XPATH, "//div[@class='buttonDiv']//button[@title='Search'][normalize-space()='Search']")
+    ))
+    print(f"Button Text : {search_button.text}")
+    search_button.click()
+
+    # Extract all coverage area text names text using a simpler XPath
+    cov_names = wait.until(EC.presence_of_all_elements_located(
+        (By.XPATH, "//lightning-datatable//tbody/tr/td[6]")
+    ))
+
+    # Assert that at least one contact is found
+    assert len(cov_names) > 0, "No coverage area found in the search results"
+
+    # Verify the Coverage Area Text
+    for contact in cov_names:
+        cov_text = contact.text.strip().lower()
+        print(f"Coverage Area Text : {cov_text}")
+        assert "commodities" in cov_text, f"Coverage Area '{cov_text}' does not contain match"
+
+    time.sleep(2)
+
+
+    # Verify the Contact Type filter
+    reset_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@class='buttonDiv']//button[@title='Reset'][normalize-space()='Reset']")))
+    reset_button.click()
     time.sleep(1)
-    state_name = driver.find_element(By.XPATH, "//body[1]/div[4]/div[1]/section[1]/div[1]/div[2]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[9]/div[1]/div[2]/div[1]/div[1]/div[2]/ul[1]/input[1]")
-    state_name.send_keys("Senior Research Analyst")
+
+    # Select Contact Type field
+    con_input = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[@placeholder='Select Type(s)'])[2]")))
+    con_input.click()
+    filter_input = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[@placeholder='Filter values..'])[10]")))
+    filter_input.send_keys("Administrator")
+    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//li[@data-id='Administrator']")))
+    btn.click()
+
+
+    # Click the Search button and print its text
+    search_button = wait.until(EC.visibility_of_element_located(
+        (By.XPATH, "//div[@class='buttonDiv']//button[@title='Search'][normalize-space()='Search']")
+    ))
+    print(f"Button Text : {search_button.text}")
+    search_button.click()
+
+    # Extract all Contact Type text names text using a simpler XPath
+    con_names = wait.until(EC.presence_of_all_elements_located(
+        (By.XPATH, "//lightning-datatable//tbody/tr/td[10]")
+    ))
+
+    # Assert that at least one contact type is found
+    assert len(con_names) > 0, "No contact type found in the search results"
+
+    # Verify the Contact Type Text
+    for contact in con_names:
+        con_text = contact.text.strip().lower()
+        print(f"Contact Type Text : {con_text}")
+        assert "administrator" in con_text, f"Contact Type '{con_text}' does not contain match"
+
     time.sleep(2)
-    driver.find_element(By.XPATH,
-                        "//span[@title='Senior Research Analyst']").click()
-    time.sleep(2)
-
-
-    # Click on Search Button
-    driver.find_element(By.XPATH,
-                        "//div[contains(@class,'filterInnerDiv')]//button[contains(@title,'Search')][normalize-space()='Search']").click()
-    time.sleep(8)
-
-    # Verify the search result
-    actual_coverage = driver.find_element(By.XPATH, "(//td[contains(@data-label,'Coverage Area')])[1]").text
-    actual_contact= driver.find_element(By.XPATH, "(//td[contains(@data-label,'Contact Type')])[1]").text
-    # print(actual_state.lower())
-    # print(actual_metro_area.lower())
-
-    if actual_coverage.lower() == "generalist" and actual_contact.lower() == "senior research analyst":
-        assert True
-    else:
-        assert False

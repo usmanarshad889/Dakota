@@ -16,9 +16,10 @@ def driver():
     driver.quit()
 
 def test_search_contact_name(driver, config):
+    wait = WebDriverWait(driver, 20)
+
     # Navigate to login page
     driver.get(config["base_url"])
-    wait = WebDriverWait(driver, 20)
 
     # Perform login
     username = wait.until(EC.element_to_be_clickable((By.ID, "username")))
@@ -27,40 +28,39 @@ def test_search_contact_name(driver, config):
     password.send_keys(config["password"])
     login_button = wait.until(EC.element_to_be_clickable((By.ID, "Login")))
     login_button.click()
-    time.sleep(3)
 
-    # Navigate to Marketplace Search
-    driver.get(f"{config["base_url"]}lightning/n/Marketplace__Dakota_Search")
-    time.sleep(15)
+    # Navigate to the contact search page
+    driver.get(f"{config['base_url']}lightning/n/Marketplace__Dakota_Search")
 
-    # Navigate to Contacts Tab
-    driver.find_element(By.XPATH, "//li[@title='Contacts']").click()
-    time.sleep(7)
+    # Select the Contacts tab and print its text
+    tab = wait.until(EC.element_to_be_clickable((By.XPATH, "//li[@title='Contacts']")))
+    print(f"Current Tab : {tab.text}")
+    tab.click()
 
-    # Click on Search Button
-    driver.find_element(By.XPATH,"//div[contains(@class,'filterInnerDiv')]//button[contains(@title,'Search')][normalize-space()='Search']").click()
-    time.sleep(5)
+    # Enter the contact name "Test"
+    contact_input = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@placeholder='Contact Name']")))
+    contact_input.send_keys("Test")
 
-    # Copy the Contact Name text
-    contact_name = driver.find_element(By.XPATH,"//body[1]/div[4]/div[1]/section[1]/div[1]/div[2]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/article[1]/div[2]/p[1]/div[1]/div[1]/div[1]/lightning-datatable[1]/div[2]/div[1]/div[1]/table[1]/tbody[1]/tr[1]/td[2]")
-    contact_name_text = contact_name.text
-    words = contact_name_text.split()  # Splitting the string into words
-    first_two_letters = words[0] + " " + words[1]
+    # Wait for the results to load
+    time.sleep(8)
 
+    # Click the Search button and print its text
+    search_button = wait.until(EC.visibility_of_element_located(
+        (By.XPATH, "//div[@class='buttonDiv']//button[@title='Search'][normalize-space()='Search']")
+    ))
+    print(f"Button Text : {search_button.text}")
+    search_button.click()
 
-    # Search Account name
-    driver.find_element(By.XPATH, "(//input[@placeholder='Contact Name'])").send_keys(first_two_letters)
-    time.sleep(1)
+    # Extract all contacts names text using a simpler XPath
+    contact_names = wait.until(EC.presence_of_all_elements_located(
+        (By.XPATH, "//lightning-datatable//tbody/tr/td[2]")
+    ))
 
-    # Click on Search Button
-    driver.find_element(By.XPATH,"//div[contains(@class,'filterInnerDiv')]//button[contains(@title,'Search')][normalize-space()='Search']").click()
-    time.sleep(5)
+    # Assert that at least one contact is found
+    assert len(contact_names) > 0, "No contact names found in the search results"
 
-    # Copy the Search Contact Name text
-    contact_name = driver.find_element(By.XPATH,"//body[1]/div[4]/div[1]/section[1]/div[1]/div[2]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[2]/article[1]/div[2]/p[1]/div[1]/div[1]/div[1]/lightning-datatable[1]/div[2]/div[1]/div[1]/table[1]/tbody[1]/tr[1]/td[2]")
-    search_contact_name_text = contact_name.text
-
-    if contact_name_text == search_contact_name_text:
-        assert True
-    else:
-        assert False
+    # Check that all returned contact names contain the text "test"
+    for contact in contact_names:
+        contact_text = contact.text.strip().lower()
+        print(f"Contact: {contact_text}")
+        assert "test" in contact_text, f"Contact name '{contact.text}' does not contain 'test'"

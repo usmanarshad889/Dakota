@@ -1,8 +1,6 @@
 import time
+import requests
 import pytest
-import allure
-from allure_commons.types import AttachmentType
-from faker import Faker
 from selenium import webdriver
 from selenium.common import NoSuchElementException, TimeoutException
 from selenium.webdriver import ActionChains
@@ -36,57 +34,15 @@ def test_search_functionality_account_fields(driver, config):
     # Navigate to installed packages setup
     driver.get(f"{config['base_url']}lightning/n/Marketplace__Dakota_Search")
 
-    # Print Current Tab
-    tab = wait.until(EC.element_to_be_clickable((By.XPATH, "//li[@title='Accounts']")))
-    print(f"Current Tab : {tab.text}")
 
-    button = wait.until(EC.visibility_of_element_located((By.XPATH, "//button[@title='Search']")))
-    print(f"Button Text : {button.text}")
-    time.sleep(8)
-    button = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@title='Search']")))
-    button.click()
+    # Validate API response separately
+    url = '''https://dakotanetworks--fuseupgrad.sandbox.lightning.force.com/aura?r=23&Marketplace.AccountSearchTab.fetchCountryValue=1&Marketplace.AccountSearchTab.getInvestmentPrefFilterFields=1&Marketplace.AccountSearchTab.getUserTimeZoneOffSet=1&Marketplace.AccountSearchTab.getValuesForPickList=4&Marketplace.AccountSearchTab.getValuesForPickListFromDakota=1'''
+    api_response = requests.get(url)
+    print(api_response.status_code == 200)
 
-    # Wait for account names to load
-    time.sleep(5)
-    prev_count = 0
-    max_records = 500  # Stop when we reach 500 records
-
-    while True:
-        # Get all account names
-        names = wait.until(EC.presence_of_all_elements_located((By.XPATH, "//tbody/tr/td[2]")))
-        new_count = len(names)
-
-        print(f"Records Loaded: {new_count}")
-
-        # Stop loop if 500 records are loaded
-        if new_count >= max_records:
-            print(f"Reached {max_records} records, stopping.")
-            break
-
-        # Break loop if no new records are loaded
-        if new_count == prev_count:
-            break
-
-        prev_count = new_count
-
-        # Scroll to the last element
-        last_element = names[-1]
-        driver.execute_script("arguments[0].scrollIntoView();", last_element)
-        ActionChains(driver).move_to_element(last_element).perform()
-
-        # Wait for the loader to appear and disappear
-        try:
-            loader = wait.until(EC.presence_of_element_located((By.XPATH, "//lightning-spinner[@class='slds-spinner_container']")))
-            wait.until(EC.invisibility_of_element(loader))
-        except TimeoutException:
-            pass  # If no loader appears, continue
-
-        # Wait a bit for new records to load
-        time.sleep(7)
-
-    # Print index and name
-    for index, name in enumerate(names[:max_records], start=1):
-        print(f"{index}: {name.text}")
-
-    time.sleep(5)
-
+    # Click on Search button
+    if api_response.status_code == 200:
+        button = driver.find_element(By.XPATH, "//button[@title='Search']")
+        button.click()
+    else:
+        print(api_response.status_code)

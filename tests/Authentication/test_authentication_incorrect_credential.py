@@ -16,6 +16,7 @@ def driver():
     yield driver
     driver.quit()
 
+@pytest.mark.P1
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Authentication - Incorrect Credentials")
 @allure.story("Test error handling with invalid credentials for the Heroku.")
