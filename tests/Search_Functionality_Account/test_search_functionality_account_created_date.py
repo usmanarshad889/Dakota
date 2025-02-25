@@ -17,6 +17,7 @@ def driver():
     yield driver
     driver.quit()
 
+@pytest.mark.P1
 def test_search_aum(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])
@@ -29,38 +30,37 @@ def test_search_aum(driver, config):
     password.send_keys(config["password"])
     login_button = wait.until(EC.element_to_be_clickable((By.ID, "Login")))
     login_button.click()
-    time.sleep(3)
 
     # Navigate to Marketplace Search
     driver.get(f"{config["base_url"]}lightning/n/Marketplace__Dakota_Search")
-    time.sleep(15)
 
     # Select Marketplace Created Date Filter
-    date = driver.find_element(By.XPATH, "//select[@name='CRMCreatedDate']")
+    date = wait.until(EC.element_to_be_clickable((By.XPATH, "//select[@name='CRMCreatedDate']")))
     dropdown = Select(date)
     dropdown.select_by_visible_text("Last 90 Days")
     time.sleep(2)
 
     # Select Display Criteria (Unlinked Account)
-    criteria_dropdown = driver.find_element(By.XPATH, "(//select[@name='DisplayCriteria'])")
+    criteria_dropdown = wait.until(EC.element_to_be_clickable((By.XPATH, "(//select[@name='DisplayCriteria'])")))
     dropdown_option = Select(criteria_dropdown)
     dropdown_option.select_by_visible_text("Unlinked Accounts")
+    time.sleep(10)
 
     # click on search button
     button = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@title='Search']")))
     button.click()
-    time.sleep(10)
 
     # Click on first Result
-    driver.find_element(By.XPATH, "/html[1]/body[1]/div[4]/div[1]/section[1]/div[1]/div[2]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/article[1]/div[2]/p[1]/div[1]/div[1]/div[1]/lightning-datatable[1]/div[2]/div[1]/div[1]/table[1]/tbody[1]/tr[1]/td[2]/lightning-primitive-cell-factory[1]/span[1]/div[1]/lightning-primitive-cell-button[1]/lightning-button[1]/button[1]").click()
-    time.sleep(10)
+    button = wait.until(EC.element_to_be_clickable((By.XPATH, "(//button[@name='previewAccount'])[1]")))
+    button.click()
 
     # Copy Dakota Created Date
-    account_date = driver.find_element(By.XPATH, "/html[1]/body[1]/div[4]/div[1]/section[1]/div[1]/div[2]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[9]/section[1]/div[1]/div[1]/form[1]/div[1]/div[1]/div[1]/marketplace-preview-unlinked-account[1]/div[1]/div[1]/lightning-accordion[1]/div[1]/slot[1]/lightning-accordion-section[1]/div[1]/section[1]/div[2]/slot[1]/table[1]/tr[7]/div[1]/div[1]/div[1]/p[1]/lightning-formatted-text[1]")
+    account_date = wait.until(EC.element_to_be_clickable((By.XPATH, "(//lightning-formatted-text[@class='slds-form-element__static'])[11]")))
     account_date_text = account_date.text.strip()
 
     # Parse the date string into a datetime object
     account_date = datetime.strptime(account_date_text, "%m/%d/%Y, %I:%M %p")
+    print(f"Extracted Date : {account_date}")
 
     # Calculate the date range for the last 90 days
     current_date = datetime.now()
@@ -71,5 +71,6 @@ def test_search_aum(driver, config):
 
     # Use assert True with the range check result
     assert is_within_range, f"Date {account_date_text} is not within the last 90 days range."
+    time.sleep(2)
 
     print(f"Date {account_date_text} is valid and within the last 90 days.")

@@ -17,6 +17,7 @@ def driver():
     yield driver
     driver.quit()
 
+@pytest.mark.P1
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Dakota Home Tab - Ask Dakota, Link Contact")
 @allure.story("Test linking of contact directly from member comment")

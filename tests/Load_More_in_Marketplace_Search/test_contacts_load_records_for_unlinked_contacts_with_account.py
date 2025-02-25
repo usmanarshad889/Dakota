@@ -19,7 +19,9 @@ def driver():
     yield driver
     driver.quit()
 
-def test_load_contacts_unlinked(driver, config):
+@pytest.mark.release_one
+@pytest.mark.P1
+def test_load_contacts_for_unlinked_accounts(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])
     wait = WebDriverWait(driver, 20)
@@ -47,7 +49,7 @@ def test_load_contacts_unlinked(driver, config):
     # Select linked accounts from filter
     dropdown = wait.until(EC.element_to_be_clickable((By.XPATH, "(//select[@name='DisplayCriteria'])[2]")))
     dropdown_option = Select(dropdown)
-    dropdown_option.select_by_visible_text("Unlinked Contacts")
+    dropdown_option.select_by_visible_text("Unlinked Contacts with Linked Accounts")
     time.sleep(1)
 
     button = wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@class='buttonDiv']//button[@title='Search'][normalize-space()='Search']")))
@@ -56,7 +58,7 @@ def test_load_contacts_unlinked(driver, config):
     # Wait for contacts names to load
     time.sleep(5)
     prev_count = 0
-    max_records = 500  # Stop when we reach 500 records
+    max_records = 300  # Stop when we reach 500 records
 
     while True:
         # Get all contact names
@@ -65,7 +67,7 @@ def test_load_contacts_unlinked(driver, config):
 
         print(f"Records Loaded: {new_count}")
 
-        # Stop loop if 500 records are loaded
+        # Stop loop if 300 records are loaded
         if new_count >= max_records:
             print(f"Reached {max_records} records, stopping.")
             break
@@ -97,11 +99,14 @@ def test_load_contacts_unlinked(driver, config):
 
     time.sleep(5)
 
-    # Verify the linked icon
-    xpath = '''//tbody/tr/th[1]/lightning-primitive-cell-factory[1]/span[1]/div[1]/lightning-icon[1]'''
-    all_linked_icons = driver.find_elements(By.XPATH, xpath)
 
-    print(f"Actual Displayed Contacts: {len(names)}")
-    print(f"Actual Displayed Icons: {len(all_linked_icons)}")
+    contact_icon_xpath = "//tbody/tr/th[1]/lightning-primitive-cell-factory[1]/span[1]/div[1]/lightning-icon[1]"
+    account_icon_xpath = "//tbody/tr/td[3]/lightning-primitive-cell-factory[1]/span[1]/div[1]/lightning-icon[1]"
 
-    assert len(all_linked_icons) <= 0 , f"Found Linked icons : {len(all_linked_icons)}"
+    # Find all contact and account icons
+    contact_icons = driver.find_elements(By.XPATH, contact_icon_xpath)
+    account_icons = driver.find_elements(By.XPATH, account_icon_xpath)
+
+    # Assertions
+    assert len(contact_icons) == 0, "Some contacts have a linked icon unexpectedly."
+    assert len(account_icons) == len(names), f"Expected {len(names)} account icons, but found {len(account_icons)}."

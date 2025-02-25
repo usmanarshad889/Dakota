@@ -16,7 +16,7 @@ def driver():
     yield driver
     driver.quit()
 
-
+@pytest.mark.P1
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Salesforce Dashboard Verification")
 @allure.story('''Verify display of Job Changes, Role Changes, Fundraising News, 

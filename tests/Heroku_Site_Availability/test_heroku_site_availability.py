@@ -17,10 +17,11 @@ def driver():
     yield driver
     driver.quit()
 
+@pytest.mark.P1
 @allure.severity(allure.severity_level.CRITICAL)
-@allure.feature("Authentication - Correct Credentials")
-@allure.story("Validate successful authentication with correct credentials for the Heroku.")
-def test_authentication_correct_credentials(driver, config):
+@allure.feature("Availability - Heroku Site")
+@allure.story("Validate the availability of Heroku site")
+def test_heroku_site_availability(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])
     wait = WebDriverWait(driver, 20)
@@ -82,3 +83,28 @@ def test_authentication_correct_credentials(driver, config):
 
     # Attach a screenshot of the final state
     allure.attach(driver.get_screenshot_as_png(), name="Final_State_Screenshot", attachment_type=AttachmentType.PNG)
+
+
+    # Navigate to contact tab
+    driver.get(f"{config["base_url"]}lightning/o/Contact/list?filterName=__Recent")
+    all_contact = wait.until(EC.presence_of_all_elements_located((By.XPATH, "//tbody/tr/th[1]")))
+    print(f"Total Contact Founds : {len(all_contact)}")
+
+    assert len(all_contact) > 0 , f"No Contact Found"
+    time.sleep(2)
+
+    # Navigate to account tab
+    driver.get(f"{config["base_url"]}lightning/o/Account/list?filterName=__Recent")
+    all_account = wait.until(EC.presence_of_all_elements_located((By.XPATH, "//tbody/tr/th[1]")))
+    print(f"Total Account Founds : {len(all_account)}")
+
+    assert len(all_account) > 0, f"No Account Found"
+    time.sleep(2)
+
+    # Navigate to Metro Area
+    driver.get(f"{config["base_url"]}lightning/n/Marketplace__Metro_Areas")
+    all_metro = wait.until(EC.presence_of_all_elements_located((By.XPATH, "//tbody/tr/th[1]")))
+    print(f"Total Metro Area Founds : {len(all_metro)}")
+
+    assert len(all_metro) > 0, f"No Metro Area Found"
+    time.sleep(2)

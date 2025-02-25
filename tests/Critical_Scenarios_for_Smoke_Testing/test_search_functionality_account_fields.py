@@ -37,6 +37,8 @@ def driver():
     yield driver
     driver.quit()
 
+@pytest.mark.release_one
+@pytest.mark.P1
 def test_search_functionality_account_fields(driver, config):
     driver.get("https://test.salesforce.com/")
     wait = WebDriverWait(driver, 20)
@@ -52,12 +54,13 @@ def test_search_functionality_account_fields(driver, config):
     # Move to account Tab and click on new button
     driver.get("https://dakotanetworks--uat.sandbox.lightning.force.com/lightning/o/Account/list?filterName=__Recent")
     new_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@title='New']")))
-    time.sleep(1)
+    time.sleep(2)
     new_button.click()
     time.sleep(2)
 
     # Select a record type
     record_type = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@class='slds-button slds-button_neutral slds-button slds-button_brand uiButton']")))
+    time.sleep(2)
     record_type.click()
 
     # Select account name

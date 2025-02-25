@@ -35,6 +35,7 @@ def driver():
     yield driver
     driver.quit()
 
+@pytest.mark.P1
 def test_single_record_linking_unlinking(driver, config):
     driver.get("https://test.salesforce.com/")
     wait = WebDriverWait(driver, 20)

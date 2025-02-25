@@ -18,6 +18,7 @@ def driver():
     yield driver
     driver.quit()
 
+@pytest.mark.P1
 def test_mass_create_link_account_by_crd(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

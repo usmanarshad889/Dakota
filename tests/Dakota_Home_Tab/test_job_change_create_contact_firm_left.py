@@ -20,6 +20,7 @@ def driver():
     yield driver
     driver.quit()
 
+@pytest.mark.P1
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Dakota Home Tab - Job Changes (Create Account Firm Left)")
 @allure.story("Test creation of accounts directly from Job Changes - Firm Left")

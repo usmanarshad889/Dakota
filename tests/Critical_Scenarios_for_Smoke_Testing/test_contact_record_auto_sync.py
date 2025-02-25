@@ -39,6 +39,8 @@ def driver():
     yield driver
     driver.quit()
 
+@pytest.mark.P1
+@pytest.mark.release_one
 def test_contact_record_auto_sync(driver, config):
     driver.get("https://test.salesforce.com/")
     wait = WebDriverWait(driver, 20)
@@ -54,10 +56,13 @@ def test_contact_record_auto_sync(driver, config):
     # Move to account Tab and click on new button
     driver.get("https://dakotanetworks--uat.sandbox.lightning.force.com/lightning/o/Contact/list")
     new_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@title='New']")))
+    time.sleep(2)
     new_button.click()
+    time.sleep(2)
 
     # Select a record type
     new_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@class='slds-button slds-button_neutral slds-button slds-button_brand uiButton']")))
+    time.sleep(2)
     new_button.click()
 
     # Select account name
@@ -410,13 +415,13 @@ def test_contact_record_auto_sync(driver, config):
     time.sleep(2)
 
     # Verify the CRD with phone
-    xpath = '''/html[1]/body[1]/div[4]/div[1]/section[1]/div[1]/div[2]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/one-record-home-flexipage2[1]/forcegenerated-adg-rollup_component___force-generated__flexipage_-record-page___-contact_-record_-page3___-contact___-v-i-e-w___-l-m-t___1738136157000[1]/forcegenerated-flexipage_contact_record_page3_contact__view_js___lmt___1738136157000[1]/record_flexipage-desktop-record-page-decorator[1]/div[1]/records-record-layout-event-broker[1]/slot[1]/slot[1]/flexipage-record-home-template-desktop2[1]/div[1]/div[2]/div[1]/slot[1]/flexipage-component2[1]/slot[1]/flexipage-tabset2[1]/div[1]/lightning-tabset[1]/div[1]/slot[1]/slot[1]/flexipage-tab2[1]/slot[1]/flexipage-component2[1]/slot[1]/records-lwc-detail-panel[1]/records-base-record-form[1]/div[1]/div[1]/div[1]/div[1]/records-lwc-record-layout[1]/forcegenerated-detailpanel_contact___0123m000000u83eaac___full___view___recordlayout2[1]/records-record-layout-block[1]/slot[1]/records-record-layout-section[1]/div[1]/div[1]/dl[1]/slot[1]/records-record-layout-row[5]/slot[1]/records-record-layout-item[2]/div[1]/div[1]/dd[1]/div[1]/span[1]/slot[1]/lightning-formatted-text[1]'''
+    xpath = '''(//span[@class='test-id__field-value slds-form-element__static slds-grow word-break-ie11'])[9]'''
     crd_field = wait.until(EC.element_to_be_clickable((By.XPATH, xpath)))
     crd_text = crd_field.text
     print(f"CRD Text : {crd_text}")
 
     # Verify the Description with Website
-    xpath = '''/html[1]/body[1]/div[4]/div[1]/section[1]/div[1]/div[2]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/one-record-home-flexipage2[1]/forcegenerated-adg-rollup_component___force-generated__flexipage_-record-page___-contact_-record_-page3___-contact___-v-i-e-w___-l-m-t___1738136157000[1]/forcegenerated-flexipage_contact_record_page3_contact__view_js___lmt___1738136157000[1]/record_flexipage-desktop-record-page-decorator[1]/div[1]/records-record-layout-event-broker[1]/slot[1]/slot[1]/flexipage-record-home-template-desktop2[1]/div[1]/div[2]/div[1]/slot[1]/flexipage-component2[1]/slot[1]/flexipage-tabset2[1]/div[1]/lightning-tabset[1]/div[1]/slot[1]/slot[1]/flexipage-tab2[1]/slot[1]/flexipage-component2[1]/slot[1]/records-lwc-detail-panel[1]/records-base-record-form[1]/div[1]/div[1]/div[1]/div[1]/records-lwc-record-layout[1]/forcegenerated-detailpanel_contact___0123m000000u83eaac___full___view___recordlayout2[1]/records-record-layout-block[1]/slot[1]/records-record-layout-section[1]/div[1]/div[1]/dl[1]/slot[1]/records-record-layout-row[5]/slot[1]/records-record-layout-item[1]/div[1]/div[1]/dd[1]/div[1]/span[1]/slot[1]/lightning-formatted-text[1]'''
+    xpath = '''(//span[@class='test-id__field-value slds-form-element__static slds-grow word-break-ie11'])[8]'''
     title_field = wait.until(EC.element_to_be_clickable((By.XPATH, xpath)))
     title_text = title_field.text
     print(f"Description Text : {title_text}")

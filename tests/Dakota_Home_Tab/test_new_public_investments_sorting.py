@@ -20,6 +20,7 @@ def driver():
     yield driver
     driver.quit()
 
+@pytest.mark.P1
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Dakota Home Tab - New Public Investments")
 @allure.story("Validate data consistency and sorting in New Public Investments")

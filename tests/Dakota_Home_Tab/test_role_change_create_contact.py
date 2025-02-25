@@ -40,6 +40,7 @@ def driver():
     yield driver
     driver.quit()
 
+@pytest.mark.P1
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Dakota Home Tab - Role Changes (Create Contact)")
 @allure.story("Test Creation of contacts directly from Role Changes.")

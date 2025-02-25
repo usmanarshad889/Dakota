@@ -40,7 +40,8 @@ def driver():
     yield driver
     driver.quit()
 
-
+@pytest.mark.release_one
+@pytest.mark.P1
 def test_search_functionality_contact_fields(driver, config):
     driver.get("https://test.salesforce.com/")
     wait = WebDriverWait(driver, 20)
@@ -56,10 +57,13 @@ def test_search_functionality_contact_fields(driver, config):
     # Move to account Tab and click on new button
     driver.get("https://dakotanetworks--uat.sandbox.lightning.force.com/lightning/o/Contact/list")
     new_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@title='New']")))
+    time.sleep(2)
     new_button.click()
+    time.sleep(2)
 
     # Select a record type
     new_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@class='slds-button slds-button_neutral slds-button slds-button_brand uiButton']")))
+    time.sleep(2)
     new_button.click()
 
     # Select account name
@@ -307,6 +311,7 @@ def test_search_functionality_contact_fields(driver, config):
     value_field.send_keys("Boston")
     btn = wait.until(EC.element_to_be_clickable((By.XPATH, f"(//li[@data-name='Boston'])[2]")))
     btn.click()
+    time.sleep(1)
 
     search_element = wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@class='buttonDiv']//button[@title='Search'][normalize-space()='Search']")))
     search_element.click()

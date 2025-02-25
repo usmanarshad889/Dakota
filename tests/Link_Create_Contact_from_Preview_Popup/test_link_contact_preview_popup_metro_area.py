@@ -18,7 +18,8 @@ def driver():
     yield driver
     driver.quit()
 
-def test_link_account_preview_popup_metro_area(driver, config):
+@pytest.mark.P1
+def test_link_contact_preview_popup_metro_area(driver, config):
     wait = WebDriverWait(driver, 20)
 
     # Navigate to login page
@@ -85,8 +86,8 @@ def test_link_account_preview_popup_metro_area(driver, config):
     driver.execute_script("window.scrollBy(0, 3000);")
     time.sleep(2)
 
-    # Sroll to All account button and click on it
-    element = wait.until(EC.presence_of_element_located((By.XPATH, "//span[normalize-space()='All Accounts']")))
+    # Sroll to All contact button and click on it
+    element = wait.until(EC.presence_of_element_located((By.XPATH, "//c-dakota-contacts-home-office-in-metro-area//slot//a[@class='slds-card__header-link']")))
     # Scroll to the element
     driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", element)
     time.sleep(1)
@@ -103,36 +104,36 @@ def test_link_account_preview_popup_metro_area(driver, config):
     time.sleep(2)
 
 
-    # Get all accounts
-    accounts = wait.until(EC.presence_of_all_elements_located((By.XPATH, "(//button[@name='accountClicked'])")))
+    # Get all contacts
+    contacts = wait.until(EC.presence_of_all_elements_located((By.XPATH, "(//button[@name='contactClicked'])")))
 
-    for index in range(1, len(accounts) + 1):
+    for index in range(1, len(contacts) + 1):
         # Check if the icon exists for this row
         icon_xpath = f"//tbody/tr[{index}]/th[1]/lightning-primitive-cell-factory[1]/span[1]/div[1]/lightning-icon[1]"
         icon = driver.find_elements(By.XPATH, icon_xpath)
 
         if not icon:  # If no icon is found
-            account_name = accounts[index - 1].text  # Get the account name
-            print(f"Account without link icon: {account_name} (Row {index})")
+            contact_name = contacts[index - 1].text  # Get the contact name
+            print(f"Account without link icon: {contact_name} (Row {index})")
 
-            # Get the account button element
-            account_xpath = f"(//button[@name='accountClicked'])[{index}]"
-            account_button = wait.until(EC.element_to_be_clickable((By.XPATH, account_xpath)))
+            # Get the contact button element
+            contact_xpath = f"(//button[@name='contactClicked'])[{index}]"
+            contact_button = wait.until(EC.element_to_be_clickable((By.XPATH, contact_xpath)))
 
-            # Scroll to the account button
-            driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", account_button)
+            # Scroll to the contact button
+            driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", contact_button)
             time.sleep(3)  # Wait for smooth scrolling
 
-            # Click on the account
-            account_button.click()
-            print(f"Scrolled to and clicked on account at row {index}")
-            break  # Stop after clicking on the first found account
+            # Click on the contact
+            contact_button.click()
+            print(f"Scrolled to and clicked on contact at row {index}")
+            break  # Stop after clicking on the first found contact
 
 
-    # Verify the "Link Account" button on preview popup
-    button = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[normalize-space()='Link Account']")))
+    # Verify the "Link Contact" button on preview popup
+    button = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[normalize-space()='Link Contact']")))
 
-    assert button.text.strip() == "Link Account" , f"Expected button was 'Link Account' but got {button.text}"
+    assert button.text.strip() == "Link Contact" , f"Expected button was 'Link Contact' but got {button.text}"
     time.sleep(1)
 
     # Verify the correct linking
@@ -177,6 +178,6 @@ def test_link_account_preview_popup_metro_area(driver, config):
             (By.XPATH, "//span[@class='toastMessage slds-text-heading--small forceActionsText']")))
         print(f"Actual Toast Text : {toast_message.text}")
 
-        assert toast_message.text.strip() == "Account successfully linked", f"Contact not clicked: {toast_message.text}"
+        assert toast_message.text.strip() == "Contact successfully linked", f"Contact not clicked: {toast_message.text}"
         break  # Stop after clicking the first enabled button
     time.sleep(2)

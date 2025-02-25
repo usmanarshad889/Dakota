@@ -17,6 +17,7 @@ def driver():
     yield driver
     driver.quit()
 
+@pytest.mark.P1
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Dakota Home Tab - Role Changes (Link Account)")
 @allure.story("Test linking of accounts directly from Role Changes - Account Name")

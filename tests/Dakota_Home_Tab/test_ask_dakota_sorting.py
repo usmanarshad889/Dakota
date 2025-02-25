@@ -20,6 +20,7 @@ def driver():
     yield driver
     driver.quit()
 
+@pytest.mark.P1
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Dakota Home Tab - Ask Dakota")
 @allure.story("Validate data consistency and sorting in Ask Dakota")

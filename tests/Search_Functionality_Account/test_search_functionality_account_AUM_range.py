@@ -16,10 +16,12 @@ def driver():
     yield driver
     driver.quit()
 
+@pytest.mark.P1
 def test_search_aum(driver, config):
+    wait = WebDriverWait(driver, 20)
+
     # Navigate to login page
     driver.get(config["base_url"])
-    wait = WebDriverWait(driver, 20)
 
     # Perform login
     username = wait.until(EC.element_to_be_clickable((By.ID, "username")))
@@ -28,33 +30,48 @@ def test_search_aum(driver, config):
     password.send_keys(config["password"])
     login_button = wait.until(EC.element_to_be_clickable((By.ID, "Login")))
     login_button.click()
-    time.sleep(3)
 
-    # Navigate to Marketplace Search
-    driver.get(f"{config["base_url"]}lightning/n/Marketplace__Dakota_Search")
-    time.sleep(15)
+    # Navigate to the contact search page
+    driver.get(f"{config['base_url']}lightning/n/Marketplace__Dakota_Search")
 
-    # Enter AUM From
-    driver.find_element(By.XPATH, "//input[@name='FROM']").send_keys("1")
-    time.sleep(3)
+    # Select the Contacts tab and print its text
+    tab = wait.until(EC.element_to_be_clickable((By.XPATH, "//a[@data-label='Accounts']")))
+    print(f"Current Tab : {tab.text}")
 
-    # Enter AUM To
-    driver.find_element(By.XPATH, "//input[@name='To']").send_keys("100000")
-    time.sleep(3)
+    # Wait for the results to load
+    time.sleep(8)
 
-    # Click on Search Button
-    driver.find_element(By.XPATH,
-                        "//div[@class='SearchbuttonDiv']//button[@title='Search'][normalize-space()='Search']").click()
-    time.sleep(5)
 
-    # aum element value
-    aum_element = driver.find_element(By.XPATH, "(//td[@data-label='AUM'])[1]")
+    # Select AUM "From" value
+    aum_from_input = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='FROM']")))
+    aum_from_input.send_keys("1")
 
-    # Remove the dollar sign and commas, then convert to integer
-    aum_value = int(aum_element.text.replace('$', '').replace(',', ''))
+    # Select AUM "To" value
+    aum_to_input = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='To']")))
+    aum_to_input.send_keys("10000")
+    # aum_to_input.send_keys("9999")
 
-    # Validate if the value is within the range
-    if 1 <= aum_value <= 100000:
-        assert True
-    else:
-        assert False
+
+    # Click the Search button and print its text
+    search_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@title='Search']")))
+    print(f"Button Text: {search_button.text.strip()}")
+    search_button.click()
+
+    # Extract all AUM values from the table
+    aum_results = wait.until(EC.presence_of_all_elements_located((By.XPATH, "//lightning-datatable//tbody/tr/td[3]")))
+
+    # Assert that at least one AUM is found
+    assert aum_results, "❌ No AUM Range found in the search results!"
+
+    # Verify that AUM values are within the expected range (1 to 10,000)
+    for aum in aum_results:
+        aum_text = aum.text.strip().replace("$", "").replace(",", "")  # Clean text (remove "$" and ",")
+
+        assert aum_text.isdigit(), f"❌ Invalid AUM format: '{aum_text}'"
+
+        aum_value = int(aum_text)
+        print(f"✅ AUM Value: {aum_value}")
+
+        assert 1 <= aum_value <= 10000, f"❌ AUM '{aum_value}' is out of range!"
+
+    print("🎉 All AUM values are within the expected range!")

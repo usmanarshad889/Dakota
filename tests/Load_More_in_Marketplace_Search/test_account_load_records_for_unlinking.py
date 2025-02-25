@@ -19,7 +19,9 @@ def driver():
     yield driver
     driver.quit()
 
-def test_load_accounts_all(driver, config):
+@pytest.mark.release_one
+@pytest.mark.P1
+def test_load_account_unlinked(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])
     wait = WebDriverWait(driver, 20)
@@ -46,7 +48,7 @@ def test_load_accounts_all(driver, config):
     # Select linked accounts from filter
     dropdown = wait.until(EC.element_to_be_clickable((By.XPATH, "//select[@name='DisplayCriteria']")))
     dropdown_option = Select(dropdown)
-    dropdown_option.select_by_visible_text("All Accounts")
+    dropdown_option.select_by_visible_text("Unlinked Accounts")
     time.sleep(1)
 
     button = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@title='Search']")))
@@ -100,7 +102,7 @@ def test_load_accounts_all(driver, config):
     xpath = '''//tbody/tr/th[1]/lightning-primitive-cell-factory[1]/span[1]/div[1]/lightning-icon[1]'''
     all_linked_icons = driver.find_elements(By.XPATH, xpath)
 
-    print(f"Displayed Accounts: {len(names)}")
-    print(f"Displayed Icons: {len(all_linked_icons)}")
+    print(f"Actual Displayed Accounts: {len(names)}")
+    print(f"Actual Displayed Icons: {len(all_linked_icons)}")
 
-    assert len(names) >= 500 , f"Actual Accounts : {len(names)} but expected was 500"
+    assert len(all_linked_icons) <= 0 , f"Found Linked icons : {len(all_linked_icons)}"

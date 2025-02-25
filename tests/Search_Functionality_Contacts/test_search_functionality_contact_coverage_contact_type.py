@@ -16,6 +16,7 @@ def driver():
     yield driver
     driver.quit()
 
+@pytest.mark.P1
 def test_search_coverage_area(driver, config):
     wait = WebDriverWait(driver, 20)
 

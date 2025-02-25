@@ -16,7 +16,8 @@ def driver():
     yield driver
     driver.quit()
 
-def test_link_account_preview_popup_marketplace(driver, config):
+@pytest.mark.P1
+def test_link_contact_preview_popup_marketplace(driver, config):
     wait = WebDriverWait(driver, 20)
 
     # Navigate to login page
@@ -33,31 +34,36 @@ def test_link_account_preview_popup_marketplace(driver, config):
     # Navigate to the contact search page
     driver.get(f"{config['base_url']}lightning/n/Marketplace__Dakota_Search")
 
+    # Switch to Contact Tab
+    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//a[@data-label='Contacts']")))
+    btn.click()
+
     # Wait for the results to load
     time.sleep(10)
 
-    # Select Display Criteria (Linked Account)
-    criteria_dropdown = wait.until(EC.element_to_be_clickable((By.XPATH, "(//select[@name='DisplayCriteria'])[1]")))
+    # Select Display Criteria (Unlinked Contacts)
+    criteria_dropdown = wait.until(EC.element_to_be_clickable((By.XPATH, "(//select[@name='DisplayCriteria'])[2]")))
     dropdown_option = Select(criteria_dropdown)
-    dropdown_option.select_by_visible_text("Unlinked Accounts")
+    dropdown_option.select_by_visible_text("Unlinked Contacts")
+    time.sleep(3)
 
 
     # Click the Search button and print its text
     search_button = wait.until(EC.element_to_be_clickable(
-        (By.XPATH, "//button[@title='Search']")
+        (By.XPATH, "//div[@class='buttonDiv']//button[@title='Search'][normalize-space()='Search']")
     ))
     print(f"Button Text : {search_button.text}")
     search_button.click()
 
     # Click on first name
-    first_name = wait.until(EC.element_to_be_clickable((By.XPATH, "(//button[@name='previewAccount'])[1]")))
-    print(f"Account Name : {first_name.text}")
+    first_name = wait.until(EC.element_to_be_clickable((By.XPATH, "(//button[@name='previewContact'])[1]")))
+    print(f"Contact Name : {first_name.text}")
     first_name.click()
 
     # Verify the "Link Account" button on preview popup
-    button = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[normalize-space()='Link Account']")))
+    button = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[normalize-space()='Link Contact']")))
 
-    assert button.text.strip() == "Link Account" , f"Expected button was 'Link Account' but got {button.text}"
+    assert button.text.strip() == "Link Contact" , f"Expected button was 'Link Account' but got {button.text}"
     time.sleep(1)
 
     # Verify the correct linking
@@ -102,5 +108,6 @@ def test_link_account_preview_popup_marketplace(driver, config):
             (By.XPATH, "//span[@class='toastMessage slds-text-heading--small forceActionsText']")))
         print(f"Actual Toast Text : {toast_message.text}")
 
-        assert toast_message.text.strip() == "Account successfully linked", f"Contact not clicked: {toast_message.text}"
+        assert toast_message.text.strip() == "Contact successfully linked", f"Contact not clicked: {toast_message.text}"
         break  # Stop after clicking the first enabled button
+    time.sleep(2)
