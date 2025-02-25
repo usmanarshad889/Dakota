@@ -107,4 +107,4 @@ def test_heroku_site_availability(driver, config):
     print(f"Total Metro Area Founds : {len(all_metro)}")
 
     assert len(all_metro) > 0, f"No Metro Area Found"
-    time.sleep(3)
+    time.sleep(2)
