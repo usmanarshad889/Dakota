@@ -99,7 +99,7 @@ def test_link_unlink_contact(driver, config):
         # Select account name
         search_fld = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@placeholder='Search by Name']")))
         search_fld.click()
-        search_fld.send_keys("Test")
+        search_fld.send_keys("test")
 
         try:
             btn = wait.until(EC.element_to_be_clickable((By.XPATH, "(//span[contains(text(),'test')])[1]")))
