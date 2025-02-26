@@ -41,6 +41,7 @@ def driver():
     yield driver
     driver.quit()
 
+
 @pytest.mark.P1
 def test_link_contact_preview_popup_metro_area(driver, config):
     wait = WebDriverWait(driver, 20)

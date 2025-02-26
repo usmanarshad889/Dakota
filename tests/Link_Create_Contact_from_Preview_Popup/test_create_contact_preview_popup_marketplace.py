@@ -39,6 +39,7 @@ def driver():
     yield driver
     driver.quit()
 
+
 @pytest.mark.P1
 def test_create_contact_preview_popup_marketplace(driver, config):
     wait = WebDriverWait(driver, 20)
