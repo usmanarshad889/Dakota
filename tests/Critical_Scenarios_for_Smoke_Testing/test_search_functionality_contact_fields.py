@@ -313,6 +313,9 @@ def test_search_functionality_contact_fields(driver, config):
     btn.click()
     time.sleep(1)
 
+    wait.until(EC.element_to_be_clickable((By.XPATH, "//a[@data-label='Contacts']"))).click()
+    time.sleep(1)
+
     search_element = wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@class='buttonDiv']//button[@title='Search'][normalize-space()='Search']")))
     search_element.click()
 
