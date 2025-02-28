@@ -17,6 +17,7 @@ def driver():
     yield driver
     driver.quit()
 
+@pytest.mark.regression
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Authentication - Correct Credentials")
 @allure.story("Validate successful authentication with correct credentials for the Heroku.")

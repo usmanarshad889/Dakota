@@ -2,21 +2,19 @@
   "sandbox": {
     "base_url": "https://dakotanetworks--fuseupgrad.sandbox.my.salesforce-setup.com/",
     "username": "draftsf@draftdata.com.fuseupgrad",
-    "password": "LOWYqfakgQ8oo"
+    "password": "LOWYqfakgQ8oo",
+    "uat_login_url": "https://test.salesforce.com/",
+    "uat_base_url": "https://dakotanetworks--uat.sandbox.lightning.force.com/",
+    "uat_username": "draftsf@draftdata.com.uat",
+    "uat_password": "Rolustech@99"
   },
   "production": {
     "base_url": "https://dakotanetworks--fuseupgrad.sandbox.my.salesforce-setup.com/",
     "username": "draftsf@draftdata.com.production",
-    "password": "LOWYrtyrtygQ8oo"
-  },
-    "staging": {
-    "base_url": "https://dakotanetworks--fuseupgrad.sandbox.my.salesforce-setup.com/",
-    "username": "draftsf@draftdata.com.fuseupgrad",
-    "password": "LOWYqfakrtryoo"
-  },
-    "demo": {
-    "base_url": "https://dakotanetworks--fuseupgrad.sandbox.my.salesforce-setup.com/",
-    "username": "draftsf@draftdata.com.demo",
-    "password": "LOWYrtertyrtQ8oo"
+    "password": "LOWYrtyrtygQ8oo",
+    "prod_login_url": "https://salesforce.com/",
+    "prod_base_url": "https://dakotanetworks--prod.sandbox.lightning.force.com/",
+    "prod_username": "draftsf@draftdata.com.uat",
+    "prod_password": "Rolustech@99"
   }
 }
