@@ -99,10 +99,11 @@ def test_link_unlink_contact(driver, config):
         # Select account name
         search_fld = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@placeholder='Search by Name']")))
         search_fld.click()
-        search_fld.send_keys("test")
+        # search_fld.send_keys("test")
+        time.sleep(3)
 
         try:
-            btn = wait.until(EC.element_to_be_clickable((By.XPATH, "(//span[contains(text(),'test')])[1]")))
+            btn = wait.until(EC.element_to_be_clickable((By.XPATH, "(//li[@role='presentation' and @class='slds-listbox__item MarketplaceCustomLookupResult'])[3]")))
             btn.click()
         except (NoSuchElementException, TimeoutException) as e:
             print(f"Error: {type(e).__name__}")
