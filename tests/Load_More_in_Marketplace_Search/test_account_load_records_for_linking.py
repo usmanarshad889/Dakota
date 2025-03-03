@@ -20,6 +20,7 @@ def driver():
     yield driver
     driver.quit()
 
+@pytest.mark.load
 @pytest.mark.release_one
 @pytest.mark.P1
 def test_load_account_linked(driver, config):
