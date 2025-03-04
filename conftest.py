@@ -14,8 +14,8 @@ def config(request):
     with open(config_file_path, "r") as config_file:
         config_data = json.load(config_file)
 
-    if env not in config_data:
-        raise ValueError(f"Environment '{env}' not found in config.json!")
+    # if env not in config_data:
+    #     raise ValueError(f"Environment '{env}' not found in config.json!")
 
     return config_data[env]
 
