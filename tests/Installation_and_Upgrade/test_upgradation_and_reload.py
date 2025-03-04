@@ -31,7 +31,7 @@ def test_upgrade_and_reload(driver, config):
     time.sleep(1)
 
     # Navigate to installed pakages setup
-    driver.get(f"{config["base_url"]}lightning/n/Marketplace__Dakota_Setup")
+    driver.get(f"{config['base_url']}lightning/n/Marketplace__Dakota_Setup")
     time.sleep(3)
 
     # Reload the Dakota Setup page

@@ -35,7 +35,7 @@ def test_role_change_sorting(driver, config):
     login_button.click()
 
     # Navigate to Dakota Home Page
-    driver.get(f"{config["base_url"]}lightning/n/Marketplace__Home")
+    driver.get(f"{config['base_url']}lightning/n/Marketplace__Home")
 
     # Navigate to Role Change
     xpath = '''//li[@title='Role Changes']'''

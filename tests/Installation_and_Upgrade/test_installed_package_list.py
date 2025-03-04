@@ -32,7 +32,7 @@ def test_package_name(driver, config):
     login_button.click()
 
     # Navigate to installed package
-    driver.get(f"{config["base_url"]}lightning/setup/ImportedPackage/home")
+    driver.get(f"{config['base_url']}lightning/setup/ImportedPackage/home")
 
     # Switch to iframe
     iframe_element = wait.until(EC.element_to_be_clickable((By.XPATH,"//iframe[@title='Installed Packages ~ Salesforce - Enterprise Edition']")))

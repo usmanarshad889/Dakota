@@ -35,7 +35,7 @@ def test_verify_dashboard_sections(driver, config):
     login_button.click()
 
     # Navigate to Dakota Home Page
-    driver.get(f"{config["base_url"]}lightning/n/Marketplace__Home")
+    driver.get(f"{config['base_url']}lightning/n/Marketplace__Home")
 
     # Scroll down the element
     scroll_element = wait.until(EC.element_to_be_clickable((By.XPATH, "//span[@class='title-div'][normalize-space()='Dakota Videos']")))

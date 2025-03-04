@@ -150,7 +150,7 @@ def test_contact_record_auto_sync(driver, config):
     time.sleep(3)
 
     # Navigate to Market Place Search
-    driver.get(f"{config["base_url"]}lightning/n/Marketplace__Dakota_Search")
+    driver.get(f"{config['base_url']}lightning/n/Marketplace__Dakota_Search")
 
     # Define the stopping condition element
     stopping_condition_locator = (By.XPATH, "(//span[@class='slds-checkbox_faux'])[2]")

@@ -32,7 +32,7 @@ def test_package_install_users(driver, config):
     login_button.click()
 
     # Navigate to correct link of installed package
-    driver.get(f"{config["base_url"]}packaging/installPackage.apexp?p0=04tKf000000kjBf")
+    driver.get(f"{config['base_url']}packaging/installPackage.apexp?p0=04tKf000000kjBf")
     time.sleep(5)
 
     if driver.title == "Install Package":
