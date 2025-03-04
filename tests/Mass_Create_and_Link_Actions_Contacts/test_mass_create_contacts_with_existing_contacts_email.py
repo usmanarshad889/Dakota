@@ -32,7 +32,7 @@ def test_mass_create_for_existing_contacts_email(driver, config):
     login_button.click()
 
     # Navigate to installed pakages setup
-    driver.get(f"{config["base_url"]}lightning/n/Marketplace__Dakota_Search")
+    driver.get(f"{config['base_url']}lightning/n/Marketplace__Dakota_Search")
 
     # Select the Contacts tab and print its text
     tab = wait.until(EC.element_to_be_clickable((By.XPATH, "//li[@title='Contacts']")))

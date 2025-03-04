@@ -58,7 +58,7 @@ def test_member_comment_create_contact_from_contact(driver, config):
     login_button.click()
 
     # Navigate to Dakota Home Page
-    driver.get(f"{config["base_url"]}lightning/n/Marketplace__Home")
+    driver.get(f"{config['base_url']}lightning/n/Marketplace__Home")
 
     # Print Section name
     btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//span[@class='title-div'][normalize-space()='Ask Dakota']")))

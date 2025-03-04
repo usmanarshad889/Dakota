@@ -34,7 +34,7 @@ def test_job_change_sorting(driver, config):
     login_button.click()
 
     # Navigate to Dakota Home Page
-    driver.get(f"{config["base_url"]}lightning/n/Marketplace__Home")
+    driver.get(f"{config['base_url']}lightning/n/Marketplace__Home")
     btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//li[@title='Job Changes']")))
     print(f"Section Name : {btn.text}")
 

@@ -2,17 +2,19 @@ import time
 import random
 import string
 import pytest
+from faker import Faker
 import allure
 from allure_commons.types import AttachmentType
-from faker import Faker
 from selenium import webdriver
 from selenium.common import NoSuchElementException, TimeoutException
 from selenium.webdriver import ActionChains
-from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import Select
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
+field_name = "Automation " + ''.join(random.choices(string.ascii_uppercase, k=3))
+print(field_name)
 
 # Generate Random Name, Email and Phone
 fake = Faker()
@@ -37,26 +39,134 @@ def driver():
     yield driver
     driver.quit()
 
-def test_account_record_auto_sync_create_task(driver, config):
-    driver.get("https://test.salesforce.com/")
+def test_field_addition_to_account(driver, config):
+    # Navigate to login page
+    driver.get(config["base_url"])
+    wait = WebDriverWait(driver, 20)
+
+    # Perform login
+    try:
+        username = wait.until(EC.element_to_be_clickable((By.ID, "username")))
+        username.send_keys(config["username"])
+        password = wait.until(EC.element_to_be_clickable((By.ID, "password")))
+        password.send_keys(config["password"])
+        login_button = wait.until(EC.element_to_be_clickable((By.ID, "Login")))
+        login_button.click()
+    except Exception as e:
+        pytest.fail(f"Login failed: {e}")
+
+
+    # Navigate to account's object field and relationship page
+    package_url = f"{config['base_url']}lightning/setup/ObjectManager/Account/FieldsAndRelationships/view"
+    driver.get(package_url)
+
+    # Click on New button
+    btn = WebDriverWait(driver, 30).until(EC.element_to_be_clickable((By.XPATH, "//button[@title='Custom Field']")))
+    time.sleep(1)
+    btn.click()
+
+    # Switch to iframe
+    iframe = wait.until(EC.element_to_be_clickable((By.XPATH, "//iframe[@title='Account: New Custom Field ~ Salesforce - Enterprise Edition']")))
+    driver.switch_to.frame(iframe)
+    time.sleep(1)
+
+    # Scrolldown in iframe
+    element = wait.until(EC.element_to_be_clickable((By.XPATH, "//h3[1]")))
+    driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", element)
+
+    element = wait.until(EC.element_to_be_clickable((By.XPATH, "//label[normalize-space()='Lookup Relationship']")))
+    driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", element)
+
+    element = wait.until(EC.element_to_be_clickable((By.XPATH, "//label[normalize-space()='Date/Time']")))
+    driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", element)
+
+    element = wait.until(EC.element_to_be_clickable((By.XPATH, "//label[normalize-space()='Phone']")))
+    driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", element)
+    time.sleep(1)
+
+    # Click on Text field radio button
+    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@id='dtypeS']")))
+    btn.click()
+
+    # scroll up
+    element = wait.until(EC.element_to_be_clickable((By.XPATH, "//h3[1]")))
+    driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", element)
+    time.sleep(1)
+
+    # Click on Next button
+    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@class='pbTopButtons']//input[@title='Next']")))
+    btn.click()
+
+    # Enter Field Label
+    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='MasterLabel']")))
+    btn.send_keys(field_name)
+
+    # Enter length
+    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='Length']")))
+    btn.send_keys("35")
+
+    # Enter Description
+    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//textarea[@name='Description']")))
+    btn.send_keys("This is Automation field description created by Selenium Python")
+
+    # Enter Help Text
+    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//textarea[@name='InlineHelpText']")))
+    btn.send_keys("Automation Test")
+
+    # Click on Next button
+    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@class='pbTopButtons']//input[@title='Next']")))
+    btn.click()
+
+    # Click on Visible checkbox
+    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[@title='Visible'])")))
+    btn.click()
+
+    # Click on Next button
+    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@class='pbTopButtons']//input[@title='Next']")))
+    btn.click()
+
+    # Click on Save button
+    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@class='pbTopButtons']//input[@title='Save']")))
+    btn.click()
+
+    # Switch out of iframe
+    driver.switch_to.default_content()
+    time.sleep(1)
+
+    # Verify the field creation
+    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@id='globalQuickfind']")))
+    btn.send_keys(field_name)
+    time.sleep(4)
+
+    # Extraxt field context
+    actual_field = wait.until(EC.element_to_be_clickable((By.XPATH, "//tbody//tr//td[1]")))
+    print(f"Actual field Text : {actual_field.text}")
+
+    assert actual_field.text == field_name , f"Expected field was {field_name} but got {actual_field.text}"
+    time.sleep(1)
+
+
+    driver.get(config["uat_login_url"])
     wait = WebDriverWait(driver, 20)
 
     # Perform login
     username = wait.until(EC.element_to_be_clickable((By.ID, "username")))
-    username.send_keys("draftsf@draftdata.com.uat")
+    username.send_keys(config["uat_username"])
     password = wait.until(EC.element_to_be_clickable((By.ID, "password")))
-    password.send_keys("Rolustech@99")
+    password.send_keys(config["uat_password"])
     login_button = wait.until(EC.element_to_be_clickable((By.ID, "Login")))
     login_button.click()
 
     # Move to account Tab and click on new button
-    driver.get("https://dakotanetworks--uat.sandbox.lightning.force.com/lightning/o/Account/list?filterName=__Recent")
+    driver.get(f"{config['uat_base_url']}lightning/o/Account/list?filterName=__Recent")
     new_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@title='New']")))
+    time.sleep(2)
     new_button.click()
     time.sleep(2)
 
     # Select a record type
     record_type = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@class='slds-button slds-button_neutral slds-button slds-button_brand uiButton']")))
+    time.sleep(2)
     record_type.click()
 
     # Select account name
@@ -193,7 +303,7 @@ def test_account_record_auto_sync_create_task(driver, config):
         # search the element
         btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='SearchBar']")))
         btn.clear()
-        btn.send_keys("y")
+        btn.send_keys("j")
         btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@class='slds-button slds-button_brand'][normalize-space()='Search']")))
         btn.click()
         time.sleep(2)
@@ -254,7 +364,7 @@ def test_account_record_auto_sync_create_task(driver, config):
     # Select phone with CRD
     select_element = wait.until(EC.element_to_be_clickable((By.XPATH, "(//select[@name='a7Ndy0000001H3gEAE'])[1]")))
     option = Select(select_element)
-    option.select_by_visible_text("CRD#")
+    option.select_by_visible_text(field_name)
 
     # Select Website with Account Description
     select_element = wait.until(EC.element_to_be_clickable((By.XPATH, "(//select[@name='a7Ndy0000001H3hEAE'])[1]")))
@@ -330,14 +440,6 @@ def test_account_record_auto_sync_create_task(driver, config):
     ok_btn.click()
     time.sleep(15)
 
-    # try:
-    #     toast_message = wait.until(EC.element_to_be_clickable((By.XPATH, "//span[@class='toastMessage slds-text-heading--small forceActionsText']")))
-    #     print(f"Actual Toast Text : {toast_message.text}")
-    #     assert toast_message == "Mapping saved successfully." , f"Error while mapping : {toast_message}"
-    # except (NoSuchElementException, TimeoutException) as e:
-    #     print(f"Error: {type(e).__name__}")
-    #     pass
-    # time.sleep(2)
 
     # Navigate to installed pakages setup
     driver.get(f"{config['base_url']}lightning/n/Marketplace__Dakota_Search")
@@ -347,6 +449,7 @@ def test_account_record_auto_sync_create_task(driver, config):
     btn.clear()
     time.sleep(7)
     btn.send_keys(name_var)
+    # btn.send_keys("Test Mrs. Theresa Lewis PhD")
 
     # Click on search button
     btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@title='Search']")))
@@ -354,6 +457,7 @@ def test_account_record_auto_sync_create_task(driver, config):
 
     # Click on account
     btn = wait.until(EC.element_to_be_clickable((By.XPATH, f"//button[normalize-space()='{name_var}']")))
+    # btn = wait.until(EC.element_to_be_clickable((By.XPATH, f"//button[@title='Test Mrs. Theresa Lewis PhD']")))
     btn.click()
     time.sleep(5)
 
@@ -363,10 +467,14 @@ def test_account_record_auto_sync_create_task(driver, config):
 
     # Switch to the second tab (index 1)
     driver.switch_to.window(tabs[1])
-    time.sleep(5)
+    time.sleep(3)
 
     # Verify by printing the current page title
     print("Switched to Tab - Title:", driver.title)
+
+    driver.delete_all_cookies()
+    driver.refresh()
+    time.sleep(7)
 
 
     # Scroll down by 300 pixels
@@ -375,19 +483,57 @@ def test_account_record_auto_sync_create_task(driver, config):
     driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'start'});", element)
     time.sleep(2)
 
-    # Verify the CRD with phone
-    xpath = '''(//span[@class='test-id__field-value slds-form-element__static slds-grow word-break-ie11'])[10]'''
-    crd_field = wait.until(EC.element_to_be_clickable((By.XPATH, xpath)))
-    crd_text = crd_field.text
-    print(f"CRD Text : {crd_text}")
-
     # Verify the Description with Website
     xpath = '''(//span[@class='test-id__field-value slds-form-element__static slds-grow word-break-ie11'])[13]'''
     des_field = wait.until(EC.element_to_be_clickable((By.XPATH, xpath)))
     des_text = des_field.text
     print(f"Description Text : {des_text}")
 
-    # Assertions with Correct Messages
-    assert crd_text == phone_var, f"CRD Mismatch: Expected '{phone_var}', but got '{crd_text}'"
+    # Scroll into view
+    element = driver.find_element(By.XPATH, "(//span[@class='test-id__field-value slds-form-element__static slds-grow word-break-ie11'])[13]")
+    driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'start'});", element)
+
+    # Scroll into view
+    element = driver.find_element(By.XPATH, "//span[normalize-space()='QA Currency Field']")
+    driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'start'});", element)
+    time.sleep(1)
+
+    automation_list = []
+
+    # Extract automation texts
+    for r in range(30, 40):
+        try:
+            xpath = f'''(//span[@class='test-id__field-value slds-form-element__static slds-grow word-break-ie11'])[{r}]'''
+            crd_field = wait.until(EC.presence_of_element_located((By.XPATH, xpath)))  # Ensure element exists
+            crd_text = crd_field.text.strip()  # Strip extra spaces
+            automation_list.append(crd_text)
+            print(f"Automation Text: {crd_text}")
+        except Exception as e:
+            print(f"Skipping index {r} due to error: {e}")
+
+    # Assert if phone_var exists in the extracted automation_list
+    assert phone_var in automation_list, f"Automation Text Mismatch: Expected '{phone_var}', but got '{automation_list}'"
     assert des_text == email_var, f"Description Mismatch: Expected '{email_var}', but got '{des_text}'"
-    time.sleep(3)
+    time.sleep(2)
+
+
+    # Delete the field created
+    # Navigate to account's object field and relationship page
+    package_url = f"{config['base_url']}lightning/setup/ObjectManager/Account/FieldsAndRelationships/view"
+    driver.get(package_url)
+
+    # Enter field name
+    btn = WebDriverWait(driver, 30).until(EC.element_to_be_clickable((By.XPATH, "//input[@id='globalQuickfind']")))
+    btn.send_keys(field_name)
+    time.sleep(4)
+
+    try:
+        btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//a[@class='rowActionsPlaceHolder slds-button slds-button--icon-border-filled']")))
+        btn.click()
+        btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//a[@title='Delete']//div[@class='slds-grid']")))
+        btn.click()
+        btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//span[contains(@class,'label bBody')][normalize-space()='Delete']")))
+        btn.click()
+        time.sleep(5)
+    except (NoSuchElementException, TimeoutException) as e:
+        print(f"Error: {type(e).__name__}")

@@ -38,7 +38,7 @@ def test_fundraising_news_sorting(driver, config):
     login_button.click()
 
     # Navigate to Dakota Home Page
-    driver.get(f"{config["base_url"]}lightning/n/Marketplace__Home")
+    driver.get(f"{config['base_url']}lightning/n/Marketplace__Home")
 
     element = wait.until(EC.element_to_be_clickable((By.XPATH, "/html[1]/body[1]/div[4]/div[1]/section[1]/div[1]/div[2]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/marketplace-dakota-home-page-main[1]/div[1]/div[2]/div[1]/c-dakota-news[1]/article[1]/div[3]/lightning-card[1]/article[1]/div[2]/slot[1]/div[4]/p[1]/span[1]/lightning-formatted-date-time[1]")))
     driver.execute_script("arguments[0].scrollIntoView();", element)

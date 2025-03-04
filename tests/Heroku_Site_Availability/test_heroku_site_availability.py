@@ -35,7 +35,7 @@ def test_heroku_site_availability(driver, config):
     login_button.click()
 
     # Navigate to installed pakages setup
-    driver.get(f"{config["base_url"]}lightning/n/Marketplace__Dakota_Setup")
+    driver.get(f"{config['base_url']}lightning/n/Marketplace__Dakota_Setup")
 
     # Click on Authentication svg button
     try:
@@ -86,7 +86,7 @@ def test_heroku_site_availability(driver, config):
 
 
     # Navigate to contact tab
-    driver.get(f"{config["base_url"]}lightning/o/Contact/list?filterName=__Recent")
+    driver.get(f"{config['base_url']}lightning/o/Contact/list?filterName=__Recent")
     all_contact = wait.until(EC.presence_of_all_elements_located((By.XPATH, "//tbody/tr/th[1]")))
     print(f"Total Contact Founds : {len(all_contact)}")
 
@@ -94,7 +94,7 @@ def test_heroku_site_availability(driver, config):
     time.sleep(2)
 
     # Navigate to account tab
-    driver.get(f"{config["base_url"]}lightning/o/Account/list?filterName=__Recent")
+    driver.get(f"{config['base_url']}lightning/o/Account/list?filterName=__Recent")
     all_account = wait.until(EC.presence_of_all_elements_located((By.XPATH, "//tbody/tr/th[1]")))
     print(f"Total Account Founds : {len(all_account)}")
 
@@ -102,7 +102,7 @@ def test_heroku_site_availability(driver, config):
     time.sleep(2)
 
     # Navigate to Metro Area
-    driver.get(f"{config["base_url"]}lightning/n/Marketplace__Metro_Areas")
+    driver.get(f"{config['base_url']}lightning/n/Marketplace__Metro_Areas")
     all_metro = wait.until(EC.presence_of_all_elements_located((By.XPATH, "//tbody/tr/th[1]")))
     print(f"Total Metro Area Founds : {len(all_metro)}")
 

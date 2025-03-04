@@ -38,7 +38,7 @@ def test_new_f13_filling_sorting(driver, config):
     login_button.click()
 
     # Navigate to Dakota Home Page
-    driver.get(f"{config["base_url"]}lightning/n/Marketplace__Home")
+    driver.get(f"{config['base_url']}lightning/n/Marketplace__Home")
 
     # Scroll down the element
     scroll_element = wait.until(EC.element_to_be_clickable((By.XPATH, "//li[@title='New 13F Filings']")))

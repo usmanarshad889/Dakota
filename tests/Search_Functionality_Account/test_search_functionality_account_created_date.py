@@ -32,7 +32,7 @@ def test_search_aum(driver, config):
     login_button.click()
 
     # Navigate to Marketplace Search
-    driver.get(f"{config["base_url"]}lightning/n/Marketplace__Dakota_Search")
+    driver.get(f"{config['base_url']}lightning/n/Marketplace__Dakota_Search")
 
     # Select Marketplace Created Date Filter
     date = wait.until(EC.element_to_be_clickable((By.XPATH, "//select[@name='CRMCreatedDate']")))

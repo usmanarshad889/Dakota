@@ -36,7 +36,7 @@ def test_role_change_creation_of_account_from_account(driver, config):
     login_button.click()
 
     # Navigate to Dakota Home Page
-    driver.get(f"{config["base_url"]}lightning/n/Marketplace__Home")
+    driver.get(f"{config['base_url']}lightning/n/Marketplace__Home")
 
     # Print Section name
     btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//li[@title='Role Changes']")))

@@ -378,7 +378,7 @@ def test_contact_record_auto_sync(driver, config):
     # time.sleep(2)
 
     # Navigate to installed pakages setup
-    driver.get(f"{config["base_url"]}lightning/n/Marketplace__Dakota_Search")
+    driver.get(f"{config['base_url']}lightning/n/Marketplace__Dakota_Search")
 
     wait.until(EC.element_to_be_clickable((By.XPATH, "//a[@data-label='Contacts']"))).click()
 

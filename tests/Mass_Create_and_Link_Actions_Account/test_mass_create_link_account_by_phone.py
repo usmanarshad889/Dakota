@@ -32,7 +32,7 @@ def test_mass_create_link_account_by_phone(driver, config):
     login_button.click()
 
     # Navigate to installed pakages setup
-    driver.get(f"{config["base_url"]}lightning/n/Marketplace__Dakota_Search")
+    driver.get(f"{config['base_url']}lightning/n/Marketplace__Dakota_Search")
 
     dropdown = wait.until(EC.element_to_be_clickable((By.XPATH, "//select[@name='DisplayCriteria']")))
     dropdown_option = Select(dropdown)

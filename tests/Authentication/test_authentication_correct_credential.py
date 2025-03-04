@@ -35,7 +35,7 @@ def test_authentication_correct_credentials(driver, config):
     login_button.click()
 
     # Navigate to installed pakages setup
-    driver.get(f"{config["base_url"]}lightning/n/Marketplace__Dakota_Setup")
+    driver.get(f"{config['base_url']}lightning/n/Marketplace__Dakota_Setup")
 
     # Click on Authentication svg button
     try:

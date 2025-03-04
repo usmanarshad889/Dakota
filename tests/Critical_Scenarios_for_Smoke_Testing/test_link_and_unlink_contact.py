@@ -33,7 +33,7 @@ def test_link_unlink_contact(driver, config):
     login_button.click()
 
     # Navigate to installed pakages setup
-    driver.get(f"{config["base_url"]}lightning/n/Marketplace__Dakota_Search")
+    driver.get(f"{config['base_url']}lightning/n/Marketplace__Dakota_Search")
 
     # Switch to Contact Tab
     contact_ele = wait.until(EC.element_to_be_clickable((By.XPATH, "//li[@title='Contacts']")))
