@@ -41,6 +41,7 @@ def driver():
     driver.quit()
 
 @pytest.mark.P1
+@pytest.mark.release_two
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Dakota Home Tab - Job Changes (Create Contact)")
 @allure.story("Test Creation of contacts directly from Job Changes.")

@@ -18,6 +18,7 @@ def driver():
     driver.quit()
 
 @pytest.mark.P1
+@pytest.mark.release_two
 def test_mass_create_for_existing_contacts_email(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

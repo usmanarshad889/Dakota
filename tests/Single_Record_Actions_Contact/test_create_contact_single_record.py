@@ -35,6 +35,7 @@ def driver():
     driver.quit()
 
 @pytest.mark.P1
+@pytest.mark.release_two
 def test_create_contact_single_record(driver, config):
     driver.get("https://test.salesforce.com/")
     wait = WebDriverWait(driver, 20)

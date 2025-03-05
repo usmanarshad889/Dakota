@@ -18,6 +18,7 @@ def driver():
     driver.quit()
 
 @pytest.mark.P1
+@pytest.mark.release_two
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Dakota Home Tab - Role Changes (Link Contact)")
 @allure.story("Test linking of accounts directly from Role Changes.")

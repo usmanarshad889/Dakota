@@ -141,8 +141,16 @@ def test_contact_record_auto_sync(driver, config):
     assert "was created" in toast_massage.lower().strip() , f"Error while creating contact : {toast_massage}"
     time.sleep(1)
 
+
+    # Now Clear data and refresh the page
+    driver.delete_all_cookies()
+    driver.refresh()
+    time.sleep(2)
+
     # Navigate to login page of fuse app
+    # Navigate to login page
     driver.get(config["base_url"])
+    wait = WebDriverWait(driver, 20)
 
     # Perform login
     username = wait.until(EC.element_to_be_clickable((By.ID, "username")))
@@ -151,7 +159,166 @@ def test_contact_record_auto_sync(driver, config):
     password.send_keys(config["password"])
     login_button = wait.until(EC.element_to_be_clickable((By.ID, "Login")))
     login_button.click()
+    time.sleep(2)
+
+    # Navigate to installed pakages setup
+    driver.get(f"{config['base_url']}lightning/n/Marketplace__Dakota_Setup")
+
+    # Click on Authentication svg button
+    try:
+        # Wait for full page load
+        wait.until(lambda d: d.execute_script("return document.readyState") == "complete")
+
+        element = wait.until(
+            EC.element_to_be_clickable((By.XPATH, "(//*[name()='svg'][@class='slds-button__icon'])[3]"))
+        )
+        element.click()
+    except (NoSuchElementException, TimeoutException) as e:
+        print(f"Message: {type(e).__name__}")
+        pass
+    time.sleep(1)
+
+    # Verify the Authentication with correct Credentials
+    wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='Username']"))).clear()
+    driver.find_element(By.XPATH, "//input[@name='Username']").send_keys("Fuse Upgrade")
+    driver.find_element(By.XPATH, "//input[@name='Password']").clear()
+    driver.find_element(By.XPATH, "//input[@name='Password']").send_keys("rolus009")
+    driver.find_element(By.XPATH, "//input[@name='AuthorizationURL']").clear()
+    driver.find_element(By.XPATH, "//input[@name='AuthorizationURL']").send_keys("https://marketplace-dakota-uat.herokuapp.com")
+
+    try:
+        btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@value='Connect']")))
+        btn.click()
+    except (NoSuchElementException, TimeoutException) as e:
+        print(f"Message: {type(e).__name__}")
+        print("Connect button is not clicked in the first attempt")
+        pass
+
+    try:
+        btn = wait.until(EC.element_to_be_clickable((By.XPATH, "(//button[normalize-space()='Connect'])[1]")))
+        btn.click()
+    except (NoSuchElementException, TimeoutException) as e:
+        print(f"Message: {type(e).__name__}")
+        print("Connect button clicked successfully in first attempt")
+        pass
+
+    time.sleep(2)
+
+    toast = wait.until(EC.presence_of_element_located((By.XPATH, "//span[@class='toastMessage forceActionsText']")))
+    print(f"Toast message : {toast.text}")
+
+    # Verify the Toast message
+    assert toast.text.lower() == "dakota marketplace account connected successfully.", f"Test failed: {toast.text}"
     time.sleep(3)
+
+
+    element = wait.until(EC.element_to_be_clickable((By.XPATH, "(//*[name()='svg'][@class='slds-button__icon'])[4]")))
+    element.click()
+    time.sleep(1)
+
+
+    try:
+        # Click on Auto Sync Field Updates
+        inactive_button = driver.find_element(By.XPATH, "//span[@class='slds-checkbox_off']")
+        if inactive_button.text == "Inactive":
+            btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//span[@class='slds-checkbox_faux']")))
+            btn.click()
+        else:
+            pass
+    except (NoSuchElementException, TimeoutException) as e:
+        print(f"Error: {type(e).__name__}")
+    time.sleep(2)
+
+
+    # Switch to contacts mapping
+    contact_fld = wait.until(EC.element_to_be_clickable((By.XPATH, "//a[@data-label='Contacts']")))
+    contact_fld.click()
+    time.sleep(1)
+
+    # Scroll down by 500 pixels
+    driver.execute_script("window.scrollBy(0, 500);")
+    time.sleep(10)
+
+
+    # Select Website with Account Description
+    select_element = wait.until(EC.element_to_be_clickable((By.XPATH, "(//select[@name='a7Ndy0000001H41EAE'])[1]")))
+    option = Select(select_element)
+    option.select_by_visible_text("Email")
+
+    # Select phone with CRD
+    select_element = wait.until(EC.element_to_be_clickable((By.XPATH, "(//select[@name='a7Ndy0000001H42EAE'])[1]")))
+    option = Select(select_element)
+    option.select_by_visible_text("Dakota Phone")
+
+
+    try:
+        # Select Sync Option
+        xpath = '''/html[1]/body[1]/div[4]/div[1]/section[1]/div[1]/div[2]/div[2]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/ol[1]/li[2]/article[1]/div[1]/div[1]/div[3]/div[1]/div[1]/div[3]/div[2]/div[1]/div[1]/table[1]/tr/td[3]/div[1]/div[1]/div[1]/select[1]'''
+        select_element = driver.find_elements(By.XPATH, xpath)
+        for element in select_element:
+            if element.is_enabled():
+                select = Select(element)
+                select.select_by_visible_text("Update")
+    except (NoSuchElementException, TimeoutException) as e:
+        print(f"Error: {type(e).__name__}")
+        print("Sync Option not selected")
+    time.sleep(1)
+
+
+    try:
+        # Select Sync Option
+        xpath = '''/html[1]/body[1]/div[4]/div[1]/section[1]/div[1]/div[2]/div[2]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/ol[1]/li[2]/article[1]/div[1]/div[1]/div[3]/div[1]/div[1]/div[3]/div[2]/div[1]/div[1]/table[1]/tr/td[4]/div[1]/div[1]/div[1]/select[1]'''
+        select_element = driver.find_elements(By.XPATH, xpath)
+        for element in select_element:
+            if element.is_enabled():
+                select = Select(element)
+                select.select_by_visible_text("Create Task")
+    except (NoSuchElementException, TimeoutException) as e:
+        print(f"Error: {type(e).__name__}")
+        print("Notification Setting field not selected")
+    time.sleep(1)
+
+
+    try:
+        # Select Sync Option
+        xpath = '''/html[1]/body[1]/div[4]/div[1]/section[1]/div[1]/div[2]/div[2]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/ol[1]/li[2]/article[1]/div[1]/div[1]/div[3]/div[1]/div[1]/div[3]/div[2]/div[1]/div[1]/table[1]/tr/td[5]/div[1]/div[1]/div[1]/select[1]'''
+        select_element = driver.find_elements(By.XPATH, xpath)
+        for element in select_element:
+            if element.is_enabled():
+                select = Select(element)
+                select.select_by_visible_text("Owner")
+    except (NoSuchElementException, TimeoutException) as e:
+        print(f"Error: {type(e).__name__}")
+        print("Notification Recipient field not selected")
+    time.sleep(1)
+
+
+    try:
+        # Select Sync Option
+        xpath = '''/html[1]/body[1]/div[4]/div[1]/section[1]/div[1]/div[2]/div[2]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/ol[1]/li[2]/article[1]/div[1]/div[1]/div[3]/div[1]/div[1]/div[3]/div[2]/div[1]/div[1]/table[1]/tr/td[6]/div[1]/div[1]/div[1]/select[1]'''
+        select_element = driver.find_elements(By.XPATH, xpath)
+        for element in select_element:
+            if element.is_enabled():
+                select = Select(element)
+                select.select_by_visible_text("Aiman Shakil")
+    except (NoSuchElementException, TimeoutException) as e:
+        print(f"Error: {type(e).__name__}")
+        print("Notification Assignee User/Group not selected")
+    time.sleep(1)
+
+
+    # Scroll down by 1500 pixels
+    driver.execute_script("window.scrollBy(0, 2500);")
+    time.sleep(2)
+
+    # Select Save Option
+    save_btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@id='contacts']//button[@class='slds-button slds-button--brand slds-button--small'][normalize-space()='Save']")))
+    save_btn.click()
+    time.sleep(1)
+    ok_btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[normalize-space()='OK']")))
+    ok_btn.click()
+    time.sleep(15)
+
 
     # Navigate to Market Place Search
     driver.get(f"{config['base_url']}lightning/n/Marketplace__Dakota_Search")
@@ -261,126 +428,6 @@ def test_contact_record_auto_sync(driver, config):
     time.sleep(3)
 
 
-    # Navigate to Market Place Setup
-    driver.get(f"{config['base_url']}lightning/n/Marketplace__Dakota_Setup")
-
-
-    element = wait.until(EC.element_to_be_clickable((By.XPATH, "(//*[name()='svg'][@class='slds-button__icon'])[4]")))
-    element.click()
-    time.sleep(1)
-
-
-    try:
-        # Click on Auto Sync Field Updates
-        inactive_button = driver.find_element(By.XPATH, "//span[@class='slds-checkbox_off']")
-        if inactive_button.text == "Inactive":
-            btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//span[@class='slds-checkbox_faux']")))
-            btn.click()
-        else:
-            pass
-    except (NoSuchElementException, TimeoutException) as e:
-        print(f"Error: {type(e).__name__}")
-    time.sleep(2)
-
-
-    # Switch to contacts mapping
-    contact_fld = wait.until(EC.element_to_be_clickable((By.XPATH, "//a[@data-label='Contacts']")))
-    contact_fld.click()
-    time.sleep(1)
-
-    # Scroll down by 500 pixels
-    driver.execute_script("window.scrollBy(0, 500);")
-    time.sleep(10)
-
-
-    # Select Website with Account Description
-    select_element = wait.until(EC.element_to_be_clickable((By.XPATH, "(//select[@name='a7Ndy0000001H41EAE'])[1]")))
-    option = Select(select_element)
-    option.select_by_visible_text("Title")
-
-    # Select phone with CRD
-    select_element = wait.until(EC.element_to_be_clickable((By.XPATH, "(//select[@name='a7Ndy0000001H42EAE'])[1]")))
-    option = Select(select_element)
-    option.select_by_visible_text("CRD #")
-
-
-    try:
-        # Select Sync Option
-        xpath = '''/html[1]/body[1]/div[4]/div[1]/section[1]/div[1]/div[2]/div[2]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/ol[1]/li[2]/article[1]/div[1]/div[1]/div[3]/div[1]/div[1]/div[3]/div[2]/div[1]/div[1]/table[1]/tr/td[3]/div[1]/div[1]/div[1]/select[1]'''
-        select_element = driver.find_elements(By.XPATH, xpath)
-        for element in select_element:
-            if element.is_enabled():
-                select = Select(element)
-                select.select_by_visible_text("Update")
-    except (NoSuchElementException, TimeoutException) as e:
-        print(f"Error: {type(e).__name__}")
-        print("Sync Option not selected")
-    time.sleep(1)
-
-
-    try:
-        # Select Sync Option
-        xpath = '''/html[1]/body[1]/div[4]/div[1]/section[1]/div[1]/div[2]/div[2]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/ol[1]/li[2]/article[1]/div[1]/div[1]/div[3]/div[1]/div[1]/div[3]/div[2]/div[1]/div[1]/table[1]/tr/td[4]/div[1]/div[1]/div[1]/select[1]'''
-        select_element = driver.find_elements(By.XPATH, xpath)
-        for element in select_element:
-            if element.is_enabled():
-                select = Select(element)
-                select.select_by_visible_text("Create Task")
-    except (NoSuchElementException, TimeoutException) as e:
-        print(f"Error: {type(e).__name__}")
-        print("Notification Setting field not selected")
-    time.sleep(1)
-
-
-    try:
-        # Select Sync Option
-        xpath = '''/html[1]/body[1]/div[4]/div[1]/section[1]/div[1]/div[2]/div[2]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/ol[1]/li[2]/article[1]/div[1]/div[1]/div[3]/div[1]/div[1]/div[3]/div[2]/div[1]/div[1]/table[1]/tr/td[5]/div[1]/div[1]/div[1]/select[1]'''
-        select_element = driver.find_elements(By.XPATH, xpath)
-        for element in select_element:
-            if element.is_enabled():
-                select = Select(element)
-                select.select_by_visible_text("Owner")
-    except (NoSuchElementException, TimeoutException) as e:
-        print(f"Error: {type(e).__name__}")
-        print("Notification Recipient field not selected")
-    time.sleep(1)
-
-
-    try:
-        # Select Sync Option
-        xpath = '''/html[1]/body[1]/div[4]/div[1]/section[1]/div[1]/div[2]/div[2]/div[1]/div[1]/div[1]/div[1]/div[2]/div[1]/ol[1]/li[2]/article[1]/div[1]/div[1]/div[3]/div[1]/div[1]/div[3]/div[2]/div[1]/div[1]/table[1]/tr/td[6]/div[1]/div[1]/div[1]/select[1]'''
-        select_element = driver.find_elements(By.XPATH, xpath)
-        for element in select_element:
-            if element.is_enabled():
-                select = Select(element)
-                select.select_by_visible_text("Aiman Shakil")
-    except (NoSuchElementException, TimeoutException) as e:
-        print(f"Error: {type(e).__name__}")
-        print("Notification Assignee User/Group not selected")
-    time.sleep(1)
-
-
-    # Scroll down by 1500 pixels
-    driver.execute_script("window.scrollBy(0, 2500);")
-    time.sleep(2)
-
-    # Select Save Option
-    save_btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@id='contacts']//button[@class='slds-button slds-button--brand slds-button--small'][normalize-space()='Save']")))
-    save_btn.click()
-    time.sleep(1)
-    ok_btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[normalize-space()='OK']")))
-    ok_btn.click()
-    time.sleep(15)
-
-    # try:
-    #     toast_message = wait.until(EC.element_to_be_clickable((By.XPATH, "//span[@class='toastMessage slds-text-heading--small forceActionsText']")))
-    #     print(f"Actual Toast Text : {toast_message.text}")
-    #     assert toast_message == "Mapping saved successfully." , f"Error while mapping : {toast_message}"
-    # except (NoSuchElementException, TimeoutException) as e:
-    #     print(f"Error: {type(e).__name__}")
-    #     pass
-    # time.sleep(2)
-
     # Navigate to installed pakages setup
     driver.get(f"{config['base_url']}lightning/n/Marketplace__Dakota_Search")
 
@@ -418,19 +465,19 @@ def test_contact_record_auto_sync(driver, config):
     driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", element)
     time.sleep(2)
 
-    # Verify the CRD with phone
-    xpath = '''(//span[@class='test-id__field-value slds-form-element__static slds-grow word-break-ie11'])[9]'''
-    crd_field = wait.until(EC.element_to_be_clickable((By.XPATH, xpath)))
-    crd_text = crd_field.text
-    print(f"CRD Text : {crd_text}")
+    # Verify the Phone with phone
+    xpath = '''(//span[@class='test-id__field-value slds-form-element__static slds-grow word-break-ie11'])[3]'''
+    phone_field = wait.until(EC.element_to_be_clickable((By.XPATH, xpath)))
+    phone_text = phone_field.text
+    print(f"Phone Text : {phone_text}")
 
-    # Verify the Description with Website
-    xpath = '''(//span[@class='test-id__field-value slds-form-element__static slds-grow word-break-ie11'])[8]'''
-    title_field = wait.until(EC.element_to_be_clickable((By.XPATH, xpath)))
-    title_text = title_field.text
-    print(f"Description Text : {title_text}")
+    # Verify the Email with Email
+    xpath = '''(//span[@class='test-id__field-value slds-form-element__static slds-grow word-break-ie11'])[7]'''
+    email_field = wait.until(EC.element_to_be_clickable((By.XPATH, xpath)))
+    email_text = email_field.text
+    print(f"Description Text : {email_text}")
 
     # Assertions with Correct Messages
-    assert crd_text == phone, f"CRD Mismatch: Expected '{phone}', but got '{crd_text}'"
-    assert title_text == email, f"Description Mismatch: Expected '{email}', but got '{title_text}'"
+    assert phone_text == phone, f"Phone Mismatch: Expected '{phone}', but got '{phone_text}'"
+    assert email_text == email, f"Email Mismatch: Expected '{email}', but got '{email_text}'"
     time.sleep(3)

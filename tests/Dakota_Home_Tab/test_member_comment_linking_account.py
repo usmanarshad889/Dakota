@@ -18,6 +18,7 @@ def driver():
     driver.quit()
 
 @pytest.mark.P1
+@pytest.mark.release_two
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Dakota Home Tab - Ask Dakota, Link Account")
 @allure.story("Test creation of contacts directly from member comment")
