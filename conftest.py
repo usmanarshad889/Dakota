@@ -14,19 +14,19 @@ def config(request):
     with open(config_file_path, "r") as config_file:
         config_data = json.load(config_file)
 
-    # if env not in config_data:
-    #     raise ValueError(f"Environment '{env}' not found in config.json!")
+    if env not in config_data:
+        raise ValueError(f"Environment '{env}' not found in config.json!")
 
     return config_data[env]
 
-# def pytest_addoption(parser):
-#     """Add command-line option for selecting environment."""
-#     parser.addoption("--env", action="store", default="sandbox", help="Environment to run tests against (e.g., sandbox, production)")
-
 def pytest_addoption(parser):
-    """Add command-line options for pytest."""
-    if not any(opt.dest == "env" for opt in parser._anonymous.options):
-        parser.addoption(
-            "--env", action="store", default="sandbox",
-            help="Environment to run tests against (e.g., sandbox, production)"
-        )
+    """Add command-line option for selecting environment."""
+    parser.addoption("--env", action="store", default="sandbox", help="Environment to run tests against (e.g., sandbox, production)")
+
+# def pytest_addoption(parser):
+#     """Add command-line options for pytest."""
+#     if not any(opt.dest == "env" for opt in parser._anonymous.options):
+#         parser.addoption(
+#             "--env", action="store", default="sandbox",
+#             help="Environment to run tests against (e.g., sandbox, production)"
+#         )
