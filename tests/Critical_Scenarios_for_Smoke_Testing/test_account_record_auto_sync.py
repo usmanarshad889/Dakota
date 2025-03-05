@@ -40,6 +40,9 @@ def driver():
 
 @pytest.mark.P1
 @pytest.mark.release_one
+@allure.severity(allure.severity_level.CRITICAL)
+@allure.feature("Mapping - Account field Mapping")
+@allure.story("Validate successful mapping of account fields.")
 def test_account_record_auto_sync(driver, config):
     driver.get(config["uat_login_url"])
     wait = WebDriverWait(driver, 20)

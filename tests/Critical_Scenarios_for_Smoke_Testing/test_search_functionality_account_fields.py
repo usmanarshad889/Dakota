@@ -39,6 +39,9 @@ def driver():
 
 @pytest.mark.release_one
 @pytest.mark.P1
+@allure.severity(allure.severity_level.CRITICAL)
+@allure.feature("Search Functionality - Account filter")
+@allure.story("Validate accounts page filter are working correctly.")
 def test_search_functionality_account_fields(driver, config):
     driver.get(config["uat_login_url"])
     wait = WebDriverWait(driver, 20)
