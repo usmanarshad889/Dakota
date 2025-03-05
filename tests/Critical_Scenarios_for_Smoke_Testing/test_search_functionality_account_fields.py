@@ -101,7 +101,7 @@ def test_search_functionality_account_fields(driver, config):
     # Select Metro Area
     field = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@placeholder='Search Metro Areas...']")))
     field.click()
-    time.sleep(3)
+    time.sleep(5)
     ssss = wait.until(EC.element_to_be_clickable((By.XPATH, "(//li[@role='presentation'])[6]")))
     first_line = ssss.text.splitlines()[0]
     print(first_line)

@@ -19,6 +19,7 @@ def driver():
 
 @pytest.mark.release_one
 @pytest.mark.P1
+@pytest.mark.demo
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Linking/Unlinking - Account Linking and Unlinking")
 @allure.story("Validate successful linking and unlinking if Accounts.")

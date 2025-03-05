@@ -21,6 +21,7 @@ def driver():
 
 @pytest.mark.load
 @pytest.mark.release_one
+@pytest.mark.demo
 @pytest.mark.P1
 def test_load_contacts_for_unlinked_accounts(driver, config):
     # Navigate to login page
