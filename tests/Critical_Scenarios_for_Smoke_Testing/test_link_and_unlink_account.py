@@ -53,7 +53,7 @@ def test_link_unlink_account(driver, config):
     btn.click()
 
     # store account name
-    account_field = wait.until(EC.element_to_be_clickable((By.XPATH, "//tbody/tr[1]/td[2]")))
+    account_field = WebDriverWait(driver, 30).until(EC.element_to_be_clickable((By.XPATH, "//tbody/tr[1]/td[2]")))
     account_name = account_field.text
 
     # Click on first account name checkbox
@@ -70,13 +70,13 @@ def test_link_unlink_account(driver, config):
     dropdown_option = Select(dropdown)
     dropdown_option.select_by_visible_text("Dakota Name")
 
-    try:
-        dropdown = wait.until(EC.element_to_be_clickable((By.XPATH, "(//select[@class='slds-select'])[5]")))
-        dropdown_option = Select(dropdown)
-        dropdown_option.select_by_visible_text("Account Name")
-    except (NoSuchElementException, TimeoutException) as e:
-        print(f"Error: {type(e).__name__}")
-        pass
+    # try:
+    #     dropdown = wait.until(EC.element_to_be_clickable((By.XPATH, "(//select[@class='slds-select'])[5]")))
+    #     dropdown_option = Select(dropdown)
+    #     dropdown_option.select_by_visible_text("Account Name")
+    # except (NoSuchElementException, TimeoutException) as e:
+    #     print(f"Error: {type(e).__name__}")
+    #     pass
 
     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@class='slds-button slds-button_neutral slds-button slds-button--brand '][normalize-space()='Search']"))).click()
     time.sleep(8)

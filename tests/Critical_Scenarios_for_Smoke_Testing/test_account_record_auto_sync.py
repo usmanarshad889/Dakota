@@ -13,6 +13,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
+value_src = "l"
 
 # Generate Random Name, Email and Phone
 fake = Faker()
@@ -197,7 +198,7 @@ def test_account_record_auto_sync(driver, config):
         # search the element
         btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='SearchBar']")))
         btn.clear()
-        btn.send_keys("y")
+        btn.send_keys(value_src)
         btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@class='slds-button slds-button_brand'][normalize-space()='Search']")))
         btn.click()
         time.sleep(2)

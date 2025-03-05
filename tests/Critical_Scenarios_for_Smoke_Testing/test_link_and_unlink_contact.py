@@ -81,13 +81,13 @@ def test_link_unlink_contact(driver, config):
     dropdown_option.select_by_visible_text("Dakota Email")
 
 
-    try:
-        dropdown = wait.until(EC.element_to_be_clickable((By.XPATH, f"(//select[@class='slds-select'])[7]")))
-        dropdown_option = Select(dropdown)
-        dropdown_option.select_by_visible_text("Email")
-    except (NoSuchElementException, TimeoutException) as e:
-        print(f"Error: {type(e).__name__}")
-        pass
+    # try:
+    #     dropdown = wait.until(EC.element_to_be_clickable((By.XPATH, f"(//select[@class='slds-select'])[7]")))
+    #     dropdown_option = Select(dropdown)
+    #     dropdown_option.select_by_visible_text("Email")
+    # except (NoSuchElementException, TimeoutException) as e:
+    #     print(f"Error: {type(e).__name__}")
+    #     pass
 
     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@class='slds-button slds-button_neutral slds-button slds-button--brand '][normalize-space()='Search']"))).click()
     time.sleep(8)
