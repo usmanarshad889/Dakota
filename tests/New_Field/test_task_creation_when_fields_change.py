@@ -452,3 +452,24 @@ def test_task_creation_when_fields_change(driver, config):
     assert "was saved" in toast_massage.lower().strip() , f"Error while creating account : {toast_massage}"
     time.sleep(2)
 
+    # # Now Clear data and refresh the page
+    # driver.delete_all_cookies()
+    # driver.refresh()
+    # time.sleep(2)
+    #
+    # # Navigate to login page of fuse app
+    # # Navigate to login page
+    # driver.get(config["base_url"])
+    # wait = WebDriverWait(driver, 20)
+    #
+    # # Perform login
+    # username = wait.until(EC.element_to_be_clickable((By.ID, "username")))
+    # username.send_keys(config["username"])
+    # password = wait.until(EC.element_to_be_clickable((By.ID, "password")))
+    # password.send_keys(config["password"])
+    # login_button = wait.until(EC.element_to_be_clickable((By.ID, "Login")))
+    # login_button.click()
+    # time.sleep(2)
+    #
+    # # Navigate to installed pakages setup
+    # driver.get(f"{config['base_url']}lightning/n/Marketplace__Dakota_Setup")

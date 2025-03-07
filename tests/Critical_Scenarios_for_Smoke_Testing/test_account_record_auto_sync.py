@@ -13,7 +13,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-value_src = "l"
+value_src = "w"
 
 # Generate Random Name, Email and Phone
 fake = Faker()
@@ -81,6 +81,17 @@ def test_account_record_auto_sync(driver, config):
     field = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='Website']")))
     field.send_keys(email_var)
 
+    # Select Type
+    field = wait.until(EC.element_to_be_clickable((By.XPATH, "(//button[@data-value='--None--'])[2]")))
+    field.click()
+    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "(//lightning-base-combobox-item[@role='option'])[4]")))
+    btn.click()
+
+
+    # Select CRD
+    field = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='CRD__c']")))
+    field.send_keys("3546")
+
     element = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='Website']")))
     driver.execute_script("arguments[0].scrollIntoView();", element)
     time.sleep(1)
@@ -89,6 +100,37 @@ def test_account_record_auto_sync(driver, config):
     element.send_keys("10000")
     driver.execute_script("arguments[0].scrollIntoView();", element)
     time.sleep(1)
+
+    # Select Metro Area
+    field = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@placeholder='Search Metro Areas...']")))
+    field.click()
+    time.sleep(5)
+    field.send_keys("Bosto")
+    time.sleep(5)
+    values = driver.find_elements(By.XPATH, "(//lightning-base-combobox-item[@role='option'])")
+    index_to_use = None  # Store index of "Boston"
+    for index, s in enumerate(values, start=1):
+        # print(f"{index}: {s.text.strip()}")
+        # If "Boston" is found anywhere in the list, store its index
+        if "Boston" in s.text.strip():
+            index_to_use = index
+            break  # Stop searching after finding the first "Boston"
+    # Click the element if "Boston" was found
+    if index_to_use is not None:
+        print(f"Using index {index_to_use} to click 'Boston'.")
+        try:
+            element = wait.until(EC.element_to_be_clickable(
+                (By.XPATH, f"(//lightning-base-combobox-item[@role='option'])[{index_to_use}]")))
+            first_line = element.text.splitlines()[0] if element.text.strip() else "No text found"
+            # print(f"First line of selected element: {first_line}")
+            element.click()
+        except Exception as e:
+            print(f"Error: {type(e).__name__}")
+            pass
+    else:
+        print("Boston was not found in the list.")
+    time.sleep(1)
+
 
     element = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='Average_Ticket_Size__c']")))
     driver.execute_script("arguments[0].scrollIntoView();", element)
@@ -294,16 +336,6 @@ def test_account_record_auto_sync(driver, config):
     ok_btn.click()
     time.sleep(15)
 
-    # try:
-    #     toast_message = wait.until(EC.element_to_be_clickable((By.XPATH, "//span[@class='toastMessage slds-text-heading--small forceActionsText']")))
-    #     print(f"Actual Toast Text : {toast_message.text}")
-    #     assert toast_message == "Mapping saved successfully." , f"Error while mapping : {toast_message}"
-    # except (NoSuchElementException, TimeoutException) as e:
-    #     print(f"Error: {type(e).__name__}")
-    #     pass
-    # time.sleep(2)
-
-
     # Navigate to Market Place Search
     driver.get(f"{config['base_url']}lightning/n/Marketplace__Dakota_Search")
     time.sleep(3)
@@ -399,7 +431,6 @@ def test_account_record_auto_sync(driver, config):
 
     time.sleep(2)
 
-
     # Navigate to installed pakages setup
     driver.get(f"{config['base_url']}lightning/n/Marketplace__Dakota_Search")
 
@@ -448,7 +479,28 @@ def test_account_record_auto_sync(driver, config):
     web_text = web_field.text
     print(f"Website Text : {web_text}")
 
+    # Verify the Type as Bank
+    xpath = '''(//span[@class='test-id__field-value slds-form-element__static slds-grow word-break-ie11'])[3]'''
+    type_field = wait.until(EC.element_to_be_clickable((By.XPATH, xpath)))
+    type_text = type_field.text
+    print(f"Type Text : {type_text}")
+
+    # Verify the CRD as '3546'
+    xpath = '''(//span[@class='test-id__field-value slds-form-element__static slds-grow word-break-ie11'])[10]'''
+    crd_field = wait.until(EC.element_to_be_clickable((By.XPATH, xpath)))
+    crd_text = crd_field.text
+    print(f"CRD Value : {crd_text}")
+
+    # Verify the Account Record Type
+    xpath = '''(//div[@class='recordTypeName slds-grow slds-truncate'])[1]'''
+    account_type_field = wait.until(EC.element_to_be_clickable((By.XPATH, xpath)))
+    account_type_text = account_type_field.text
+    print(f"Account Record Type : {account_type_text}")
+
     # Assertions with Correct Messages
     # assert phone_text == phone_var, f"Phone Mismatch: Expected '{phone_var}', but got '{phone_text}'"
     assert web_text == email_var, f"Website Mismatch: Expected '{email_var}', but got '{web_text}'"
+    assert type_text == "Bank", f"Type Mismatch: Expected 'Bank', but got '{type_text}'"
+    assert crd_text == "3546", f"CRD Value Mismatch: Expected CRD Value '3546', but got '{crd_text}'"
+    assert account_type_text == "Investment Allocator", f"Account Record Type Mismatch: Expected CRD Value 'Investment Allocator', but got '{account_type_text}'"
     time.sleep(3)

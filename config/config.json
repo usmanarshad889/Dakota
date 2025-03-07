@@ -11,10 +11,10 @@
   "production": {
     "base_url": "https://dakotanetworks--fuseupgrad.sandbox.my.salesforce-setup.com/",
     "username": "draftsf@draftdata.com.fuseupgr",
-    "password": "LOWYqfakgQ8",
+    "password": "test",
     "uat_login_url": "https://test.salesforce.com/",
     "uat_base_url": "https://dakotanetworks--uat.sandbox.lightning.force.com/",
     "uat_username": "draftsf@draftdata.com",
-    "uat_password": "Rolustech@"
+    "uat_password": "test"
   }
 }
