@@ -192,18 +192,16 @@ def test_contact_record_auto_sync(driver, config):
     except (NoSuchElementException, TimeoutException) as e:
         print(f"Message: {type(e).__name__}")
         print("Connect button is not clicked in the first attempt")
-        pass
 
     try:
         btn = wait.until(EC.element_to_be_clickable((By.XPATH, "(//button[normalize-space()='Connect'])[1]")))
         try:
             btn.click()
-        except:
-            pass
+        except (NoSuchElementException, TimeoutException) as e:
+            print(f"Message: {type(e).__name__}")
     except (NoSuchElementException, TimeoutException) as e:
         print(f"Message: {type(e).__name__}")
         print("Connect button clicked successfully in first attempt")
-        pass
 
     time.sleep(2)
 
@@ -227,7 +225,7 @@ def test_contact_record_auto_sync(driver, config):
             btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//span[@class='slds-checkbox_faux']")))
             btn.click()
         else:
-            pass
+            print("Button is already active")
     except (NoSuchElementException, TimeoutException) as e:
         print(f"Error: {type(e).__name__}")
     time.sleep(2)
@@ -427,7 +425,6 @@ def test_contact_record_auto_sync(driver, config):
             break  # Exit loop after the first successful click
         except (NoSuchElementException, TimeoutException) as e:
             print(f"Error: {type(e).__name__} while trying button {r}")
-            pass
     time.sleep(3)
 
 

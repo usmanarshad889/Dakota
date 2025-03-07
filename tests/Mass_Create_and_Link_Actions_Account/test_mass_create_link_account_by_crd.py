@@ -47,7 +47,6 @@ def test_mass_create_link_account_by_crd(driver, config):
         btn.clear()
     except (NoSuchElementException, TimeoutException) as e:
         print(f"Error: {type(e).__name__}")
-        pass
 
     btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@title='Search']")))
     time.sleep(5)
@@ -73,7 +72,6 @@ def test_mass_create_link_account_by_crd(driver, config):
         dropdown_option.select_by_visible_text("CRD#")
     except (NoSuchElementException, TimeoutException) as e:
         print(f"Error: {type(e).__name__}")
-        pass
 
     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[contains(@class,'slds-button slds-button_neutral slds-button slds-button--brand')][normalize-space()='Search']"))).click()
     time.sleep(8)

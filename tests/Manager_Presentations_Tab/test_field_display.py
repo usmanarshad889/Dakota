@@ -1,0 +1,81 @@
+import time
+import pytest
+import allure
+from allure_commons.types import AttachmentType
+from selenium import webdriver
+from selenium.common import NoSuchElementException
+from selenium.common import TimeoutException
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
+@pytest.fixture(scope="module")
+def driver():
+    driver = webdriver.Chrome()
+    driver.maximize_window()
+    driver.implicitly_wait(10)
+    yield driver
+    driver.quit()
+
+@pytest.mark.regression
+@allure.severity(allure.severity_level.CRITICAL)
+@allure.feature("Authentication - Correct Credentials")
+@allure.story("Validate successful authentication with correct credentials for the Heroku.")
+def test_field_display(driver, config):
+    # Navigate to login page
+    driver.get(config["base_url"])
+    wait = WebDriverWait(driver, 20)
+
+    # Perform login
+    username = wait.until(EC.element_to_be_clickable((By.ID, "username")))
+    username.send_keys(config["username"])
+    password = wait.until(EC.element_to_be_clickable((By.ID, "password")))
+    password.send_keys(config["password"])
+    login_button = wait.until(EC.element_to_be_clickable((By.ID, "Login")))
+    login_button.click()
+
+    # Navigate to installed pakages setup
+    driver.get(f"{config['base_url']}lightning/n/Marketplace__Manager_Presentations")
+    time.sleep(5)
+
+    xpaths = [
+        "(//c-custom-datatable[@class='tablecol managerPresentationDataTable']//a[@role='button'])[1]",
+        "(//c-custom-datatable[@class='tablecol managerPresentationDataTable']//a[@role='button'])[2]",
+        "(//c-custom-datatable[@class='tablecol managerPresentationDataTable']//a[@role='button'])[3]",
+        "(//c-custom-datatable[@class='tablecol managerPresentationDataTable']//a[@role='button'])[4]",
+        "(//c-custom-datatable[@class='tablecol managerPresentationDataTable']//a[@role='button'])[5]",
+        "(//c-custom-datatable[@class='tablecol managerPresentationDataTable']//a[@role='button'])[6]",
+        "(//c-custom-datatable[@class='tablecol managerPresentationDataTable']//a[@role='button'])[7]",
+        "(//c-custom-datatable[@class='tablecol managerPresentationDataTable']//a[@role='button'])[8]"
+    ]
+
+    expected_field_text = [
+        "Manager Presentation Name",
+        "Type",
+        "Account Name",
+        "Public Plan Minute",
+        "Investment Strategy",
+        "Asset Class",
+        "Sub-Asset Class",
+        "Meeting Date"
+    ]
+
+    extracted_field_text = []
+    second_extracted_text = []  # List to store only the second line
+
+    for xpath in xpaths:
+        try:
+            field = wait.until(EC.element_to_be_clickable((By.XPATH, xpath)))
+            text = field.text.strip()
+            extracted_field_text.append(text)  # Store all extracted text
+
+            # Extract second line if text has multiple lines
+            lines = text.split("\n")  # Split text by newline
+            if len(lines) > 1:  # Ensure there's a second line
+                print(f"Actual Field Name : {lines[1].strip()}")
+                second_extracted_text.append(lines[1].strip())  # Append second line
+
+        except (NoSuchElementException, TimeoutException) as e:
+            print(f"Message: {type(e).__name__}")
+
+    assert expected_field_text == second_extracted_text, "All Fields are not displayed correctly"

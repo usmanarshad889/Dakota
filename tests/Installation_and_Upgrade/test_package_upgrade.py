@@ -60,7 +60,7 @@ def test_package_upgrade(driver, config):
         btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//span[@class='slds-checkbox_faux']")))
         btn.click()
     else:
-        pass
+        print("Button is already active")
 
     # Scroll down by 500 pixels
     driver.execute_script("window.scrollBy(0, 500);")
@@ -76,7 +76,6 @@ def test_package_upgrade(driver, config):
     except (NoSuchElementException, TimeoutException) as e:
         print("Sync Option not selected")
         print(f"Error: {type(e).__name__}")
-        pass
 
     try:
         # Select Notification Setting
@@ -89,7 +88,6 @@ def test_package_upgrade(driver, config):
     except (NoSuchElementException, TimeoutException) as e:
         print("Notification Setting field not selected")
         print(f"Error: {type(e).__name__}")
-        pass
 
     try:
         # Select Notification Recipient
@@ -102,7 +100,6 @@ def test_package_upgrade(driver, config):
     except (NoSuchElementException, TimeoutException) as e:
         print("Notification Recipient field not selected")
         print(f"Error: {type(e).__name__}")
-        pass
 
     try:
         # Select Notification Assignee User/Group
@@ -115,7 +112,6 @@ def test_package_upgrade(driver, config):
     except (NoSuchElementException, TimeoutException) as e:
         print("Notification Assignee User/Group not selected")
         print(f"Error: {type(e).__name__}")
-        pass
 
     # Scroll down by 1500 pixels
     driver.execute_script("window.scrollBy(0, 1500);")

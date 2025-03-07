@@ -126,7 +126,6 @@ def test_account_record_auto_sync(driver, config):
             element.click()
         except Exception as e:
             print(f"Error: {type(e).__name__}")
-            pass
     else:
         print("Boston was not found in the list.")
     time.sleep(1)
@@ -196,7 +195,6 @@ def test_account_record_auto_sync(driver, config):
         element.click()
     except (NoSuchElementException, TimeoutException) as e:
         print(f"Message: {type(e).__name__}")
-        pass
     time.sleep(1)
 
     # Verify the Authentication with correct Credentials
@@ -213,18 +211,16 @@ def test_account_record_auto_sync(driver, config):
     except (NoSuchElementException, TimeoutException) as e:
         print(f"Message: {type(e).__name__}")
         print("Connect button is not clicked in the first attempt")
-        pass
 
     try:
         btn = wait.until(EC.element_to_be_clickable((By.XPATH, "(//button[normalize-space()='Connect'])[1]")))
         try:
             btn.click()
-        except:
-            pass
+        except (NoSuchElementException, TimeoutException) as e:
+            print(f"Message: {type(e).__name__}")
     except (NoSuchElementException, TimeoutException) as e:
         print(f"Message: {type(e).__name__}")
         print("Connect button clicked successfully in first attempt")
-        pass
 
     time.sleep(2)
 
@@ -248,7 +244,7 @@ def test_account_record_auto_sync(driver, config):
             btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//span[@class='slds-checkbox_faux']")))
             btn.click()
         else:
-            pass
+            print("Button is already active")
     except (NoSuchElementException, TimeoutException) as e:
         print(f"Error: {type(e).__name__}")
 

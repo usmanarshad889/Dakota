@@ -47,7 +47,6 @@ def test_authentication_incorrect_credentials(driver, config):
         element.click()
     except (NoSuchElementException, TimeoutException) as e:
         print(f"Message: {type(e).__name__}")
-        pass
     time.sleep(1)
 
     # Verify the Authentication with correct Credentials
@@ -65,15 +64,16 @@ def test_authentication_incorrect_credentials(driver, config):
     except (NoSuchElementException, TimeoutException) as e:
         print(f"Message: {type(e).__name__}")
         print("Connect button is not clicked in the first attempt")
-        pass
 
     try:
-        driver.find_element(By.XPATH, "(//button[normalize-space()='Connect'])[1]").click()
-        time.sleep(1)
+        btn = wait.until(EC.element_to_be_clickable((By.XPATH, "(//button[normalize-space()='Connect'])[1]")))
+        try:
+            btn.click()
+        except (NoSuchElementException, TimeoutException) as e:
+            print(f"Message: {type(e).__name__}")
     except (NoSuchElementException, TimeoutException) as e:
         print(f"Message: {type(e).__name__}")
         print("Connect button clicked successfully in first attempt")
-        pass
 
     time.sleep(2)
 

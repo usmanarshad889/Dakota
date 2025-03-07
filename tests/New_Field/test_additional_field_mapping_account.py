@@ -352,7 +352,7 @@ def test_field_addition_to_account(driver, config):
             btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//span[@class='slds-checkbox_faux']")))
             btn.click()
         else:
-            pass
+            print("Button is already active")
     except (NoSuchElementException, TimeoutException) as e:
         print(f"Error: {type(e).__name__}")
 

@@ -50,7 +50,7 @@ def test_additional_settings_toggle(driver, config):
             btn = wait.until(EC.element_to_be_clickable((By.XPATH, "(//span[@class='slds-checkbox_faux'])[1]")))
             btn.click()
         else:
-            pass
+            print("Button is already active")
     except (NoSuchElementException, TimeoutException) as e:
         print("Sync Account/Contact Type Field is not working")
         print(f"Error: {type(e).__name__}")
@@ -63,7 +63,7 @@ def test_additional_settings_toggle(driver, config):
             btn = wait.until(EC.element_to_be_clickable((By.XPATH, "(//span[@class='slds-checkbox_faux'])[2]")))
             btn.click()
         else:
-            pass
+            print("Button is already active")
     except (NoSuchElementException, TimeoutException) as e:
         print("Auto Sync new Accounts and related Contacts is not working")
         print(f"Error: {type(e).__name__}")
@@ -76,7 +76,7 @@ def test_additional_settings_toggle(driver, config):
             btn = wait.until(EC.element_to_be_clickable((By.XPATH, "(//span[@class='slds-checkbox_faux'])[3]")))
             btn.click()
         else:
-            pass
+            print("Button is already active")
     except (NoSuchElementException, TimeoutException) as e:
         print("Notify when any field changes is not working")
         print(f"Error: {type(e).__name__}")
@@ -89,7 +89,7 @@ def test_additional_settings_toggle(driver, config):
             btn = wait.until(EC.element_to_be_clickable((By.XPATH, "(//span[@class='slds-checkbox_faux'])[4]")))
             btn.click()
         else:
-            pass
+            print("Button is already active")
     except (NoSuchElementException, TimeoutException) as e:
         print("Receive Follow Notification is not working")
         print(f"Error: {type(e).__name__}")

@@ -214,7 +214,6 @@ def test_single_record_linking_unlinking(driver, config):
         #         time.sleep(10)
         #     except (NoSuchElementException, TimeoutException) as e:
         #         print(f"Error: {type(e).__name__}")
-        #         pass
         #
         #     # Wait for search input and enter the search term
         #     name_input = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='searchTerm']")))
@@ -298,7 +297,6 @@ def test_single_record_linking_unlinking(driver, config):
             break  # Exit loop after the first successful click
         except (NoSuchElementException, TimeoutException) as e:
             print(f"Error: {type(e).__name__} while trying button {r}")
-            pass
     time.sleep(3)
 
     # Search by name

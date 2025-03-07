@@ -53,7 +53,6 @@ def test_link_unlink_contact(driver, config):
         btn.clear()
     except (NoSuchElementException, TimeoutException) as e:
         print(f"Error: {type(e).__name__}")
-        pass
 
     btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@class='buttonDiv']//button[@title='Search'][normalize-space()='Search']")))
     time.sleep(5)
@@ -65,7 +64,6 @@ def test_link_unlink_contact(driver, config):
         contact_text = contact_field.text
     except (NoSuchElementException, TimeoutException) as e:
         print(f"Error: {type(e).__name__}")
-        pass
 
 
     # Click on first contact name checkbox
@@ -90,7 +88,6 @@ def test_link_unlink_contact(driver, config):
     #     dropdown_option.select_by_visible_text("Email")
     # except (NoSuchElementException, TimeoutException) as e:
     #     print(f"Error: {type(e).__name__}")
-    #     pass
 
     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@class='slds-button slds-button_neutral slds-button slds-button--brand '][normalize-space()='Search']"))).click()
     time.sleep(8)
@@ -110,7 +107,6 @@ def test_link_unlink_contact(driver, config):
             btn.click()
         except (NoSuchElementException, TimeoutException) as e:
             print(f"Error: {type(e).__name__}")
-            pass
 
 
     # Click on linked account

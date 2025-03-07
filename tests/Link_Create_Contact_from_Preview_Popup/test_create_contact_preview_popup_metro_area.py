@@ -66,7 +66,6 @@ def test_link_contact_preview_popup_metro_area(driver, config):
         print(btn.text)
     except (NoSuchElementException, TimeoutException) as e:
         print(f"Error: {type(e).__name__}")
-        pass
 
     time.sleep(2)
 
@@ -102,7 +101,6 @@ def test_link_contact_preview_popup_metro_area(driver, config):
         print(btn.text)
     except (NoSuchElementException, TimeoutException) as e:
         print(f"Error: {type(e).__name__}")
-        pass
 
     time.sleep(2)
 
@@ -123,7 +121,6 @@ def test_link_contact_preview_popup_metro_area(driver, config):
         print(btn.text)
     except (NoSuchElementException, TimeoutException) as e:
         print(f"Error: {type(e).__name__}")
-        pass
 
     time.sleep(2)
 

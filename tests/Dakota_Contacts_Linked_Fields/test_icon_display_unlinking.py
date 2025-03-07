@@ -243,7 +243,6 @@ def test_icon_display_unlinking(driver, config):
         cancel_btn.click()
     except (NoSuchElementException, TimeoutException) as e:
         print(f"Error: {type(e).__name__}")
-        pass
     time.sleep(5)
 
     # Search by name
@@ -286,7 +285,6 @@ def test_icon_display_unlinking(driver, config):
             break  # Exit loop after the first successful click
         except (NoSuchElementException, TimeoutException) as e:
             print(f"Error: {type(e).__name__} while trying button {r}")
-            pass
     time.sleep(3)
 
     # Search by name

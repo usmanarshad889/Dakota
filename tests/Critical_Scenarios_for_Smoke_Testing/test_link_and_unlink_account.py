@@ -49,7 +49,6 @@ def test_link_unlink_account(driver, config):
         btn.clear()
     except (NoSuchElementException, TimeoutException) as e:
         print(f"Error: {type(e).__name__}")
-        pass
 
     btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@title='Search']")))
     time.sleep(5)
@@ -79,7 +78,6 @@ def test_link_unlink_account(driver, config):
     #     dropdown_option.select_by_visible_text("Account Name")
     # except (NoSuchElementException, TimeoutException) as e:
     #     print(f"Error: {type(e).__name__}")
-    #     pass
 
     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@class='slds-button slds-button_neutral slds-button slds-button--brand '][normalize-space()='Search']"))).click()
     time.sleep(8)
@@ -100,7 +98,6 @@ def test_link_unlink_account(driver, config):
         except (NoSuchElementException, TimeoutException) as e:
             print(f"Error: {type(e).__name__}")
             print("1")
-            pass
 
         try:
             # search_fld.send_keys("Test Contacts")
@@ -109,7 +106,6 @@ def test_link_unlink_account(driver, config):
         except (NoSuchElementException, TimeoutException) as e:
             print(f"Error: {type(e).__name__}")
             print("2")
-            pass
 
         try:
             # search_fld.send_keys("Test Contacts")
@@ -118,7 +114,6 @@ def test_link_unlink_account(driver, config):
         except (NoSuchElementException, TimeoutException) as e:
             print(f"Error: {type(e).__name__}")
             print("3")
-            pass
 
 
 

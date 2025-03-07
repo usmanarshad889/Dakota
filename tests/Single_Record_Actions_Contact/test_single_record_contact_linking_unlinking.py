@@ -247,7 +247,6 @@ def test_create_contact_linking_unlinking(driver, config):
             break  # Exit loop after the first successful click
         except (NoSuchElementException, TimeoutException) as e:
             print(f"Error: {type(e).__name__} while trying button {r}")
-            pass
     time.sleep(3)
 
 

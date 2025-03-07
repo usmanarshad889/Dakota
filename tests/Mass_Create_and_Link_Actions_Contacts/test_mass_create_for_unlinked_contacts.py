@@ -51,7 +51,6 @@ def test_mass_create_for_unlinked_contacts(driver, config):
         btn.clear()
     except (NoSuchElementException, TimeoutException) as e:
         print(f"Error: {type(e).__name__}")
-        pass
 
     # Click the Search button and print its text
     search_button = wait.until(EC.visibility_of_element_located(
@@ -78,7 +77,6 @@ def test_mass_create_for_unlinked_contacts(driver, config):
     except (NoSuchElementException, TimeoutException) as e:
         print(f"Error: {type(e).__name__}")
         print("No toast message/error found")
-        pass
 
     # Click on linked account
     dropdown = wait.until(EC.element_to_be_clickable((By.XPATH, "(//select[@class='slds-select'])[6]")))
@@ -91,7 +89,6 @@ def test_mass_create_for_unlinked_contacts(driver, config):
         dropdown_option.select_by_visible_text("Account Name")
     except (NoSuchElementException, TimeoutException) as e:
         print(f"Error: {type(e).__name__}")
-        pass
 
     wait.until(EC.element_to_be_clickable((By.XPATH,
                                            "//button[contains(@class,'slds-button slds-button_neutral slds-button slds-button--brand')][normalize-space()='Search']"))).click()

@@ -242,7 +242,7 @@ def test_account_record_auto_sync_send_email(driver, config):
             btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//span[@class='slds-checkbox_faux']")))
             btn.click()
         else:
-            pass
+            print("Button is already active")
     except (NoSuchElementException, TimeoutException) as e:
         print(f"Error: {type(e).__name__}")
 
@@ -336,7 +336,6 @@ def test_account_record_auto_sync_send_email(driver, config):
     #     assert toast_message == "Mapping saved successfully." , f"Error while mapping : {toast_message}"
     # except (NoSuchElementException, TimeoutException) as e:
     #     print(f"Error: {type(e).__name__}")
-    #     pass
     # time.sleep(2)
 
     # Navigate to installed pakages setup

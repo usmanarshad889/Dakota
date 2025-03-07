@@ -93,7 +93,6 @@ def test_create_account_preview_popup_marketplace(driver, config):
             check_box.click()
         except (NoSuchElementException, TimeoutException) as e:
             print(f"Error: {type(e).__name__}")
-            pass
 
         # click on save/create button
         save_btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[normalize-space()='Save and Create']")))

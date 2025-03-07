@@ -60,7 +60,6 @@ def test_installation_using_correct_link(driver, config):
             button.click()
         except (NoSuchElementException, TimeoutException) as e:
             print(f"Error: {type(e).__name__}")
-            pass
         assert True
     else:
         print("Install Package Link is not correct")

@@ -71,7 +71,6 @@ def test_role_change_creation_of_account_from_account(driver, config):
                     continue  # Skip to the next element in the loop
             except (NoSuchElementException, TimeoutException) as e:
                 print(f"Error: {type(e).__name__}")
-                pass
 
             wait.until(
                 EC.visibility_of_element_located((By.XPATH, f"//h2[normalize-space()='Account: {contact_name}']")))

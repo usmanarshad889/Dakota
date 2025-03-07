@@ -96,7 +96,7 @@ def test_upgrade_and_reload(driver, config):
         driver.find_element(By.XPATH, "//span[@class='slds-checkbox_faux']").click()
         time.sleep(1)
     else:
-        pass
+        print("Button is already active")
 
     # Scroll down by 500 pixels
     driver.execute_script("window.scrollBy(0, 500);")

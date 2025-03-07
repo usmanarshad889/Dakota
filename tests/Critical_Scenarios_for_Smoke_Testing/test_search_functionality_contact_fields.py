@@ -180,7 +180,6 @@ def test_search_functionality_contact_fields(driver, config):
             element.click()
         except Exception as e:
             print(f"Error: {type(e).__name__}")
-            pass
     else:
         print("Boston was not found in the list.")
     time.sleep(1)

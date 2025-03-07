@@ -70,7 +70,6 @@ def test_job_change_linking_firm_left(driver, config):
                     continue  # Skip to the next element in the loop
             except (NoSuchElementException, TimeoutException) as e:
                 print(f"Error: {type(e).__name__}")
-                pass
 
             wait.until(
                 EC.visibility_of_element_located((By.XPATH, f"//h2[normalize-space()='Account: {account_name}']")))
