@@ -17,7 +17,8 @@ def driver():
     yield driver
     driver.quit()
 
-def test_additional_settings_toggle(driver, config):
+
+def test_additional_settings_toggle_buttons(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])
     wait = WebDriverWait(driver, 20)

@@ -35,19 +35,19 @@ def driver():
     driver.quit()
 
 def test_icon_display_unlinking(driver, config):
-    driver.get("https://test.salesforce.com/")
+    driver.get(config["uat_login_url"])
     wait = WebDriverWait(driver, 20)
 
     # Perform login
     username = wait.until(EC.element_to_be_clickable((By.ID, "username")))
-    username.send_keys("draftsf@draftdata.com.uat")
+    username.send_keys(config["uat_username"])
     password = wait.until(EC.element_to_be_clickable((By.ID, "password")))
-    password.send_keys("Rolustech@99")
+    password.send_keys(config["uat_password"])
     login_button = wait.until(EC.element_to_be_clickable((By.ID, "Login")))
     login_button.click()
-
+    time.sleep(2)
     # Move to account Tab and click on new button
-    driver.get("https://dakotanetworks--uat.sandbox.lightning.force.com/lightning/o/Contact/list")
+    driver.get(f"{config['uat_base_url']}lightning/o/Contact/list")
     new_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@title='New']")))
     new_button.click()
 

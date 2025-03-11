@@ -145,6 +145,12 @@ def test_account_record_auto_sync(driver, config):
 
     element = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='SEC_Registered_Date__c']")))
     driver.execute_script("arguments[0].scrollIntoView();", element)
+
+    element = wait.until(EC.element_to_be_clickable((By.XPATH, "//label[normalize-space()='Billing Street']")))
+    driver.execute_script("arguments[0].scrollIntoView();", element)
+
+    element = wait.until(EC.element_to_be_clickable((By.XPATH, "//label[normalize-space()='Billing Zip/Postal Code']")))
+    driver.execute_script("arguments[0].scrollIntoView();", element)
     time.sleep(1)
 
     element = driver.find_element(By.XPATH, "//input[@name='X100_Marketplace__c']")
