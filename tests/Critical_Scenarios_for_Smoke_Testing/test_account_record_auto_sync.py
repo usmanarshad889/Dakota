@@ -262,7 +262,7 @@ def test_account_record_auto_sync(driver, config):
     # Select phone with CRD
     select_element = wait.until(EC.element_to_be_clickable((By.XPATH, "(//select[@name='a7Ndy0000001H3gEAE'])[1]")))
     option = Select(select_element)
-    option.select_by_visible_text("Dakota Phone")
+    option.select_by_visible_text("Account Phone")
 
     # Select Website with Account Description
     select_element = wait.until(EC.element_to_be_clickable((By.XPATH, "(//select[@name='a7Ndy0000001H3hEAE'])[1]")))

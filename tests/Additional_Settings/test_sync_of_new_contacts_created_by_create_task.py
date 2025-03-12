@@ -5,7 +5,6 @@ import pytest
 import allure
 import datetime
 from allure_commons.types import AttachmentType
-from selenium.webdriver.chrome.options import Options
 from faker import Faker
 from selenium import webdriver
 from selenium.common import NoSuchElementException, TimeoutException
@@ -16,20 +15,22 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 
-# Generate Random Name, Email and Phone
+# Initialize Faker
 fake = Faker()
-random_name = "Test " + fake.name()  # Add 'test' at the start of the name
-email_prefix = ''.join(random.choices(string.ascii_lowercase, k=7))
-random_email = f"www.{email_prefix}.com"
-random_phone = ''.join(random.choices(string.digits, k=9))
-# Print the generated values
-print("Name:", random_name)
-print("Email:", random_email)
-print("Phone:", random_phone)
-# Store them in variables
-name_var = random_name
-email_var = random_email
-phone_var = random_phone
+phone = f"{random.randint(100,999)}-{random.randint(100,999)}-{random.randint(1000,9999)}"
+mobile = f"{random.randint(100,999)}-{random.randint(100,999)}-{random.randint(1000,9999)}"
+mailing_address = fake.address()
+account_name = fake.company()
+name = fake.name()
+first_name = fake.first_name()
+last_name = fake.last_name()
+suffix = random.choice(['Jr.', 'Sr.', 'III', 'PhD', 'MD', 'Esq.'])
+email = fake.email()
+title = fake.job()
+contact_type = random.choice(['Personal', 'Business', 'Emergency', 'Billing'])
+search_name = "Test" + " " + last_name
+full_name = "Test" + " " + last_name + " " + suffix
+print(full_name)
 
 
 # # Define the target minutes (when the script should run)
@@ -62,7 +63,7 @@ def driver():
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Mapping - Account field Mapping")
 @allure.story("Validate successful mapping of account fields.")
-def test_account_field_change_notify_create_task(driver, config):
+def test_sync_of_new_accounts_created_by_create_task(driver, config):
     driver.get(config["uat_login_url"])
     wait = WebDriverWait(driver, 20)
 
@@ -73,80 +74,81 @@ def test_account_field_change_notify_create_task(driver, config):
     password.send_keys(config["uat_password"])
     login_button = wait.until(EC.element_to_be_clickable((By.ID, "Login")))
     login_button.click()
-    time.sleep(2)
 
 
-    # Move to account Tab and click on new button
-    driver.get(f"{config['uat_base_url']}lightning/o/Account/list?filterName=__Recent")
+    driver.get(f"{config['uat_base_url']}lightning/o/Contact/list")
     new_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@title='New']")))
     time.sleep(2)
     new_button.click()
     time.sleep(2)
 
     # Select a record type
-    record_type = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@class='slds-button slds-button_neutral slds-button slds-button_brand uiButton']")))
+    new_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@class='slds-button slds-button_neutral slds-button slds-button_brand uiButton']")))
     time.sleep(2)
-    record_type.click()
+    new_button.click()
 
     # Select account name
-    name_field = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='Name']")))
-    name_field.send_keys(name_var)
+    name_field = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='Phone']")))
+    name_field.send_keys(phone)
 
     # Select phone
-    field = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='Phone']")))
-    field.send_keys(phone_var)
+    field = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='MobilePhone']")))
+    field.send_keys(mobile)
 
-    # Select website
-    field = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='Website']")))
-    field.send_keys(email_var)
+    element = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='city']")))
+    driver.execute_script("arguments[0].scrollIntoView();", element)
 
-    # Select Type
-    field = wait.until(EC.element_to_be_clickable((By.XPATH, "(//button[@data-value='--None--'])[2]")))
-    field.click()
-    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "(//lightning-base-combobox-item[@role='option'])[4]")))
+    element = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='LinkedIn_URL__c']")))
+    driver.execute_script("arguments[0].scrollIntoView();", element)
+
+    element = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='GHIN__c']")))
+    driver.execute_script("arguments[0].scrollIntoView();", element)
+    time.sleep(1)
+
+    # SELECT Account type
+    input_field = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@placeholder='Search Accounts...']")))
+    input_field.clear()
+    input_field.send_keys("Test Contacts")
+    dropdown_option = wait.until(EC.element_to_be_clickable((By.XPATH, "(//lightning-base-combobox-item[@role='option'])[2]")))
+    dropdown_option.click()
+
+    # Select account name
+    salutation_field = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@name='salutation']")))
+    salutation_field.click()
+    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//lightning-base-combobox-item[@data-value='Mr.']")))
     btn.click()
 
+    # Select First name
+    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='firstName']")))
+    btn.send_keys("Test")
+    # driver.find_element(By.XPATH, "//input[@name='middleName']").send_keys(middle_name)
+    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='lastName']")))
+    btn.send_keys(last_name)
+    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='suffix']")))
+    btn.send_keys(suffix)
 
-    # Select CRD
-    field = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='CRD__c']")))
-    field.send_keys("3546")
+    element = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='Email']")))
+    driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", element)
+    time.sleep(2)
 
-    element = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='Website']")))
-    driver.execute_script("arguments[0].scrollIntoView();", element)
-    time.sleep(1)
+    for r in range(1, 101):  # XPath indices start from 1
+        try:
+            element = driver.find_element(By.XPATH, f"(//input[@name='Marketplace_Verified_Contact__c'])[{r}]")
+            element.click()
+            print(f"Clicked element {r}")
+            break  # Stop after the first successful click
+        except NoSuchElementException:
+            print(f"Element {r} not found, trying next...")
 
-    element = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='AUM__c']")))
-    element.send_keys("10000")
-    driver.execute_script("arguments[0].scrollIntoView();", element)
-
-    element = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='Average_Ticket_Size__c']")))
-    driver.execute_script("arguments[0].scrollIntoView();", element)
-
-    element = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='Total_Participants__c']")))
-    driver.execute_script("arguments[0].scrollIntoView();", element)
-
-    element = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='Trial_Start_Date__c']")))
-    driver.execute_script("arguments[0].scrollIntoView();", element)
-
-    element = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='Copyright__c']")))
-    driver.execute_script("arguments[0].scrollIntoView();", element)
-
-    element = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='SEC_Registered_Date__c']")))
-    driver.execute_script("arguments[0].scrollIntoView();", element)
-
-    element = wait.until(EC.element_to_be_clickable((By.XPATH, "//label[normalize-space()='Billing Street']")))
-    driver.execute_script("arguments[0].scrollIntoView();", element)
-
-    element = wait.until(EC.element_to_be_clickable((By.XPATH, "//label[normalize-space()='Billing Zip/Postal Code']")))
-    driver.execute_script("arguments[0].scrollIntoView();", element)
-    time.sleep(1)
-
-    element = driver.find_element(By.XPATH, "//input[@name='X100_Marketplace__c']")
-    element.click()
+    wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='Email']"))).send_keys(email)
+    wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='Title']"))).send_keys(title)
+    wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@aria-label='Contact Type']"))).click()
+    wait.until(EC.element_to_be_clickable((By.XPATH, "//lightning-base-combobox-item[@data-value='Administrator']"))).click()
 
     # click on save button
     save_btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@name='SaveEdit']")))
     save_btn.click()
+
     time.sleep(2)
 
     # Verify toast_message
@@ -154,13 +156,17 @@ def test_account_field_change_notify_create_task(driver, config):
     toast_massage = toast.text
     print(f"Actual Toast : {toast_massage}")
 
-    assert "was created" in toast_massage.lower().strip() , f"Error while creating account : {toast_massage}"
-    time.sleep(2)
+    assert "was created" in toast_massage.lower().strip() , f"Error while creating contact : {toast_massage}"
+    time.sleep(1)
 
 
-    # Navigate to login page of SF App
+    # Now Clear data and refresh the page
     driver.delete_all_cookies()
     driver.refresh()
+    time.sleep(2)
+
+    # Navigate to login page of fuse app
+    # Navigate to login page
     driver.get(config["base_url"])
     wait = WebDriverWait(driver, 20)
 
@@ -171,6 +177,8 @@ def test_account_field_change_notify_create_task(driver, config):
     password.send_keys(config["password"])
     login_button = wait.until(EC.element_to_be_clickable((By.ID, "Login")))
     login_button.click()
+    time.sleep(2)
+
 
     try:
         # Navigate to Market Place Setup
@@ -220,23 +228,10 @@ def test_account_field_change_notify_create_task(driver, config):
         print(f"Error: {type(e).__name__}")
 
 
-    try:
-        # Click on Notify when any field changes
-        inactive_button = driver.find_element(By.XPATH, "(//span[@class='slds-checkbox_off'])[3]")
-        if inactive_button.text == "Inactive":
-            btn = wait.until(EC.element_to_be_clickable((By.XPATH, "(//span[@class='slds-checkbox_faux'])[3]")))
-            btn.click()
-        else:
-            print("Button is already active")
-    except (NoSuchElementException, TimeoutException) as e:
-        print("Notify when any field changes is not working")
-        print(f"Error: {type(e).__name__}")
-
-
-    # Set the Notification setting (Notify when any field changes)
+    # Set the Notification setting (Auto Sync new Accounts and related Contacts)
     try:
         # Select Notification Setting
-        xpath = '''(//select[@name='a7Fdy0000003GjOEAU'])[1]'''
+        xpath = '''(//select[@name='a7Fdy0000003GjNEAU'])[1]'''
         select_element = driver.find_elements(By.XPATH, xpath)
         for element in select_element:
             if element.is_enabled():
@@ -249,7 +244,7 @@ def test_account_field_change_notify_create_task(driver, config):
 
     try:
         # Select Notification Recipient
-        xpath = '''(//select[@name='a7Fdy0000003GjOEAU'])[2]'''
+        xpath = '''(//select[@name='a7Fdy0000003GjNEAU'])[2]'''
         select_element = driver.find_elements(By.XPATH, xpath)
         for element in select_element:
             if element.is_enabled():
@@ -262,7 +257,7 @@ def test_account_field_change_notify_create_task(driver, config):
 
     try:
         # Select Notification Assignee User/Group
-        xpath = '''(//select[@name='a7Fdy0000003GjOEAU'])[3]'''
+        xpath = '''(//select[@name='a7Fdy0000003GjNEAU'])[3]'''
         select_element = driver.find_elements(By.XPATH, xpath)
         for element in select_element:
             if element.is_enabled():
@@ -291,55 +286,20 @@ def test_account_field_change_notify_create_task(driver, config):
     time.sleep(2)
 
 
-    try:
-        # Navigate to Market Place Setup
-        driver.get(f"{config['uat_base_url']}lightning/o/Account/list?filterName=All_Accounts_Private_Fund")
-    except (NoSuchElementException, TimeoutException) as e:
-        print(f"Error: {type(e).__name__}")
 
     try:
         # Navigate to Market Place Setup
-        driver.get(f"{config['uat_base_url']}lightning/o/Account/list?filterName=All_Accounts_Private_Fund")
+        driver.get(f"{config['base_url']}lightning/n/Marketplace__Dakota_Search")
     except (NoSuchElementException, TimeoutException) as e:
         print(f"Error: {type(e).__name__}")
 
 
-    src_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='Account-search-input']")))
-    src_button.send_keys(name_var)
-    # src_button.send_keys("Test Megan Burton")
-    load_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[contains(@title,'Refresh')]//lightning-primitive-icon[contains(@exportparts,'icon')]")))
-    load_button.click()
-    time.sleep(5)
+    try:
+        # Navigate to Market Place Setup
+        driver.get(f"{config['base_url']}lightning/n/Marketplace__Dakota_Search")
+    except (NoSuchElementException, TimeoutException) as e:
+        print(f"Error: {type(e).__name__}")
 
-    # Edit the Account
-    edit_btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@class='slds-button slds-button_icon-border slds-button_icon-x-small']//lightning-primitive-icon[@variant='bare']")))
-    edit_btn.click()
-    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//a[@title='Edit']")))
-    btn.click()
-
-    # Edit the Website Field
-    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='Website']")))
-    btn.click()
-    btn.clear()
-    btn.send_keys("www.testtaskcreate.com")
-
-    # Save the Account
-    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@name='SaveEdit']")))
-    btn.click()
-    time.sleep(2)
-
-    # Verify toast_message
-    toast = wait.until(EC.element_to_be_clickable((By.XPATH, "//span[@class='toastMessage slds-text-heading--small forceActionsText']")))
-    toast_massage = toast.text
-    print(f"Actual Toast : {toast_massage}")
-
-    assert "was saved" in toast_massage.lower().strip() , f"Error while creating account : {toast_massage}"
-    time.sleep(2)
-
-
-    # Navigate to Market Place Search
-    driver.get(f"{config['base_url']}lightning/n/Marketplace__Dakota_Search")
-    time.sleep(3)
 
     # Define the stopping condition element
     stopping_condition_locator = (By.XPATH, "(//span[@class='slds-checkbox_faux'])[2]")
@@ -351,13 +311,14 @@ def test_account_field_change_notify_create_task(driver, config):
         # Refresh page and clear cookies
         driver.delete_all_cookies()
         driver.refresh()
+        wait.until(EC.element_to_be_clickable((By.XPATH, "//a[@data-label='Contacts']"))).click()
 
         # Wait for search input and enter the search term
-        name_input = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='searchTerm']")))
+        name_input = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[@name='searchTerm'])[2]")))
         name_input.clear()
-        name_input.send_keys(name_var)
+        name_input.send_keys(search_name)
 
-        search_element = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@title='Search']")))
+        search_element = wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@class='buttonDiv']//button[@title='Search'][normalize-space()='Search']")))
 
         # Double-click search button multiple times until condition is met
         actions = ActionChains(driver)
@@ -383,7 +344,6 @@ def test_account_field_change_notify_create_task(driver, config):
     time.sleep(1)
 
 
-    # Check for account linking icon
     # Define the stopping condition element
     stopping_condition_locator = (By.XPATH, "//th[@class='test']//lightning-icon[@class='slds-m-left_x-small slds-m-right_x-small slds-icon_container_circle slds-icon-action-share-link slds-icon_container']")
 
@@ -394,13 +354,14 @@ def test_account_field_change_notify_create_task(driver, config):
         # Refresh page and clear cookies
         driver.delete_all_cookies()
         driver.refresh()
+        wait.until(EC.element_to_be_clickable((By.XPATH, "//a[@data-label='Contacts']"))).click()
 
         # Wait for search input and enter the search term
-        name_input = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='searchTerm']")))
+        name_input = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[@name='searchTerm'])[2]")))
         name_input.clear()
-        name_input.send_keys(name_var)
+        name_input.send_keys(search_name)
 
-        search_element = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@title='Search']")))
+        search_element = wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@class='buttonDiv']//button[@title='Search'][normalize-space()='Search']")))
 
         # Double-click search button multiple times until condition is met
         actions = ActionChains(driver)
@@ -423,7 +384,7 @@ def test_account_field_change_notify_create_task(driver, config):
     # Check for checkboxes after exiting loop
     checkboxes = driver.find_elements(By.XPATH, "(//span[@class='slds-checkbox_faux'])[2]")
     assert len(checkboxes) > 0, "Checkbox not found or not visible"
-    time.sleep(3)
+    time.sleep(2)
 
 
     try:
@@ -432,12 +393,12 @@ def test_account_field_change_notify_create_task(driver, config):
     except (NoSuchElementException, TimeoutException) as e:
         print(f"Error: {type(e).__name__}")
 
+
     try:
         # Navigate to Market Place Setup
         driver.get(f"{config['base_url']}lightning/o/Task/home")
     except (NoSuchElementException, TimeoutException) as e:
         print(f"Error: {type(e).__name__}")
-
 
     # Select Table View
     try:
@@ -464,11 +425,48 @@ def test_account_field_change_notify_create_task(driver, config):
 
 
     src_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@placeholder='Search this list...']")))
-    src_button.send_keys("Dakota Marketplace | Account Field Updates")
+    src_button.send_keys("Dakota Marketplace | Account Record Created")
     time.sleep(1)
     load_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[contains(@name,'refreshButton')]")))
     load_button.click()
     time.sleep(5)
+
+
+    # found = False  # Flag to track if name_var is found
+    #
+    # # First attempt: Check before clicking refresh
+    # try:
+    #     all_accounts = wait.until(EC.presence_of_all_elements_located((By.XPATH, "//tbody/tr/td[4]")))
+    #     account_texts = [account.text.strip() for account in all_accounts]
+    #
+    #     if name_var in account_texts:
+    #         found = True  # Mark as found
+    # except (NoSuchElementException, TimeoutException) as e:
+    #     print(f"Message: {type(e).__name__}")
+    #
+    # # Click on the "Due Date" button
+    # btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//span[contains(@title,'Due Date')]")))
+    # btn.click()
+    #
+    # # Wait and click on the refresh button
+    # time.sleep(5)
+    # load_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[contains(@name,'refreshButton')]")))
+    # load_button.click()
+    #
+    # # Second attempt: Check after refresh
+    # time.sleep(5)
+    # try:
+    #     all_accounts = wait.until(EC.presence_of_all_elements_located((By.XPATH, "//tbody/tr/td[4]")))
+    #     account_texts = [account.text.strip() for account in all_accounts]
+    #
+    #     if name_var in account_texts:
+    #         found = True  # Mark as found
+    # except (NoSuchElementException, TimeoutException) as e:
+    #     print(f"Message: {type(e).__name__}")
+    #
+    # # Final assertion
+    # assert found, f"Account '{name_var}' not found in any attempt."
+    # time.sleep(2)
 
 
     # Get today date

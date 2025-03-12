@@ -31,21 +31,21 @@ email_var = random_email
 phone_var = random_phone
 
 
-# Define the target minutes (when the script should run)
-target_minutes = {12, 27, 42, 57}
-
-def wait_until_target_time():
-    """Wait until the system time is close to one of the target minutes."""
-    while True:
-        now = datetime.datetime.now()
-        print(f"Current Time : {now}")
-        if now.minute in target_minutes and now.second == 0:  # Run exactly at the target minute
-            print(f"Running Selenium script at {now.strftime('%H:%M:%S')}")
-            return
-        time.sleep(0.5)  # Check every 0.5 seconds to minimize CPU usage
-
-# Wait until the correct time
-wait_until_target_time()
+# # Define the target minutes (when the script should run)
+# target_minutes = {12, 27, 42, 57}
+#
+# def wait_until_target_time():
+#     """Wait until the system time is close to one of the target minutes."""
+#     while True:
+#         now = datetime.datetime.now()
+#         print(f"Current Time : {now}")
+#         if now.minute in target_minutes and now.second == 0:  # Run exactly at the target minute
+#             print(f"Running Selenium script at {now.strftime('%H:%M:%S')}")
+#             return
+#         time.sleep(0.5)  # Check every 0.5 seconds to minimize CPU usage
+#
+# # Wait until the correct time
+# wait_until_target_time()
 
 
 @pytest.fixture(scope="module")
@@ -58,8 +58,6 @@ def driver():
 
 
 @pytest.mark.P1
-@pytest.mark.release_one
-@pytest.mark.demo
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Mapping - Account field Mapping")
 @allure.story("Validate successful mapping of account fields.")

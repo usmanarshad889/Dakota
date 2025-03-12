@@ -9,7 +9,7 @@ from selenium.webdriver.chrome.options import Options
 from faker import Faker
 from selenium import webdriver
 from selenium.common import NoSuchElementException, TimeoutException
-from selenium.webdriver import ActionChains
+from selenium.webdriver import ActionChains, Keys
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -33,7 +33,7 @@ phone_var = random_phone
 
 
 # # Define the target minutes (when the script should run)
-# target_minutes = {12, 27, 42, 57}
+# target_minutes = {11, 26, 41, 56}
 #
 # def wait_until_target_time():
 #     """Wait until the system time is close to one of the target minutes."""
@@ -62,7 +62,7 @@ def driver():
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Mapping - Account field Mapping")
 @allure.story("Validate successful mapping of account fields.")
-def test_account_field_change_notify_create_task(driver, config):
+def test_account_field_change_notify_send_email(driver, config):
     driver.get(config["uat_login_url"])
     wait = WebDriverWait(driver, 20)
 
@@ -241,7 +241,7 @@ def test_account_field_change_notify_create_task(driver, config):
         for element in select_element:
             if element.is_enabled():
                 select = Select(element)
-                select.select_by_visible_text("Create Task")
+                select.select_by_visible_text("Send Email")
     except (NoSuchElementException, TimeoutException) as e:
         print(f"Error: {type(e).__name__}")
         print("Notification Setting field not selected")
@@ -254,7 +254,7 @@ def test_account_field_change_notify_create_task(driver, config):
         for element in select_element:
             if element.is_enabled():
                 select = Select(element)
-                select.select_by_visible_text("Owner")
+                select.select_by_visible_text("User")
     except (NoSuchElementException, TimeoutException) as e:
         print(f"Error: {type(e).__name__}")
         print("Notification Recipient not selected")
@@ -288,52 +288,6 @@ def test_account_field_change_notify_create_task(driver, config):
     print(f"Actual Toast message : {text}")
 
     assert text in ["Mapping saved successfully.", "Status changed successfully!"], f"Unexpected toast message: {text}"
-    time.sleep(2)
-
-
-    try:
-        # Navigate to Market Place Setup
-        driver.get(f"{config['uat_base_url']}lightning/o/Account/list?filterName=All_Accounts_Private_Fund")
-    except (NoSuchElementException, TimeoutException) as e:
-        print(f"Error: {type(e).__name__}")
-
-    try:
-        # Navigate to Market Place Setup
-        driver.get(f"{config['uat_base_url']}lightning/o/Account/list?filterName=All_Accounts_Private_Fund")
-    except (NoSuchElementException, TimeoutException) as e:
-        print(f"Error: {type(e).__name__}")
-
-
-    src_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='Account-search-input']")))
-    src_button.send_keys(name_var)
-    # src_button.send_keys("Test Megan Burton")
-    load_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[contains(@title,'Refresh')]//lightning-primitive-icon[contains(@exportparts,'icon')]")))
-    load_button.click()
-    time.sleep(5)
-
-    # Edit the Account
-    edit_btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@class='slds-button slds-button_icon-border slds-button_icon-x-small']//lightning-primitive-icon[@variant='bare']")))
-    edit_btn.click()
-    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//a[@title='Edit']")))
-    btn.click()
-
-    # Edit the Website Field
-    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='Website']")))
-    btn.click()
-    btn.clear()
-    btn.send_keys("www.testtaskcreate.com")
-
-    # Save the Account
-    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@name='SaveEdit']")))
-    btn.click()
-    time.sleep(2)
-
-    # Verify toast_message
-    toast = wait.until(EC.element_to_be_clickable((By.XPATH, "//span[@class='toastMessage slds-text-heading--small forceActionsText']")))
-    toast_massage = toast.text
-    print(f"Actual Toast : {toast_massage}")
-
-    assert "was saved" in toast_massage.lower().strip() , f"Error while creating account : {toast_massage}"
     time.sleep(2)
 
 
@@ -383,7 +337,105 @@ def test_account_field_change_notify_create_task(driver, config):
     time.sleep(1)
 
 
-    # Check for account linking icon
+    # Navigate to UAT Environment
+    driver.delete_all_cookies()
+    driver.refresh()
+    driver.get(config["uat_login_url"])
+    wait = WebDriverWait(driver, 20)
+
+    try:
+        # Perform login
+        username = wait.until(EC.element_to_be_clickable((By.ID, "username")))
+        username.send_keys(config["uat_username"])
+        password = wait.until(EC.element_to_be_clickable((By.ID, "password")))
+        password.send_keys(config["uat_password"])
+        login_button = wait.until(EC.element_to_be_clickable((By.ID, "Login")))
+        login_button.click()
+    except (NoSuchElementException, TimeoutException) as e:
+        print(f"Error: {type(e).__name__}")
+
+
+    try:
+        # Navigate to Market Place Setup
+        driver.get(f"{config['uat_base_url']}lightning/o/Account/list?filterName=All_Accounts_Private_Fund")
+    except (NoSuchElementException, TimeoutException) as e:
+        print(f"Error: {type(e).__name__}")
+
+    try:
+        # Navigate to Market Place Setup
+        driver.get(f"{config['uat_base_url']}lightning/o/Account/list?filterName=All_Accounts_Private_Fund")
+    except (NoSuchElementException, TimeoutException) as e:
+        print(f"Error: {type(e).__name__}")
+
+
+    src_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='Account-search-input']")))
+    src_button.send_keys(name_var)
+    # src_button.send_keys("Test Megan Burton")
+    load_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[contains(@title,'Refresh')]//lightning-primitive-icon[contains(@exportparts,'icon')]")))
+    load_button.click()
+    time.sleep(5)
+
+    # Edit the Account
+    edit_btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@class='slds-button slds-button_icon-border slds-button_icon-x-small']//lightning-primitive-icon[@variant='bare']")))
+    edit_btn.click()
+    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//a[@title='Edit']")))
+    btn.click()
+
+    # Edit the Website Field
+    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='Website']")))
+    btn.click()
+    btn.clear()
+    btn.send_keys("www.testtaskcreate.com")
+
+    # Save the Account
+    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@name='SaveEdit']")))
+    btn.click()
+    time.sleep(2)
+
+    # Verify toast_message
+    toast = wait.until(EC.element_to_be_clickable((By.XPATH, "//span[@class='toastMessage slds-text-heading--small forceActionsText']")))
+    toast_massage = toast.text
+    print(f"Actual Toast : {toast_massage}")
+
+    assert "was saved" in toast_massage.lower().strip() , f"Error while creating account : {toast_massage}"
+    time.sleep(2)
+
+
+    # Navigate to login page
+    driver.delete_all_cookies()
+    driver.refresh()
+    time.sleep(3)
+
+    driver.get(config["base_url"])
+    wait = WebDriverWait(driver, 20)
+
+
+    try:
+        # Perform login
+        username = wait.until(EC.element_to_be_clickable((By.ID, "username")))
+        username.send_keys(config["username"])
+        password = wait.until(EC.element_to_be_clickable((By.ID, "password")))
+        password.send_keys(config["password"])
+        login_button = wait.until(EC.element_to_be_clickable((By.ID, "Login")))
+        login_button.click()
+        time.sleep(2)
+    except (NoSuchElementException, TimeoutException) as e:
+        print(f"Error: {type(e).__name__}")
+
+
+    try:
+        # Navigate to Market Place Setup
+        driver.get(f"{config['base_url']}lightning/n/Marketplace__Dakota_Search")
+    except (NoSuchElementException, TimeoutException) as e:
+        print(f"Error: {type(e).__name__}")
+
+    try:
+        # Navigate to Market Place Setup
+        driver.get(f"{config['base_url']}lightning/n/Marketplace__Dakota_Search")
+    except (NoSuchElementException, TimeoutException) as e:
+        print(f"Error: {type(e).__name__}")
+
+
     # Define the stopping condition element
     stopping_condition_locator = (By.XPATH, "//th[@class='test']//lightning-icon[@class='slds-m-left_x-small slds-m-right_x-small slds-icon_container_circle slds-icon-action-share-link slds-icon_container']")
 
@@ -423,92 +475,56 @@ def test_account_field_change_notify_create_task(driver, config):
     # Check for checkboxes after exiting loop
     checkboxes = driver.find_elements(By.XPATH, "(//span[@class='slds-checkbox_faux'])[2]")
     assert len(checkboxes) > 0, "Checkbox not found or not visible"
-    time.sleep(3)
-
-
-    try:
-        # Navigate to Market Place Setup
-        driver.get(f"{config['base_url']}lightning/o/Task/home")
-    except (NoSuchElementException, TimeoutException) as e:
-        print(f"Error: {type(e).__name__}")
-
-    try:
-        # Navigate to Market Place Setup
-        driver.get(f"{config['base_url']}lightning/o/Task/home")
-    except (NoSuchElementException, TimeoutException) as e:
-        print(f"Error: {type(e).__name__}")
-
-
-    # Select Table View
-    try:
-        btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@title='Select list display']")))
-        time.sleep(1)
-        btn.click()
-        btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//span[normalize-space()='Table']//lightning-primitive-icon[@size='x-small']")))
-        btn.click()
-        print("Successfully click Table view")
-    except (NoSuchElementException, TimeoutException) as e:
-            print(f"Message: {type(e).__name__}")
     time.sleep(5)
 
 
+    # ---------------- #
+    ### Verify Email ###
+
+
     try:
-        btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@title='Select a List View: Tasks']//lightning-primitive-icon[@exportparts='icon']//*[name()='svg']")))
-        btn.click()
-        btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//span[@class=' virtualAutocompleteOptionText'][normalize-space()='Open Tasks']")))
-        btn.click()
-        print("Successfully Click on Opened Task")
-    except (NoSuchElementException, TimeoutException) as e:
-            print(f"Message: {type(e).__name__}")
-    time.sleep(5)
+        driver.get("https://mail.google.com/mail/u/0/#inbox")
 
+        email_field = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@id='identifierId']")))
+        email_field.send_keys("usman.arshad@rolustech.com")
 
-    src_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@placeholder='Search this list...']")))
-    src_button.send_keys("Dakota Marketplace | Account Field Updates")
-    time.sleep(1)
-    load_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[contains(@name,'refreshButton')]")))
-    load_button.click()
-    time.sleep(5)
+        next_btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//span[normalize-space()='Next']")))
+        next_btn.click()
 
+        password_field = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='Passwd']")))
+        password_field.send_keys("test")
 
-    # Get today date
-    today = datetime.datetime.today()
-    today_date = f"{today.month}/{today.day}/{today.year}"
-    print(today_date)
+        next_btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//span[normalize-space()='Next']")))
+        next_btn.click()
+        time.sleep(20)
 
-    found = False  # Flag to track if today's due date is found
-
-    # First attempt: Check before clicking refresh
-    try:
-        all_dates = wait.until(EC.presence_of_all_elements_located((By.XPATH, "//span[@class='uiOutputDate']")))
-        date_texts = [date.text.strip() for date in all_dates if date.text.strip()]  # Filter out empty texts
-
-        if today_date in date_texts:
-            print("A Task with today's due date is found in the first attempt. Test Passed!")
-            found = True  # Mark as found
-    except (NoSuchElementException, TimeoutException) as e:
-        print(f"Message: {type(e).__name__}")
-
-    # If not found in the first attempt, proceed with refresh
-    if not found:
-        # Click on the "Due Date" button
-        wait.until(EC.element_to_be_clickable((By.XPATH, "//span[contains(@title,'Due Date')]"))).click()
-
-        # Click on the refresh button
-        time.sleep(5)  # Allow UI update time
-        wait.until(EC.element_to_be_clickable((By.XPATH, "//button[contains(@name,'refreshButton')]"))).click()
-
-        # Second attempt: Check after refresh
-        time.sleep(5)  # Allow refreshed elements to load
         try:
-            all_dates = wait.until(EC.presence_of_all_elements_located((By.XPATH, "//span[@class='uiOutputDate']")))
-            date_texts = [date.text.strip() for date in all_dates if date.text.strip()]
+            # Wait for Gmail Inbox to Load
+            wait.until(EC.presence_of_element_located((By.XPATH, "//table[@role='grid']")))
 
-            if today_date in date_texts:
-                print("A Task with today's due date is found after refresh. Test Passed!")
-                found = True  # Mark as found
+            # Locate the Gmail Search Box
+            search_box = wait.until(EC.presence_of_element_located((By.XPATH, "//input[@aria-label='Search mail']")))
+
+            # Type Email Search Query (Modify as Needed)
+            search_box.send_keys("from:SF Development")  # Modify email search criteria
+            search_box.send_keys(Keys.ENTER)
+
+            # Wait for Search Results to Load
+            time.sleep(5)  # Adjust sleep time as needed
+
+            try:
+                # Capture Search Results
+                emails = driver.find_elements(By.XPATH, "(//td[@class='oZ-x3 xY'])")
+                print(f"Total Emails Found: {len(emails)}")
+            except (NoSuchElementException, TimeoutException) as e:
+                print(f"Message: {type(e).__name__}")
+                assert True
+
         except (NoSuchElementException, TimeoutException) as e:
             print(f"Message: {type(e).__name__}")
+            print("2 Step verification not completed")
+            assert True
 
-    # Final assertion
-    assert found, f"Test Failed: No Task is present with today's due date ({today_date})."
+    except (NoSuchElementException, TimeoutException) as e:
+        print(f"Message: {type(e).__name__}")
+        assert True

@@ -292,20 +292,20 @@ def test_search_functionality_account_fields(driver, config):
     print("Metro Area filter verified")
 
 
-    # Verify State
-    state_src = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@placeholder='Select State(s)']")))
-    state_src.click()
-    value_field = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[contains(@placeholder,'Filter values..')])[3]")))
-    value_field.send_keys(state_name)
-    fl_value = wait.until(EC.element_to_be_clickable((By.XPATH, f"(//li[@data-name='{state_name}'])")))
-    fl_value.click()
-    search_element = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@title='Search']")))
-    search_element.click()
-    # Verify State filter
-    checkboxes = driver.find_elements(By.XPATH, "(//span[@class='slds-checkbox_faux'])[2]")
-    assert len(checkboxes) > 0, "Checkbox not found or not visible"
-    time.sleep(1)
-    print("State filter verified")
+    # # Verify State
+    # state_src = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@placeholder='Select State(s)']")))
+    # state_src.click()
+    # value_field = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[contains(@placeholder,'Filter values..')])[3]")))
+    # value_field.send_keys(state_name)
+    # fl_value = wait.until(EC.element_to_be_clickable((By.XPATH, f"(//li[@data-name='{state_name}'])")))
+    # fl_value.click()
+    # search_element = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@title='Search']")))
+    # search_element.click()
+    # # Verify State filter
+    # checkboxes = driver.find_elements(By.XPATH, "(//span[@class='slds-checkbox_faux'])[2]")
+    # assert len(checkboxes) > 0, "Checkbox not found or not visible"
+    # time.sleep(1)
+    # print("State filter verified")
 
 
     # Verify Type

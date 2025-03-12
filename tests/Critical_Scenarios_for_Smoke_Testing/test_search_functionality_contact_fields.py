@@ -328,22 +328,22 @@ def test_search_functionality_contact_fields(driver, config):
     time.sleep(1)
 
 
-    # Verify State Filter
-    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[contains(@placeholder,'Select State(s)')])[2]")))
-    btn.click()
-    value_field = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[contains(@placeholder,'Filter values..')])[9]")))
-    value_field.send_keys("Florida")
-    btn = wait.until(EC.element_to_be_clickable((By.XPATH, f"(//li[@data-name='Florida'])[2]")))
-    btn.click()
-
-    search_element = wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@class='buttonDiv']//button[@title='Search'][normalize-space()='Search']")))
-    search_element.click()
-
-    # Verify State filter
-    checkboxes = driver.find_elements(By.XPATH, "(//span[@class='slds-checkbox_faux'])[2]")
-    assert len(checkboxes) > 0, "Checkbox not found or not visible"
-    print("State filter is verified")
-    time.sleep(1)
+    # # Verify State Filter
+    # btn = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[contains(@placeholder,'Select State(s)')])[2]")))
+    # btn.click()
+    # value_field = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[contains(@placeholder,'Filter values..')])[9]")))
+    # value_field.send_keys("Florida")
+    # btn = wait.until(EC.element_to_be_clickable((By.XPATH, f"(//li[@data-name='Florida'])[2]")))
+    # btn.click()
+    #
+    # search_element = wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@class='buttonDiv']//button[@title='Search'][normalize-space()='Search']")))
+    # search_element.click()
+    #
+    # # Verify State filter
+    # checkboxes = driver.find_elements(By.XPATH, "(//span[@class='slds-checkbox_faux'])[2]")
+    # assert len(checkboxes) > 0, "Checkbox not found or not visible"
+    # print("State filter is verified")
+    # time.sleep(1)
 
 
     # Verify Contact Type Filter

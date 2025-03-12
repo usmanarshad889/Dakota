@@ -33,7 +33,7 @@ phone_var = random_phone
 
 
 # # Define the target minutes (when the script should run)
-# target_minutes = {12, 27, 42, 57}
+# target_minutes = {11, 26, 41, 56}
 #
 # def wait_until_target_time():
 #     """Wait until the system time is close to one of the target minutes."""
@@ -291,52 +291,6 @@ def test_account_field_change_notify_create_task(driver, config):
     time.sleep(2)
 
 
-    try:
-        # Navigate to Market Place Setup
-        driver.get(f"{config['uat_base_url']}lightning/o/Account/list?filterName=All_Accounts_Private_Fund")
-    except (NoSuchElementException, TimeoutException) as e:
-        print(f"Error: {type(e).__name__}")
-
-    try:
-        # Navigate to Market Place Setup
-        driver.get(f"{config['uat_base_url']}lightning/o/Account/list?filterName=All_Accounts_Private_Fund")
-    except (NoSuchElementException, TimeoutException) as e:
-        print(f"Error: {type(e).__name__}")
-
-
-    src_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='Account-search-input']")))
-    src_button.send_keys(name_var)
-    # src_button.send_keys("Test Megan Burton")
-    load_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[contains(@title,'Refresh')]//lightning-primitive-icon[contains(@exportparts,'icon')]")))
-    load_button.click()
-    time.sleep(5)
-
-    # Edit the Account
-    edit_btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@class='slds-button slds-button_icon-border slds-button_icon-x-small']//lightning-primitive-icon[@variant='bare']")))
-    edit_btn.click()
-    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//a[@title='Edit']")))
-    btn.click()
-
-    # Edit the Website Field
-    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='Website']")))
-    btn.click()
-    btn.clear()
-    btn.send_keys("www.testtaskcreate.com")
-
-    # Save the Account
-    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@name='SaveEdit']")))
-    btn.click()
-    time.sleep(2)
-
-    # Verify toast_message
-    toast = wait.until(EC.element_to_be_clickable((By.XPATH, "//span[@class='toastMessage slds-text-heading--small forceActionsText']")))
-    toast_massage = toast.text
-    print(f"Actual Toast : {toast_massage}")
-
-    assert "was saved" in toast_massage.lower().strip() , f"Error while creating account : {toast_massage}"
-    time.sleep(2)
-
-
     # Navigate to Market Place Search
     driver.get(f"{config['base_url']}lightning/n/Marketplace__Dakota_Search")
     time.sleep(3)
@@ -383,7 +337,105 @@ def test_account_field_change_notify_create_task(driver, config):
     time.sleep(1)
 
 
-    # Check for account linking icon
+    # Navigate to UAT Environment
+    driver.delete_all_cookies()
+    driver.refresh()
+    driver.get(config["uat_login_url"])
+    wait = WebDriverWait(driver, 20)
+
+    try:
+        # Perform login
+        username = wait.until(EC.element_to_be_clickable((By.ID, "username")))
+        username.send_keys(config["uat_username"])
+        password = wait.until(EC.element_to_be_clickable((By.ID, "password")))
+        password.send_keys(config["uat_password"])
+        login_button = wait.until(EC.element_to_be_clickable((By.ID, "Login")))
+        login_button.click()
+    except (NoSuchElementException, TimeoutException) as e:
+        print(f"Error: {type(e).__name__}")
+
+
+    try:
+        # Navigate to Market Place Setup
+        driver.get(f"{config['uat_base_url']}lightning/o/Account/list?filterName=All_Accounts_Private_Fund")
+    except (NoSuchElementException, TimeoutException) as e:
+        print(f"Error: {type(e).__name__}")
+
+    try:
+        # Navigate to Market Place Setup
+        driver.get(f"{config['uat_base_url']}lightning/o/Account/list?filterName=All_Accounts_Private_Fund")
+    except (NoSuchElementException, TimeoutException) as e:
+        print(f"Error: {type(e).__name__}")
+
+
+    src_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='Account-search-input']")))
+    src_button.send_keys(name_var)
+    # src_button.send_keys("Test Megan Burton")
+    load_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[contains(@title,'Refresh')]//lightning-primitive-icon[contains(@exportparts,'icon')]")))
+    load_button.click()
+    time.sleep(5)
+
+    # Edit the Account
+    edit_btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@class='slds-button slds-button_icon-border slds-button_icon-x-small']//lightning-primitive-icon[@variant='bare']")))
+    edit_btn.click()
+    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//a[@title='Edit']")))
+    btn.click()
+
+    # Edit the Website Field
+    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='Website']")))
+    btn.click()
+    btn.clear()
+    btn.send_keys("www.testtaskcreate.com")
+
+    # Save the Account
+    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@name='SaveEdit']")))
+    btn.click()
+    time.sleep(2)
+
+    # Verify toast_message
+    toast = wait.until(EC.element_to_be_clickable((By.XPATH, "//span[@class='toastMessage slds-text-heading--small forceActionsText']")))
+    toast_massage = toast.text
+    print(f"Actual Toast : {toast_massage}")
+
+    assert "was saved" in toast_massage.lower().strip() , f"Error while creating account : {toast_massage}"
+    time.sleep(2)
+
+
+    # Navigate to login page
+    driver.delete_all_cookies()
+    driver.refresh()
+    time.sleep(3)
+
+    driver.get(config["base_url"])
+    wait = WebDriverWait(driver, 20)
+
+
+    try:
+        # Perform login
+        username = wait.until(EC.element_to_be_clickable((By.ID, "username")))
+        username.send_keys(config["username"])
+        password = wait.until(EC.element_to_be_clickable((By.ID, "password")))
+        password.send_keys(config["password"])
+        login_button = wait.until(EC.element_to_be_clickable((By.ID, "Login")))
+        login_button.click()
+        time.sleep(2)
+    except (NoSuchElementException, TimeoutException) as e:
+        print(f"Error: {type(e).__name__}")
+
+
+    try:
+        # Navigate to Market Place Setup
+        driver.get(f"{config['base_url']}lightning/n/Marketplace__Dakota_Search")
+    except (NoSuchElementException, TimeoutException) as e:
+        print(f"Error: {type(e).__name__}")
+
+    try:
+        # Navigate to Market Place Setup
+        driver.get(f"{config['base_url']}lightning/n/Marketplace__Dakota_Search")
+    except (NoSuchElementException, TimeoutException) as e:
+        print(f"Error: {type(e).__name__}")
+
+
     # Define the stopping condition element
     stopping_condition_locator = (By.XPATH, "//th[@class='test']//lightning-icon[@class='slds-m-left_x-small slds-m-right_x-small slds-icon_container_circle slds-icon-action-share-link slds-icon_container']")
 
@@ -423,7 +475,7 @@ def test_account_field_change_notify_create_task(driver, config):
     # Check for checkboxes after exiting loop
     checkboxes = driver.find_elements(By.XPATH, "(//span[@class='slds-checkbox_faux'])[2]")
     assert len(checkboxes) > 0, "Checkbox not found or not visible"
-    time.sleep(3)
+    time.sleep(5)
 
 
     try:
