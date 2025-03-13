@@ -243,10 +243,6 @@ def test_field_addition_to_account(driver, config):
     assert "was created" in toast_massage.lower().strip() , f"Error while creating contact : {toast_massage}"
     time.sleep(1)
 
-    # Now Clear data and refresh the page
-    driver.delete_all_cookies()
-    driver.refresh()
-    time.sleep(2)
 
     # Navigate to login page of fuse app
     driver.get(config["base_url"])
@@ -271,7 +267,6 @@ def test_field_addition_to_account(driver, config):
 
     while attempts < max_attempts:
         # Refresh page and clear cookies
-        driver.delete_all_cookies()
         driver.refresh()
         wait.until(EC.element_to_be_clickable((By.XPATH, "//a[@data-label='Contacts']"))).click()
 

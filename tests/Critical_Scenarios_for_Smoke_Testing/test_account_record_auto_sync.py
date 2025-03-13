@@ -168,13 +168,8 @@ def test_account_record_auto_sync(driver, config):
 
     assert "was created" in toast_massage.lower().strip() , f"Error while creating account : {toast_massage}"
 
-    # Now Clear data and refresh the page
-    driver.delete_all_cookies()
-    driver.refresh()
-    time.sleep(2)
 
     # Navigate to login page of fuse app
-    # Navigate to login page
     driver.get(config["base_url"])
     wait = WebDriverWait(driver, 20)
 
@@ -350,7 +345,6 @@ def test_account_record_auto_sync(driver, config):
 
     while attempts < max_attempts:
         # Refresh page and clear cookies
-        driver.delete_all_cookies()
         driver.refresh()
 
         # Wait for search input and enter the search term

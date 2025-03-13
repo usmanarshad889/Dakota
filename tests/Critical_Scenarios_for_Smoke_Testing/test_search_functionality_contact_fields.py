@@ -220,7 +220,6 @@ def test_search_functionality_contact_fields(driver, config):
 
     while attempts < max_attempts:
         # Refresh page and clear cookies
-        driver.delete_all_cookies()
         driver.refresh()
         wait.until(EC.element_to_be_clickable((By.XPATH, "//a[@data-label='Contacts']"))).click()
 

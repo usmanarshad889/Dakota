@@ -154,7 +154,6 @@ def test_icon_display_linking(driver, config):
 
     while attempts < max_attempts:
         # Refresh page and clear cookies
-        driver.delete_all_cookies()
         driver.refresh()
         wait.until(EC.element_to_be_clickable((By.XPATH, "//a[@data-label='Contacts']"))).click()
 

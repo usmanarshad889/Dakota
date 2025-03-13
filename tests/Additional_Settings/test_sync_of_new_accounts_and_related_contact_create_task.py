@@ -248,11 +248,6 @@ def test_sync_of_new_accounts_created_by_create_task(driver, config):
     time.sleep(2)
 
 
-    # Now Clear data and refresh the page
-    driver.delete_all_cookies()
-    driver.refresh()
-    time.sleep(2)
-
     # Navigate to login page of fuse app
     # Navigate to login page
     driver.get(config["base_url"])
@@ -265,7 +260,6 @@ def test_sync_of_new_accounts_created_by_create_task(driver, config):
     password.send_keys(config["password"])
     login_button = wait.until(EC.element_to_be_clickable((By.ID, "Login")))
     login_button.click()
-    time.sleep(2)
 
 
     try:
@@ -389,7 +383,6 @@ def test_sync_of_new_accounts_created_by_create_task(driver, config):
 
     while attempts < max_attempts:
         # Refresh page and clear cookies
-        driver.delete_all_cookies()
         driver.refresh()
 
         # Wait for search input and enter the search term
@@ -431,7 +424,6 @@ def test_sync_of_new_accounts_created_by_create_task(driver, config):
 
     while attempts < max_attempts:
         # Refresh page and clear cookies
-        driver.delete_all_cookies()
         driver.refresh()
 
         # Wait for search input and enter the search term

@@ -142,13 +142,7 @@ def test_contact_record_auto_sync(driver, config):
     time.sleep(1)
 
 
-    # Now Clear data and refresh the page
-    driver.delete_all_cookies()
-    driver.refresh()
-    time.sleep(2)
-
     # Navigate to login page of fuse app
-    # Navigate to login page
     driver.get(config["base_url"])
     wait = WebDriverWait(driver, 20)
 
@@ -332,7 +326,6 @@ def test_contact_record_auto_sync(driver, config):
 
     while attempts < max_attempts:
         # Refresh page and clear cookies
-        driver.delete_all_cookies()
         driver.refresh()
         wait.until(EC.element_to_be_clickable((By.XPATH, "//a[@data-label='Contacts']"))).click()
 

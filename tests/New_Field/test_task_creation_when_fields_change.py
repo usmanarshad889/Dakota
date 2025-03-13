@@ -121,15 +121,10 @@ def test_task_creation_when_fields_change(driver, config):
     print(f"Actual Toast : {toast_massage}")
 
     assert "was created" in toast_massage.lower().strip() , f"Error while creating account : {toast_massage}"
-
-
-    # Now Clear data and refresh the page
-    driver.delete_all_cookies()
-    driver.refresh()
     time.sleep(2)
 
+
     # Navigate to login page of fuse app
-    # Navigate to login page
     driver.get(config["base_url"])
     wait = WebDriverWait(driver, 20)
 

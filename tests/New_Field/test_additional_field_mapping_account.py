@@ -221,11 +221,6 @@ def test_field_addition_to_account(driver, config):
 
     assert "was created" in toast_massage.lower().strip() , f"Error while creating account : {toast_massage}"
 
-    # Now Clear data and refresh the page
-    driver.delete_all_cookies()
-    driver.refresh()
-    time.sleep(2)
-
 
     # Navigate to login page of fuse app
     driver.get(config["base_url"])
@@ -251,7 +246,6 @@ def test_field_addition_to_account(driver, config):
 
     while attempts < max_attempts:
         # Refresh page and clear cookies
-        driver.delete_all_cookies()
         driver.refresh()
 
         # Wait for search input and enter the search term
@@ -472,7 +466,6 @@ def test_field_addition_to_account(driver, config):
     # Verify by printing the current page title
     print("Switched to Tab - Title:", driver.title)
 
-    driver.delete_all_cookies()
     driver.refresh()
     time.sleep(7)
 

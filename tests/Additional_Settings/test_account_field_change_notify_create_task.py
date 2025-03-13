@@ -158,9 +158,6 @@ def test_account_field_change_notify_create_task(driver, config):
     time.sleep(2)
 
 
-    # Navigate to login page of SF App
-    driver.delete_all_cookies()
-    driver.refresh()
     driver.get(config["base_url"])
     wait = WebDriverWait(driver, 20)
 
@@ -303,7 +300,6 @@ def test_account_field_change_notify_create_task(driver, config):
 
     while attempts < max_attempts:
         # Refresh page and clear cookies
-        driver.delete_all_cookies()
         driver.refresh()
 
         # Wait for search input and enter the search term
@@ -338,8 +334,6 @@ def test_account_field_change_notify_create_task(driver, config):
 
 
     # Navigate to UAT Environment
-    driver.delete_all_cookies()
-    driver.refresh()
     driver.get(config["uat_login_url"])
     wait = WebDriverWait(driver, 20)
 
@@ -401,11 +395,6 @@ def test_account_field_change_notify_create_task(driver, config):
     time.sleep(2)
 
 
-    # Navigate to login page
-    driver.delete_all_cookies()
-    driver.refresh()
-    time.sleep(3)
-
     driver.get(config["base_url"])
     wait = WebDriverWait(driver, 20)
 
@@ -444,7 +433,6 @@ def test_account_field_change_notify_create_task(driver, config):
 
     while attempts < max_attempts:
         # Refresh page and clear cookies
-        driver.delete_all_cookies()
         driver.refresh()
 
         # Wait for search input and enter the search term

@@ -112,10 +112,6 @@ def test_single_record_linking_unlinking(driver, config):
     print(f"Actual Toast : {toast_massage}")
 
     assert "was created" in toast_massage.lower().strip() , f"Error while creating account : {toast_massage}"
-
-    # Now Clear data and refresh the page
-    driver.delete_all_cookies()
-    driver.refresh()
     time.sleep(2)
 
 
@@ -143,7 +139,6 @@ def test_single_record_linking_unlinking(driver, config):
 
     while attempts < max_attempts:
         # Refresh page and clear cookies
-        driver.delete_all_cookies()
         driver.refresh()
 
         # Wait for search input and enter the search term
