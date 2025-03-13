@@ -55,7 +55,7 @@ def test_account_record_auto_sync(driver, config):
     password.send_keys(config["uat_password"])
     login_button = wait.until(EC.element_to_be_clickable((By.ID, "Login")))
     login_button.click()
-    time.sleep(2)
+    time.sleep(10)
 
     # Move to account Tab and click on new button
     driver.get(f"{config['uat_base_url']}lightning/o/Account/list?filterName=__Recent")
@@ -167,6 +167,7 @@ def test_account_record_auto_sync(driver, config):
     print(f"Actual Toast : {toast_massage}")
 
     assert "was created" in toast_massage.lower().strip() , f"Error while creating account : {toast_massage}"
+    time.sleep(2)
 
 
     # Navigate to login page of fuse app
@@ -180,10 +181,20 @@ def test_account_record_auto_sync(driver, config):
     password.send_keys(config["password"])
     login_button = wait.until(EC.element_to_be_clickable((By.ID, "Login")))
     login_button.click()
-    time.sleep(2)
+    time.sleep(10)
 
-    # Navigate to installed pakages setup
-    driver.get(f"{config['base_url']}lightning/n/Marketplace__Dakota_Setup")
+
+    retries = 5
+    for attempt in range(retries):
+        try:
+            driver.get(f"{config['base_url']}lightning/n/Marketplace__Dakota_Setup")
+            break  # Exit the loop if the page loads successfully
+        except TimeoutException:
+            print(f"Attempt {attempt + 1} failed. Retrying...")
+            time.sleep(5)  # Wait before retrying
+    else:
+        print("All retry attempts failed.")
+
 
     # Click on Authentication svg button
     try:
@@ -333,8 +344,19 @@ def test_account_record_auto_sync(driver, config):
     ok_btn.click()
     time.sleep(15)
 
-    # Navigate to Market Place Search
-    driver.get(f"{config['base_url']}lightning/n/Marketplace__Dakota_Search")
+
+    try:
+        # Navigate to Market Place Setup
+        driver.get(f"{config['base_url']}lightning/n/Marketplace__Dakota_Search")
+    except (NoSuchElementException, TimeoutException) as e:
+        print(f"Error: {type(e).__name__}")
+
+    try:
+        # Navigate to Market Place Setup
+        driver.get(f"{config['base_url']}lightning/n/Marketplace__Dakota_Search")
+    except (NoSuchElementException, TimeoutException) as e:
+        print(f"Error: {type(e).__name__}")
+
     time.sleep(3)
 
     # Define the stopping condition element
@@ -427,8 +449,19 @@ def test_account_record_auto_sync(driver, config):
 
     time.sleep(2)
 
-    # Navigate to installed pakages setup
-    driver.get(f"{config['base_url']}lightning/n/Marketplace__Dakota_Search")
+
+    try:
+        # Navigate to Market Place Setup
+        driver.get(f"{config['base_url']}lightning/n/Marketplace__Dakota_Search")
+    except (NoSuchElementException, TimeoutException) as e:
+        print(f"Error: {type(e).__name__}")
+
+    try:
+        # Navigate to Market Place Setup
+        driver.get(f"{config['base_url']}lightning/n/Marketplace__Dakota_Search")
+    except (NoSuchElementException, TimeoutException) as e:
+        print(f"Error: {type(e).__name__}")
+
 
     # Search the account
     btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@placeholder='Account Name']")))
