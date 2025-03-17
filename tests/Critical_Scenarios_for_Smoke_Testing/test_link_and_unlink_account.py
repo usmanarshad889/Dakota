@@ -35,6 +35,14 @@ def test_link_unlink_account(driver, config):
     login_button = wait.until(EC.element_to_be_clickable((By.ID, "Login")))
     login_button.click()
 
+    # Click on Marketplace Search button
+    try:
+        btn = WebDriverWait(driver, 30).until(EC.element_to_be_clickable((By.XPATH, "//one-app-nav-bar-item-root[@data-target-selection-name='sfdc:TabDefinition.Marketplace__Dakota_Search']")))
+        btn.click()
+    except (NoSuchElementException, TimeoutException) as e:
+        print(f"Message: {type(e).__name__}")
+    time.sleep(1)
+
     # Navigate to installed pakages setup
     driver.get(f"{config['base_url']}lightning/n/Marketplace__Dakota_Search")
 

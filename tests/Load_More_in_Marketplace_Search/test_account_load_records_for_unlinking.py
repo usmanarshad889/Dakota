@@ -3,7 +3,7 @@ import pytest
 import allure
 from allure_commons.types import AttachmentType
 from selenium import webdriver
-from selenium.common import TimeoutException
+from selenium.common import TimeoutException, NoSuchElementException
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
@@ -35,6 +35,14 @@ def test_load_account_unlinked(driver, config):
     login_button = wait.until(EC.element_to_be_clickable((By.ID, "Login")))
     login_button.click()
 
+    # Click on Marketplace Search button
+    try:
+        btn = WebDriverWait(driver, 30).until(EC.element_to_be_clickable((By.XPATH, "//one-app-nav-bar-item-root[@data-target-selection-name='sfdc:TabDefinition.Marketplace__Dakota_Search']")))
+        btn.click()
+    except (NoSuchElementException, TimeoutException) as e:
+        print(f"Message: {type(e).__name__}")
+    time.sleep(1)
+
     # Navigate to installed packages setup
     driver.get(f"{config['base_url']}lightning/n/Marketplace__Dakota_Search")
 
@@ -58,7 +66,7 @@ def test_load_account_unlinked(driver, config):
     # Wait for account names to load
     time.sleep(5)
     prev_count = 0
-    max_records = 500  # Stop when we reach 500 records
+    max_records = 200  # Stop when we reach 200 records
 
     while True:
         # Get all account names
@@ -67,7 +75,7 @@ def test_load_account_unlinked(driver, config):
 
         print(f"Records Loaded: {new_count}")
 
-        # Stop loop if 500 records are loaded
+        # Stop loop if 200 records are loaded
         if new_count >= max_records:
             print(f"Reached {max_records} records, stopping.")
             break

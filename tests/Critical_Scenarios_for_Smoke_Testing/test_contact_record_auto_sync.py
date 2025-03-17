@@ -56,7 +56,15 @@ def test_contact_record_auto_sync(driver, config):
     password.send_keys(config["uat_password"])
     login_button = wait.until(EC.element_to_be_clickable((By.ID, "Login")))
     login_button.click()
-    time.sleep(10)
+
+
+    # Click on Contact button
+    try:
+        btn = WebDriverWait(driver, 30).until(EC.element_to_be_clickable((By.XPATH, "//one-app-nav-bar-item-root[@data-target-selection-name='sfdc:TabDefinition.standard-Contact']")))
+        btn.click()
+    except (NoSuchElementException, TimeoutException) as e:
+        print(f"Message: {type(e).__name__}")
+    time.sleep(1)
 
 
     # Move to account Tab and click on new button
@@ -156,7 +164,16 @@ def test_contact_record_auto_sync(driver, config):
     password.send_keys(config["password"])
     login_button = wait.until(EC.element_to_be_clickable((By.ID, "Login")))
     login_button.click()
-    time.sleep(10)
+
+
+    # Click on Marketplace Search button
+    try:
+        btn = WebDriverWait(driver, 30).until(EC.element_to_be_clickable((By.XPATH, "//one-app-nav-bar-item-root[@data-target-selection-name='sfdc:TabDefinition.Marketplace__Dakota_Search']")))
+        btn.click()
+    except (NoSuchElementException, TimeoutException) as e:
+        print(f"Message: {type(e).__name__}")
+    time.sleep(1)
+
 
     retries = 5
     for attempt in range(retries):
@@ -473,7 +490,7 @@ def test_contact_record_auto_sync(driver, config):
     # print(f"Phone Text : {phone_text}")
 
     # Verify the Email with Email
-    xpath = '''(//span[@class='test-id__field-value slds-form-element__static slds-grow word-break-ie11'])[7]'''
+    xpath = '''(//span[@class='test-id__field-value slds-form-element__static slds-grow word-break-ie11'])[6]'''
     email_field = wait.until(EC.element_to_be_clickable((By.XPATH, xpath)))
     email_text = email_field.text
     print(f"Description Text : {email_text}")

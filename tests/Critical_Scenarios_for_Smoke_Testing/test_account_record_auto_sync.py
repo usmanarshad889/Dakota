@@ -13,7 +13,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-value_src = "w"
+value_src = "q"
 
 # Generate Random Name, Email and Phone
 fake = Faker()
@@ -55,7 +55,14 @@ def test_account_record_auto_sync(driver, config):
     password.send_keys(config["uat_password"])
     login_button = wait.until(EC.element_to_be_clickable((By.ID, "Login")))
     login_button.click()
-    time.sleep(10)
+
+    # Click on Account button
+    try:
+        btn = WebDriverWait(driver, 30).until(EC.element_to_be_clickable((By.XPATH, "//one-app-nav-bar-item-root[@data-target-selection-name='sfdc:TabDefinition.standard-Account']")))
+        btn.click()
+    except (NoSuchElementException, TimeoutException) as e:
+        print(f"Message: {type(e).__name__}")
+    time.sleep(1)
 
     # Move to account Tab and click on new button
     driver.get(f"{config['uat_base_url']}lightning/o/Account/list?filterName=__Recent")
@@ -101,34 +108,34 @@ def test_account_record_auto_sync(driver, config):
     driver.execute_script("arguments[0].scrollIntoView();", element)
     time.sleep(1)
 
-    # Select Metro Area
-    field = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@placeholder='Search Metro Areas...']")))
-    field.click()
-    time.sleep(5)
-    field.send_keys("Bosto")
-    time.sleep(5)
-    values = driver.find_elements(By.XPATH, "(//lightning-base-combobox-item[@role='option'])")
-    index_to_use = None  # Store index of "Boston"
-    for index, s in enumerate(values, start=1):
-        # print(f"{index}: {s.text.strip()}")
-        # If "Boston" is found anywhere in the list, store its index
-        if "Boston" in s.text.strip():
-            index_to_use = index
-            break  # Stop searching after finding the first "Boston"
-    # Click the element if "Boston" was found
-    if index_to_use is not None:
-        print(f"Using index {index_to_use} to click 'Boston'.")
-        try:
-            element = wait.until(EC.element_to_be_clickable(
-                (By.XPATH, f"(//lightning-base-combobox-item[@role='option'])[{index_to_use}]")))
-            first_line = element.text.splitlines()[0] if element.text.strip() else "No text found"
-            # print(f"First line of selected element: {first_line}")
-            element.click()
-        except Exception as e:
-            print(f"Error: {type(e).__name__}")
-    else:
-        print("Boston was not found in the list.")
-    time.sleep(1)
+    # # Select Metro Area
+    # field = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@placeholder='Search Metro Areas...']")))
+    # field.click()
+    # time.sleep(5)
+    # field.send_keys("Bosto")
+    # time.sleep(5)
+    # values = driver.find_elements(By.XPATH, "(//lightning-base-combobox-item[@role='option'])")
+    # index_to_use = None  # Store index of "Boston"
+    # for index, s in enumerate(values, start=1):
+    #     # print(f"{index}: {s.text.strip()}")
+    #     # If "Boston" is found anywhere in the list, store its index
+    #     if "Boston" in s.text.strip():
+    #         index_to_use = index
+    #         break  # Stop searching after finding the first "Boston"
+    # # Click the element if "Boston" was found
+    # if index_to_use is not None:
+    #     print(f"Using index {index_to_use} to click 'Boston'.")
+    #     try:
+    #         element = wait.until(EC.element_to_be_clickable(
+    #             (By.XPATH, f"(//lightning-base-combobox-item[@role='option'])[{index_to_use}]")))
+    #         first_line = element.text.splitlines()[0] if element.text.strip() else "No text found"
+    #         # print(f"First line of selected element: {first_line}")
+    #         element.click()
+    #     except Exception as e:
+    #         print(f"Error: {type(e).__name__}")
+    # else:
+    #     print("Boston was not found in the list.")
+    # time.sleep(1)
 
 
     element = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='Average_Ticket_Size__c']")))
@@ -181,7 +188,14 @@ def test_account_record_auto_sync(driver, config):
     password.send_keys(config["password"])
     login_button = wait.until(EC.element_to_be_clickable((By.ID, "Login")))
     login_button.click()
-    time.sleep(10)
+
+    # Click on Marketplace Search button
+    try:
+        btn = WebDriverWait(driver, 30).until(EC.element_to_be_clickable((By.XPATH, "//one-app-nav-bar-item-root[@data-target-selection-name='sfdc:TabDefinition.Marketplace__Dakota_Search']")))
+        btn.click()
+    except (NoSuchElementException, TimeoutException) as e:
+        print(f"Message: {type(e).__name__}")
+    time.sleep(1)
 
 
     retries = 5

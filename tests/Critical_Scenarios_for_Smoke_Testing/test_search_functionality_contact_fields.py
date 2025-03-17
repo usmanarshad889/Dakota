@@ -57,6 +57,15 @@ def test_search_functionality_contact_fields(driver, config):
     login_button = wait.until(EC.element_to_be_clickable((By.ID, "Login")))
     login_button.click()
 
+    # Click on Contact button
+    try:
+        btn = WebDriverWait(driver, 30).until(EC.element_to_be_clickable((By.XPATH, "//one-app-nav-bar-item-root[@data-target-selection-name='sfdc:TabDefinition.standard-Contact']")))
+        btn.click()
+    except (NoSuchElementException, TimeoutException) as e:
+        print(f"Message: {type(e).__name__}")
+    time.sleep(1)
+
+
     # Move to account Tab and click on new button
     driver.get(f"{config['uat_base_url']}lightning/o/Contact/list")
     new_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@title='New']")))
@@ -207,7 +216,15 @@ def test_search_functionality_contact_fields(driver, config):
     password.send_keys(config["password"])
     login_button = wait.until(EC.element_to_be_clickable((By.ID, "Login")))
     login_button.click()
-    time.sleep(3)
+
+    # Click on Marketplace Search button
+    try:
+        btn = WebDriverWait(driver, 30).until(EC.element_to_be_clickable((By.XPATH, "//one-app-nav-bar-item-root[@data-target-selection-name='sfdc:TabDefinition.Marketplace__Dakota_Search']")))
+        btn.click()
+    except (NoSuchElementException, TimeoutException) as e:
+        print(f"Message: {type(e).__name__}")
+    time.sleep(1)
+
 
     # Navigate to Market Place Search
     driver.get(f"{config['base_url']}lightning/n/Marketplace__Dakota_Search")

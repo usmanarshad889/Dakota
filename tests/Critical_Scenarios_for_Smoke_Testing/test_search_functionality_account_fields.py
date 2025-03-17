@@ -54,6 +54,15 @@ def test_search_functionality_account_fields(driver, config):
     login_button = wait.until(EC.element_to_be_clickable((By.ID, "Login")))
     login_button.click()
 
+    # Click on Account button
+    try:
+        btn = WebDriverWait(driver, 30).until(EC.element_to_be_clickable((By.XPATH, "//one-app-nav-bar-item-root[@data-target-selection-name='sfdc:TabDefinition.standard-Account']")))
+        btn.click()
+    except (NoSuchElementException, TimeoutException) as e:
+        print(f"Message: {type(e).__name__}")
+    time.sleep(1)
+
+
     # Move to account Tab and click on new button
     driver.get(f"{config['uat_base_url']}lightning/o/Account/list?filterName=__Recent")
     new_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@title='New']")))
@@ -98,14 +107,46 @@ def test_search_functionality_account_fields(driver, config):
     driver.execute_script("arguments[0].scrollIntoView();", element)
     time.sleep(1)
 
+    # # Select Metro Area
+    # field = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@placeholder='Search Metro Areas...']")))
+    # field.click()
+    # time.sleep(5)
+    # ssss = wait.until(EC.element_to_be_clickable((By.XPATH, "(//li[@role='presentation'])[6]")))
+    # first_line = ssss.text.splitlines()[0]
+    # print(first_line)
+    # ssss.click()
+
+
+
     # Select Metro Area
     field = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@placeholder='Search Metro Areas...']")))
     field.click()
     time.sleep(5)
-    ssss = wait.until(EC.element_to_be_clickable((By.XPATH, "(//li[@role='presentation'])[6]")))
-    first_line = ssss.text.splitlines()[0]
-    print(first_line)
-    ssss.click()
+    field.send_keys("Bosto")
+    time.sleep(5)
+    values = driver.find_elements(By.XPATH, "(//lightning-base-combobox-item[@role='option'])")
+    index_to_use = None  # Store index of "Boston"
+    for index, s in enumerate(values, start=1):
+        # print(f"{index}: {s.text.strip()}")
+        # If "Boston" is found anywhere in the list, store its index
+        if "Boston" in s.text.strip():
+            index_to_use = index
+            break  # Stop searching after finding the first "Boston"
+    # Click the element if "Boston" was found
+    if index_to_use is not None:
+        print(f"Using index {index_to_use} to click 'Boston'.")
+        try:
+            element = wait.until(EC.element_to_be_clickable(
+                (By.XPATH, f"(//lightning-base-combobox-item[@role='option'])[{index_to_use}]")))
+            first_line = element.text.splitlines()[0] if element.text.strip() else "No text found"
+            # print(f"First line of selected element: {first_line}")
+            element.click()
+        except Exception as e:
+            print(f"Error: {type(e).__name__}")
+    else:
+        print("Boston was not found in the list.")
+    time.sleep(1)
+
 
 
     element = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='Average_Ticket_Size__c']")))
@@ -208,6 +249,15 @@ def test_search_functionality_account_fields(driver, config):
     login_button = wait.until(EC.element_to_be_clickable((By.ID, "Login")))
     login_button.click()
 
+    # Click on Marketplace Search button
+    try:
+        btn = WebDriverWait(driver, 30).until(EC.element_to_be_clickable((By.XPATH, "//one-app-nav-bar-item-root[@data-target-selection-name='sfdc:TabDefinition.Marketplace__Dakota_Search']")))
+        btn.click()
+    except (NoSuchElementException, TimeoutException) as e:
+        print(f"Message: {type(e).__name__}")
+    time.sleep(1)
+
+
     # Navigate to Market Place Search
     driver.get(f"{config['base_url']}lightning/n/Marketplace__Dakota_Search")
     time.sleep(3)
@@ -274,8 +324,8 @@ def test_search_functionality_account_fields(driver, config):
     metro_area = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@placeholder='Select Metro Area(s)']")))
     metro_area.click()
     value_field = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[contains(@placeholder,'Filter values..')])[1]")))
-    value_field.send_keys(first_line)
-    sco_value = wait.until(EC.element_to_be_clickable((By.XPATH, f"(//li[@data-name='{first_line}'])")))
+    value_field.send_keys("Boston")
+    sco_value = wait.until(EC.element_to_be_clickable((By.XPATH, "(//li[@data-name='Boston'])")))
     sco_value.click()
     search_element = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@title='Search']")))
     search_element.click()
