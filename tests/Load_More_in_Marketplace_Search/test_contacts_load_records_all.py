@@ -65,49 +65,59 @@ def test_load_contacts_all(driver, config):
     button = wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@class='buttonDiv']//button[@title='Search'][normalize-space()='Search']")))
     button.click()
 
-    # Wait for account names to load
+    # Parameters
+    max_records = 200
+    retry_limit = 3  # How many times to retry if no new records load
+
+    # Initial wait
     time.sleep(5)
+
     prev_count = 0
-    max_records = 200  # Stop when we reach 200 records
 
     while True:
-        # Get all contact names
+        # Get current loaded account names
         names = wait.until(EC.presence_of_all_elements_located((By.XPATH, "//tbody/tr/td[2]")))
         new_count = len(names)
-
         print(f"Records Loaded: {new_count}")
 
-        # Stop loop if 200 records are loaded
+        # Check if max limit reached
         if new_count >= max_records:
-            print(f"Reached {max_records} records, stopping.")
+            print(f"Reached {max_records} records. Stopping.")
             break
 
-        # Break loop if no new records are loaded
-        if new_count == prev_count:
+        # Retry checking if new records load
+        retries = 0
+        while retries < retry_limit:
+            # Scroll to last element
+            last_element = names[-1]
+            driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'start'});", last_element)
+            ActionChains(driver).move_to_element(last_element).perform()
+
+            # Wait for new records to load
+            time.sleep(5)
+            names_after_scroll = driver.find_elements(By.XPATH, "//tbody/tr/td[2]")
+            updated_count = len(names_after_scroll)
+
+            if updated_count > new_count:
+                print(f"New records loaded: {updated_count}")
+                prev_count = updated_count
+                break  # New records loaded, continue loop
+            else:
+                retries += 1
+                print(f"No new records, retry {retries}/{retry_limit}...")
+
+        # If no new records after retries, stop loop
+        if retries == retry_limit:
+            print("No more records loading. Stopping.")
             break
 
-        prev_count = new_count
+    # Optional: Scroll to the top after loading
+    first_element = names[0]
+    driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'start'});", first_element)
+    ActionChains(driver).move_to_element(first_element).perform()
 
-        # Scroll to the last element
-        last_element = names[-1]
-        driver.execute_script("arguments[0].scrollIntoView();", last_element)
-        ActionChains(driver).move_to_element(last_element).perform()
-
-        # Wait for the loader to appear and disappear
-        try:
-            loader = wait.until(EC.presence_of_element_located((By.XPATH, "//lightning-spinner[@class='slds-spinner_container']")))
-            wait.until(EC.invisibility_of_element(loader))
-        except TimeoutException:
-            pass  # If no loader appears, continue
-
-        # Wait a bit for new records to load
-        time.sleep(7)
-
-    # Print index and name
-    for index, name in enumerate(names[:max_records], start=1):
-        print(f"{index}: {name.text}")
-
-    time.sleep(5)
+    print("All possible records loaded.")
+    time.sleep(2)
 
     # Verify the linked icon
     xpath = '''//tbody/tr/th[1]/lightning-primitive-cell-factory[1]/span[1]/div[1]/lightning-icon[1]'''

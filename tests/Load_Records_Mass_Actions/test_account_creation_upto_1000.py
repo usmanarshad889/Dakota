@@ -3,13 +3,12 @@ import pytest
 import allure
 from allure_commons.types import AttachmentType
 from selenium import webdriver
-from selenium.common import TimeoutException, NoSuchElementException
-from selenium.webdriver.support.ui import Select
+from selenium.common import NoSuchElementException, TimeoutException
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import Select
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-
 
 @pytest.fixture(scope="module")
 def driver():
@@ -19,10 +18,8 @@ def driver():
     yield driver
     driver.quit()
 
-@pytest.mark.load
-@pytest.mark.release_one
 @pytest.mark.P1
-def test_load_contacts_linked(driver, config):
+def test_account_creation_upto_1000(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])
     wait = WebDriverWait(driver, 20)
@@ -44,29 +41,29 @@ def test_load_contacts_linked(driver, config):
         print(f"Message: {type(e).__name__}")
     time.sleep(1)
 
-    # Navigate to installed packages setup
+
+    # Navigate to Marketplace Search
     driver.get(f"{config['base_url']}lightning/n/Marketplace__Dakota_Search")
 
     # Print Current Tab
-    tab = wait.until(EC.element_to_be_clickable((By.XPATH, "//li[@title='Contacts']")))
+    tab = wait.until(EC.element_to_be_clickable((By.XPATH, "//li[@title='Accounts']")))
     print(f"Current Tab : {tab.text}")
-    tab.click()
 
-    button = wait.until(EC.visibility_of_element_located((By.XPATH, "//div[@class='buttonDiv']//button[@title='Search'][normalize-space()='Search']")))
+    button = wait.until(EC.visibility_of_element_located((By.XPATH, "//button[@title='Search']")))
     print(f"Button Text : {button.text}")
     time.sleep(8)
 
     # Select linked accounts from filter
-    dropdown = wait.until(EC.element_to_be_clickable((By.XPATH, "(//select[@name='DisplayCriteria'])[2]")))
+    dropdown = wait.until(EC.element_to_be_clickable((By.XPATH, "//select[@name='DisplayCriteria']")))
     dropdown_option = Select(dropdown)
-    dropdown_option.select_by_visible_text("Linked Contacts")
+    dropdown_option.select_by_visible_text("Unlinked Accounts")
     time.sleep(1)
 
-    button = wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@class='buttonDiv']//button[@title='Search'][normalize-space()='Search']")))
+    button = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@title='Search']")))
     button.click()
 
     # Parameters
-    max_records = 200
+    max_records = 1000
     retry_limit = 3  # How many times to retry if no new records load
 
     # Initial wait
@@ -119,14 +116,32 @@ def test_load_contacts_linked(driver, config):
     print("All possible records loaded.")
     time.sleep(2)
 
-    # Verify the linked icon
-    xpath = '''//tbody/tr/th[1]/lightning-primitive-cell-factory[1]/span[1]/div[1]/lightning-icon[1]'''
-    all_linked_icons = driver.find_elements(By.XPATH, xpath)
 
-    print(f"Actual Displayed Contacts: {len(names)}")
-    print(f"Actual Displayed Icons: {len(all_linked_icons)}")
+    # Click on ALL CHECKBOX
+    all_box = wait.until(EC.element_to_be_clickable((By.XPATH, "(//span[@class='slds-checkbox_faux'])[1]")))
+    all_box.click()
 
-    assert len(all_linked_icons) == len(names), (
-        f"Mismatch in linked accounts verification: "
-        f"Expected {len(names)} icons but found {len(all_linked_icons)}."
-    )
+    # Click on Create Account
+    dropdown = wait.until(EC.element_to_be_clickable((By.XPATH, "//select[@name='MassUploadActions']")))
+    dropdown_option = Select(dropdown)
+    dropdown_option.select_by_visible_text("Create Account")
+    time.sleep(5)
+
+    # Click on add account button
+    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@class='slds-button slds-button_neutral slds-button slds-button--brand ']")))
+    btn.click()
+
+    time.sleep(2)
+
+    toast_message = wait.until(EC.element_to_be_clickable(
+        (By.XPATH, "//span[@class='toastMessage slds-text-heading--small forceActionsText']")))
+    print(f"Actual Toast Text : {toast_message.text}")
+
+    valid_messages = [
+        "Account(s) creation is in progress.",
+        "No account to create."
+    ]
+
+    toast_text = toast_message.text.strip()
+    assert toast_text in valid_messages, f"Unexpected Toast Message: {toast_text}"
+    time.sleep(5)
