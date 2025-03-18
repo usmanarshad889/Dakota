@@ -33,6 +33,7 @@ def test_link_unlink_account(driver, config):
     password = wait.until(EC.element_to_be_clickable((By.ID, "password")))
     password.send_keys(config["password"])
     login_button = wait.until(EC.element_to_be_clickable((By.ID, "Login")))
+    time.sleep(2)
     login_button.click()
 
     # Click on Marketplace Search button

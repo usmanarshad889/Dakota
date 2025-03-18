@@ -52,6 +52,7 @@ def test_search_functionality_account_fields(driver, config):
     password = wait.until(EC.element_to_be_clickable((By.ID, "password")))
     password.send_keys(config["uat_password"])
     login_button = wait.until(EC.element_to_be_clickable((By.ID, "Login")))
+    time.sleep(2)
     login_button.click()
 
     # Click on Account button
@@ -247,6 +248,7 @@ def test_search_functionality_account_fields(driver, config):
     password = wait.until(EC.element_to_be_clickable((By.ID, "password")))
     password.send_keys(config["password"])
     login_button = wait.until(EC.element_to_be_clickable((By.ID, "Login")))
+    time.sleep(2)
     login_button.click()
 
     # Click on Marketplace Search button

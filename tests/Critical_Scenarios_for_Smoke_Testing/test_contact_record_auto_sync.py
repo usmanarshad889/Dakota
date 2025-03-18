@@ -55,6 +55,7 @@ def test_contact_record_auto_sync(driver, config):
     password = wait.until(EC.element_to_be_clickable((By.ID, "password")))
     password.send_keys(config["uat_password"])
     login_button = wait.until(EC.element_to_be_clickable((By.ID, "Login")))
+    time.sleep(2)
     login_button.click()
 
 
@@ -163,6 +164,7 @@ def test_contact_record_auto_sync(driver, config):
     password = wait.until(EC.element_to_be_clickable((By.ID, "password")))
     password.send_keys(config["password"])
     login_button = wait.until(EC.element_to_be_clickable((By.ID, "Login")))
+    time.sleep(2)
     login_button.click()
 
 
