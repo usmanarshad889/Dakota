@@ -39,8 +39,6 @@ def driver():
     driver.quit()
 
 @pytest.mark.P1
-@pytest.mark.release_one
-@pytest.mark.demo
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Mapping - Account field Mapping")
 @allure.story("Validate successful mapping of account fields.")
