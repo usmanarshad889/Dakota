@@ -95,7 +95,6 @@ def test_account_record_auto_sync(driver, config):
     btn = wait.until(EC.element_to_be_clickable((By.XPATH, "(//lightning-base-combobox-item[@role='option'])[4]")))
     btn.click()
 
-
     # Select CRD
     field = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='CRD__c']")))
     field.send_keys("3546")
@@ -108,36 +107,6 @@ def test_account_record_auto_sync(driver, config):
     element.send_keys("10000")
     driver.execute_script("arguments[0].scrollIntoView();", element)
     time.sleep(1)
-
-    # # Select Metro Area
-    # field = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@placeholder='Search Metro Areas...']")))
-    # field.click()
-    # time.sleep(5)
-    # field.send_keys("Bosto")
-    # time.sleep(5)
-    # values = driver.find_elements(By.XPATH, "(//lightning-base-combobox-item[@role='option'])")
-    # index_to_use = None  # Store index of "Boston"
-    # for index, s in enumerate(values, start=1):
-    #     # print(f"{index}: {s.text.strip()}")
-    #     # If "Boston" is found anywhere in the list, store its index
-    #     if "Boston" in s.text.strip():
-    #         index_to_use = index
-    #         break  # Stop searching after finding the first "Boston"
-    # # Click the element if "Boston" was found
-    # if index_to_use is not None:
-    #     print(f"Using index {index_to_use} to click 'Boston'.")
-    #     try:
-    #         element = wait.until(EC.element_to_be_clickable(
-    #             (By.XPATH, f"(//lightning-base-combobox-item[@role='option'])[{index_to_use}]")))
-    #         first_line = element.text.splitlines()[0] if element.text.strip() else "No text found"
-    #         # print(f"First line of selected element: {first_line}")
-    #         element.click()
-    #     except Exception as e:
-    #         print(f"Error: {type(e).__name__}")
-    # else:
-    #     print("Boston was not found in the list.")
-    # time.sleep(1)
-
 
     element = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='Average_Ticket_Size__c']")))
     driver.execute_script("arguments[0].scrollIntoView();", element)
@@ -548,4 +517,4 @@ def test_account_record_auto_sync(driver, config):
     assert type_text == "Bank", f"Type Mismatch: Expected 'Bank', but got '{type_text}'"
     assert crd_text == "3546", f"CRD Value Mismatch: Expected CRD Value '3546', but got '{crd_text}'"
     assert account_type_text == "Investment Allocator", f"Account Record Type Mismatch: Expected CRD Value 'Investment Allocator', but got '{account_type_text}'"
-    time.sleep(3)
+    time.sleep(10)

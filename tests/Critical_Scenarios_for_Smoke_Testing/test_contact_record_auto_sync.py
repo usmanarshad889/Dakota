@@ -65,7 +65,7 @@ def test_contact_record_auto_sync(driver, config):
         btn.click()
     except (NoSuchElementException, TimeoutException) as e:
         print(f"Message: {type(e).__name__}")
-    time.sleep(1)
+    time.sleep(3)
 
 
     # Move to account Tab and click on new button
