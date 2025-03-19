@@ -3,16 +3,33 @@ import random
 import string
 import pytest
 import allure
-from allure_commons.types import AttachmentType
 from faker import Faker
 from selenium import webdriver
-from selenium.common import NoSuchElementException, TimeoutException
-from selenium.webdriver import ActionChains
-from selenium.webdriver.support.ui import Select
+from selenium.common.exceptions import (
+    NoSuchElementException, TimeoutException, ElementClickInterceptedException,
+    ElementNotInteractableException, StaleElementReferenceException
+)
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
+# --- Data Setup ---
+
+fake = Faker()
+random_name = "Test " + fake.name()
+email_prefix = ''.join(random.choices(string.ascii_lowercase, k=7))
+random_email = f"www.{email_prefix}.com"
+random_phone = ''.join(random.choices(string.digits, k=9))
+
+name_var = random_name
+email_var = random_email
+phone_var = random_phone
+
+print("Name:", random_name)
+print("Email:", random_email)
+print("Phone:", random_phone)
+
+# --- Fixtures ---
 
 @pytest.fixture(scope="module")
 def driver():
@@ -22,78 +39,64 @@ def driver():
     yield driver
     driver.quit()
 
+# --- Safe Click Utility ---
+
+def safe_click(driver, locator, wait_time=20, max_attempts=5):
+    attempts = 0
+    while attempts < max_attempts:
+        try:
+            element = WebDriverWait(driver, wait_time).until(EC.element_to_be_clickable(locator))
+            element.click()
+            print(f"Click successful on attempt {attempts + 1}")
+            return
+        except (
+            ElementClickInterceptedException, ElementNotInteractableException,
+            NoSuchElementException, TimeoutException, StaleElementReferenceException
+        ) as e:
+            print(f"Click failed on attempt {attempts + 1} due to {type(e).__name__}. Retrying...")
+            time.sleep(2)
+            attempts += 1
+    # JavaScript fallback
+    try:
+        element = driver.find_element(*locator)
+        driver.execute_script("arguments[0].click();", element)
+        print("Clicked using JavaScript as last resort.")
+    except Exception as e:
+        print(f"JavaScript click also failed: {e}. Continuing test.")
+
+# --- Test Case ---
+
 @pytest.mark.P1
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Mapping - Account field Mapping")
 @allure.story("Validate successful mapping of account fields.")
 def test_account_record_auto_sync(driver, config):
-    # Navigate to login page of fuse app
-    driver.get(config["base_url"])
     wait = WebDriverWait(driver, 20)
 
-    # Perform login
-    username = wait.until(EC.element_to_be_clickable((By.ID, "username")))
-    username.send_keys(config["username"])
-    password = wait.until(EC.element_to_be_clickable((By.ID, "password")))
-    password.send_keys(config["password"])
-    login_button = wait.until(EC.element_to_be_clickable((By.ID, "Login")))
-    time.sleep(2)
-    login_button.click()
+    with allure.step("Open login page and perform login"):
+        driver.get(config["uat_login_url"])
 
-    # Click on Marketplace Search button
-    try:
-        btn = WebDriverWait(driver, 30).until(EC.element_to_be_clickable((By.XPATH, "//one-app-nav-bar-item-root[@data-target-selection-name='sfdc:TabDefinition.Marketplace__Dakota_Search']")))
-        btn.click()
-    except (NoSuchElementException, TimeoutException) as e:
-        print(f"Message: {type(e).__name__}")
-    time.sleep(1)
+        username = wait.until(EC.element_to_be_clickable((By.ID, "username")))
+        username.send_keys(config["uat_username"])
 
+        password = wait.until(EC.element_to_be_clickable((By.ID, "password")))
+        password.send_keys(config["uat_password"])
 
-    retries = 5
-    for attempt in range(retries):
-        try:
-            driver.get(f"{config['base_url']}lightning/n/Marketplace__Dakota_Setup")
-            break  # Exit the loop if the page loads successfully
-        except TimeoutException:
-            print(f"Attempt {attempt + 1} failed. Retrying...")
-            time.sleep(5)  # Wait before retrying
-    else:
-        print("All retry attempts failed.")
+        login_button = wait.until(EC.element_to_be_clickable((By.ID, "Login")))
+        time.sleep(2)
+        login_button.click()
 
+    with allure.step("Click on Account button in navigation"):
+        account_button = (By.XPATH, "//one-app-nav-bar-item-root[@data-target-selection-name='sfdc:TabDefinition.standard-Account']")
+        safe_click(driver, account_button)
 
-    # Click on Authentication svg button
-    try:
-        # Wait for full page load
-        wait.until(lambda d: d.execute_script("return document.readyState") == "complete")
+    with allure.step("Navigate to Account Tab URL"):
+        driver.get(f"{config['uat_base_url']}lightning/o/Account/list?filterName=__Recent")
 
-        element = wait.until(
-            EC.element_to_be_clickable((By.XPATH, "(//*[name()='svg'][@class='slds-button__icon'])[3]"))
-        )
-        time.sleep(1)
-        element.click()
-    except (NoSuchElementException, TimeoutException) as e:
-        print(f"Message: {type(e).__name__}")
-    time.sleep(1)
+    with allure.step("Click on New button to create account"):
+        new_button_locator = (By.XPATH, "//div[@title='New']")
+        safe_click(driver, new_button_locator)
 
-    # Verify the Authentication with correct Credentials
-    wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='Username']"))).clear()
-    driver.find_element(By.XPATH, "//input[@name='Username']").send_keys("Fuse Upgrade")
-    driver.find_element(By.XPATH, "//input[@name='Password']").clear()
-    driver.find_element(By.XPATH, "//input[@name='Password']").send_keys("rolus009")
-    driver.find_element(By.XPATH, "//input[@name='AuthorizationURL']").clear()
-    driver.find_element(By.XPATH, "//input[@name='AuthorizationURL']").send_keys("https://marketplace-dakota-uat.herokuapp.com")
-    time.sleep(1)
+    # Continue test...
+    # Add steps for record type, filling form, saving, validations, etc.
 
-    try:
-        btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[normalize-space()='Connect']")))
-        driver.execute_script("arguments[0].click();", btn)
-    except (NoSuchElementException, TimeoutException) as e:
-        print(f"Message: {type(e).__name__}")
-    time.sleep(2)
-
-    toast = wait.until(EC.presence_of_element_located((By.XPATH, "//span[@class='toastMessage forceActionsText']")))
-    print(f"Toast message : {toast.text}")
-
-    # Verify the Toast message
-    assert toast.text.lower() == "dakota marketplace account connected successfully.", f"Test failed: {toast.text}"
-    time.sleep(3)

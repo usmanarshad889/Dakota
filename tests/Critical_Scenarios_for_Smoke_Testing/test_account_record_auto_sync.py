@@ -57,6 +57,14 @@ def test_account_record_auto_sync(driver, config):
     time.sleep(2)
     login_button.click()
 
+    with allure.step("Waiting for Document Ready State to be Complete"):
+        WebDriverWait(driver, 90).until(
+            lambda d: print("Current Ready State:", d.execute_script('return document.readyState')) or
+                      d.execute_script('return document.readyState') == 'complete'
+        )
+    print("Document Ready State is COMPLETE!")
+    time.sleep(1)
+
     # Click on Account button
     try:
         btn = WebDriverWait(driver, 30).until(EC.element_to_be_clickable((By.XPATH, "//one-app-nav-bar-item-root[@data-target-selection-name='sfdc:TabDefinition.standard-Account']")))
@@ -159,6 +167,14 @@ def test_account_record_auto_sync(driver, config):
     login_button = wait.until(EC.element_to_be_clickable((By.ID, "Login")))
     time.sleep(2)
     login_button.click()
+
+    with allure.step("Waiting for Document Ready State to be Complete"):
+        WebDriverWait(driver, 90).until(
+            lambda d: print("Current Ready State:", d.execute_script('return document.readyState')) or
+                      d.execute_script('return document.readyState') == 'complete'
+        )
+    print("Document Ready State is COMPLETE!")
+    time.sleep(1)
 
     # Click on Marketplace Search button
     try:
