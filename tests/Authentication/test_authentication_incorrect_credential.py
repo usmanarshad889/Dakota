@@ -65,26 +65,17 @@ def test_authentication_incorrect_credentials(driver, config):
     driver.find_element(By.XPATH, "//input[@name='Password']").send_keys("4444") # correct --> rolus009
     driver.find_element(By.XPATH, "//input[@name='AuthorizationURL']").clear()
     driver.find_element(By.XPATH, "//input[@name='AuthorizationURL']").send_keys("https://marketplace-dakota-uat.herokuapp.com")
-
-    # Try to click on connect button
-    try:
-        driver.find_element(By.XPATH, "//button[@value='Connect']").click()
-        time.sleep(1)
-    except (NoSuchElementException, TimeoutException) as e:
-        print(f"Message: {type(e).__name__}")
-        print("Connect button is not clicked in the first attempt")
+    time.sleep(1)
 
     try:
-        btn = wait.until(EC.element_to_be_clickable((By.XPATH, "(//button[normalize-space()='Connect'])[1]")))
-        try:
-            btn.click()
-        except (NoSuchElementException, TimeoutException) as e:
-            print(f"Message: {type(e).__name__}")
+        btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[normalize-space()='Connect']")))
+        driver.execute_script("arguments[0].click();", btn)
     except (NoSuchElementException, TimeoutException) as e:
         print(f"Message: {type(e).__name__}")
-        print("Connect button clicked successfully in first attempt")
-
     time.sleep(2)
+
+    toast = wait.until(EC.presence_of_element_located((By.XPATH, "//span[@class='toastMessage forceActionsText']")))
+    print(f"Toast message : {toast.text}")
 
     toast = wait.until(EC.presence_of_element_located((By.XPATH, "//span[@class='toastMessage forceActionsText']")))
     toast_message = toast.text.strip().lower()

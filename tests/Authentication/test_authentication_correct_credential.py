@@ -44,6 +44,8 @@ def test_authentication_correct_credentials(driver, config):
     except (NoSuchElementException, TimeoutException) as e:
         print(f"Message: {type(e).__name__}")
     time.sleep(2)
+    print("Login Successfully")
+
 
     # Navigate to installed pakages setup
     driver.get(f"{config['base_url']}lightning/n/Marketplace__Dakota_Setup")
@@ -60,6 +62,7 @@ def test_authentication_correct_credentials(driver, config):
     except (NoSuchElementException, TimeoutException) as e:
         print(f"Message: {type(e).__name__}")
     time.sleep(1)
+    print("Navigating to Marketplace Setup")
 
     # Verify the Authentication with correct Credentials
     wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='Username']"))).clear()
@@ -68,30 +71,23 @@ def test_authentication_correct_credentials(driver, config):
     driver.find_element(By.XPATH, "//input[@name='Password']").send_keys("rolus009")
     driver.find_element(By.XPATH, "//input[@name='AuthorizationURL']").clear()
     driver.find_element(By.XPATH, "//input[@name='AuthorizationURL']").send_keys("https://marketplace-dakota-uat.herokuapp.com")
+    time.sleep(1)
 
     try:
-        wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@value='Connect']"))).click()
+        btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[normalize-space()='Connect']")))
+        driver.execute_script("arguments[0].click();", btn)
     except (NoSuchElementException, TimeoutException) as e:
         print(f"Message: {type(e).__name__}")
-        print("Connect button is not clicked in the first attempt")
-
-    try:
-        btn = wait.until(EC.element_to_be_clickable((By.XPATH, "(//button[normalize-space()='Connect'])[1]")))
-        try:
-            btn.click()
-        except (NoSuchElementException, TimeoutException) as e:
-            print(f"Message: {type(e).__name__}")
-    except (NoSuchElementException, TimeoutException) as e:
-        print(f"Message: {type(e).__name__}")
-        print("Connect button clicked successfully in first attempt")
-
     time.sleep(2)
 
     toast = wait.until(EC.presence_of_element_located((By.XPATH, "//span[@class='toastMessage forceActionsText']")))
     print(f"Toast message : {toast.text}")
+    print("Verifying assertion")
 
     # Verify the Toast message
     assert toast.text.lower() == "dakota marketplace account connected successfully.", f"Test failed: {toast.text}"
+    time.sleep(3)
+    print("Assertion verified")
 
     # Attach a screenshot of the final state
     allure.attach(driver.get_screenshot_as_png(), name="Final_State_Screenshot", attachment_type=AttachmentType.PNG)
