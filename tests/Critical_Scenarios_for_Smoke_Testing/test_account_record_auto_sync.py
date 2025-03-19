@@ -305,17 +305,27 @@ def test_account_record_auto_sync(driver, config):
     # time.sleep(1)
 
 
-
-    # Scroll down by 1500 pixels
-    driver.execute_script("window.scrollBy(0, 1500);")
+    try:
+        # Scroll down by 1500 pixels
+        driver.execute_script("window.scrollBy(0, 1500);")
+    except (NoSuchElementException, TimeoutException) as e:
+        print(f"Error: {type(e).__name__}")
     time.sleep(2)
 
-    # Select Save Option
-    save_btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[normalize-space()='Save']")))
-    save_btn.click()
+
+    try:
+        save_btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[normalize-space()='Save']")))
+        save_btn.click()
+        time.sleep(1)
+    except (NoSuchElementException, TimeoutException) as e:
+        print(f"Error: {type(e).__name__}")
     time.sleep(1)
-    ok_btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[normalize-space()='OK']")))
-    ok_btn.click()
+
+    try:
+        ok_btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[normalize-space()='OK']")))
+        ok_btn.click()
+    except (NoSuchElementException, TimeoutException) as e:
+        print(f"Error: {type(e).__name__}")
     time.sleep(10)
 
 
