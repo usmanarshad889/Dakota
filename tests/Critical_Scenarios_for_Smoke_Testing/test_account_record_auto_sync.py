@@ -491,6 +491,10 @@ def test_account_record_auto_sync(driver, config):
     driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", element)
     time.sleep(2)
 
+    # Take Screenshot & Attach to Allure
+    screenshot = driver.get_screenshot_as_png()
+    allure.attach(screenshot, name=f"Field Mapping", attachment_type=allure.attachment_type.PNG)
+
     # # Verify the CRD with phone
     # xpath = '''(//span[@class='test-id__field-value slds-form-element__static slds-grow word-break-ie11'])[6]'''
     # phone_field = wait.until(EC.element_to_be_clickable((By.XPATH, xpath)))
@@ -527,8 +531,4 @@ def test_account_record_auto_sync(driver, config):
     assert type_text == "Bank", f"Type Mismatch: Expected 'Bank', but got '{type_text}'"
     assert crd_text == "3546", f"CRD Value Mismatch: Expected CRD Value '3546', but got '{crd_text}'"
     assert account_type_text == "Investment Allocator", f"Account Record Type Mismatch: Expected CRD Value 'Investment Allocator', but got '{account_type_text}'"
-
-    # Take Screenshot & Attach to Allure
-    screenshot = driver.get_screenshot_as_png()
-    allure.attach(screenshot, name=f"Field Mapping", attachment_type=allure.attachment_type.PNG)
     time.sleep(10)
