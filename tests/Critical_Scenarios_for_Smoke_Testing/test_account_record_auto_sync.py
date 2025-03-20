@@ -167,6 +167,7 @@ def test_account_record_auto_sync(driver, config):
     login_button = wait.until(EC.element_to_be_clickable((By.ID, "Login")))
     time.sleep(2)
     login_button.click()
+    time.sleep(3)
 
     with allure.step("Waiting for Document Ready State to be Complete"):
         WebDriverWait(driver, 90).until(

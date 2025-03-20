@@ -28,7 +28,16 @@ def test_search_contact_name(driver, config):
     password = wait.until(EC.element_to_be_clickable((By.ID, "password")))
     password.send_keys(config["password"])
     login_button = wait.until(EC.element_to_be_clickable((By.ID, "Login")))
+    time.sleep(2)
     login_button.click()
+
+    with allure.step("Waiting for Document Ready State to be Complete"):
+        WebDriverWait(driver, 90).until(
+            lambda d: print("Current Ready State:", d.execute_script('return document.readyState')) or
+                      d.execute_script('return document.readyState') == 'complete'
+        )
+    print("Document Ready State is COMPLETE!")
+    time.sleep(1)
 
     # Navigate to the contact search page
     driver.get(f"{config['base_url']}lightning/n/Marketplace__Dakota_Search")
