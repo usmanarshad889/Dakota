@@ -571,7 +571,7 @@ def test_account_field_change_notify_create_task(driver, config):
         next_btn.click()
 
         password_field = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='Passwd']")))
-        password_field.send_keys("R0013161622@ua")
+        password_field.send_keys("test")
 
         next_btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//span[normalize-space()='Next']")))
         next_btn.click()
