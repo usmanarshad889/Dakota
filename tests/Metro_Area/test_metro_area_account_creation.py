@@ -18,7 +18,7 @@ def driver():
     driver.quit()
 
 @pytest.mark.P1
-def test_metro_area_names_display(driver, config):
+def test_metro_area_account_creation(driver, config):
     # Navigate to login page of fuse app
     driver.get(config["base_url"])
     wait = WebDriverWait(driver, 20)
@@ -54,13 +54,12 @@ def test_metro_area_names_display(driver, config):
 
     # Wait for elements to present
     try:
-        btn = wait.until(EC.element_to_be_clickable((By.XPATH, "(//tbody/tr[1]/td[1])[4]")))
+        btn = wait.until(EC.presence_of_element_located((By.XPATH, "//tbody/tr[1]/th[1]/lightning-primitive-cell-factory[1]/span[1]")))
         print(btn.text)
     except (NoSuchElementException, TimeoutException) as e:
         print(f"Error: {type(e).__name__}")
 
     time.sleep(2)
-
 
     # Wait for all links under "Metro Area Name"
     all_names = wait.until(EC.presence_of_all_elements_located((By.XPATH, "//th[@data-label='Metro Area Name']//a")))
