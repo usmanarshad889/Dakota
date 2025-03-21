@@ -1,34 +1,13 @@
 import time
-import random
-import string
 import pytest
 import allure
 from allure_commons.types import AttachmentType
-from faker import Faker
 from selenium import webdriver
-from selenium.common import NoSuchElementException, TimeoutException
-from selenium.webdriver import ActionChains
-from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import TimeoutException
 
-value_src = "u"
-
-# Generate Random Name, Email and Phone
-fake = Faker()
-random_name = "Test " + fake.name()  # Add 'test' at the start of the name
-email_prefix = ''.join(random.choices(string.ascii_lowercase, k=7))
-random_email = f"www.{email_prefix}.com"
-random_phone = ''.join(random.choices(string.digits, k=9))
-# Print the generated values
-print("Name:", random_name)
-print("Email:", random_email)
-print("Phone:", random_phone)
-# Store them in variables
-name_var = random_name
-email_var = random_email
-phone_var = random_phone
 
 @pytest.fixture(scope="module")
 def driver():
@@ -38,58 +17,54 @@ def driver():
     yield driver
     driver.quit()
 
-@pytest.mark.P1
+
+def wait_for_page_load(driver, timeout=90):
+    """Wait for document ready state AND universal main content element."""
+    # Step 1: Wait for document ready
+    with allure.step("Waiting for Document Ready State to be Complete"):
+        WebDriverWait(driver, timeout).until(
+            lambda d: d.execute_script('return document.readyState') == 'complete'
+        )
+    print("Document Ready State is COMPLETE!")
+
+    # Step 2: Wait for key content element (common to all pages)
+    key_locator = (By.CSS_SELECTOR, "div[role='main']")
+    try:
+        with allure.step("Waiting for main content element to load"):
+            WebDriverWait(driver, timeout).until(
+                EC.presence_of_element_located(key_locator)
+            )
+        print("Main content element loaded successfully!")
+    except TimeoutException:
+        allure.attach(driver.get_screenshot_as_png(), name="Timeout Error", attachment_type=AttachmentType.PNG)
+        pytest.fail("Page content did not load properly.")
+
+
+def measure_page_load(driver, url, page_name):
+    """Reusable function to measure and report page load time."""
+    with allure.step(f"Navigating to {page_name}"):
+        driver.get(url)
+
+    start_time = time.time()
+    wait_for_page_load(driver)
+    end_time = time.time()
+
+    time_taken = end_time - start_time
+    print(f"Total time taken for {page_name}: {time_taken:.2f} seconds")
+
+    allure.attach(
+        body=f"Page Load Time for {page_name}: {time_taken:.2f} seconds",
+        name=f"{page_name} Load Time",
+        attachment_type=AttachmentType.TEXT
+    )
+
+
 @allure.severity(allure.severity_level.CRITICAL)
-@allure.feature("Mapping - Account field Mapping")
-@allure.story("Validate successful mapping of account fields.")
-def test_account_record_auto_sync(driver, config):
-    driver.get(config["uat_login_url"])
+def test_performance_optimization(driver, config):
     wait = WebDriverWait(driver, 20)
 
-    # Perform login
-    username = wait.until(EC.element_to_be_clickable((By.ID, "username")))
-    username.send_keys(config["uat_username"])
-    password = wait.until(EC.element_to_be_clickable((By.ID, "password")))
-    password.send_keys(config["uat_password"])
-    login_button = wait.until(EC.element_to_be_clickable((By.ID, "Login")))
-    time.sleep(2)
-    login_button.click()
-
-    with allure.step("Waiting for Document Ready State to be Complete"):
-        WebDriverWait(driver, 90).until(
-            lambda d: print("Current Ready State:", d.execute_script('return document.readyState')) or
-                      d.execute_script('return document.readyState') == 'complete'
-        )
-    print("Document Ready State is COMPLETE!")
-    time.sleep(1)
-
-    # Click on Account button
-    try:
-        btn = WebDriverWait(driver, 30).until(EC.element_to_be_clickable((By.XPATH, "//one-app-nav-bar-item-root[@data-target-selection-name='sfdc:TabDefinition.standard-Account']")))
-        btn.click()
-    except (NoSuchElementException, TimeoutException) as e:
-        print(f"Message: {type(e).__name__}")
-    time.sleep(1)
-
-    # Move to account Tab and click on new button
-    driver.get(f"{config['uat_base_url']}lightning/o/Account/list?filterName=__Recent")
-    time.sleep(2)
-
-    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@class='profileTrigger branding-user-profile bgimg slds-avatar slds-avatar_profile-image-small circular forceEntityIcon']")))
-    btn.click()
-    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//a[normalize-space()='Log Out']")))
-    btn.click()
-    time.sleep(2)
-
-
-
-
-
-
-
-    # Navigate to login page of fuse app
+    # Navigate to login page
     driver.get(config["base_url"])
-    wait = WebDriverWait(driver, 20)
 
     # Perform login
     username = wait.until(EC.element_to_be_clickable((By.ID, "username")))
@@ -97,243 +72,77 @@ def test_account_record_auto_sync(driver, config):
     password = wait.until(EC.element_to_be_clickable((By.ID, "password")))
     password.send_keys(config["password"])
     login_button = wait.until(EC.element_to_be_clickable((By.ID, "Login")))
-    time.sleep(2)
     login_button.click()
 
-    with allure.step("Waiting for Document Ready State to be Complete"):
-        WebDriverWait(driver, 90).until(
-            lambda d: print("Current Ready State:", d.execute_script('return document.readyState')) or
-                      d.execute_script('return document.readyState') == 'complete'
-        )
-    print("Document Ready State is COMPLETE!")
-    time.sleep(1)
+    # Define pages with their URLs
+    pages = [
+        {
+            "name": "Home Page",
+            "url": f"{config['base_url']}"
+        },
+        {
+            "name": "Metro Area Page",
+            "url": f"{config['base_url']}lightning/n/Marketplace__Metro_Areas"
+        },
+        {
+            "name": "Account Page",
+            "url": f"{config['base_url']}lightning/o/Account/list?filterName=__Recent"
+        },
+        {
+            "name": "Contact Page",
+            "url": f"{config['base_url']}lightning/o/Contact/list?filterName=__Recent"
+        },
+        {
+            "name": "Dakota Marketplace Page",
+            "url": f"{config['base_url']}lightning/n/Marketplace__Dakota_Search"
+        },
+        {
+            "name": "Dakota Video Page",
+            "url": f"{config['base_url']}lightning/n/Marketplace__Dakota_Video"
+        },
+        {
+            "name": "Dakota Search Page",
+            "url": f"{config['base_url']}lightning/n/Marketplace__Searches"
+        },
+        {
+            "name": "Dakota Investment Page",
+            "url": f"{config['base_url']}lightning/n/Marketplace__Investments"
+        },
+        {
+            "name": "Dakota Manager Presentation Page",
+            "url": f"{config['base_url']}lightning/n/Marketplace__Manager_Presentations"
+        },
+        {
+            "name": "Dakota Public Plan Page",
+            "url": f"{config['base_url']}lightning/n/Marketplace__Public_Plan_Minutes"
+        },
+        {
+            "name": "Dakota Conference Page",
+            "url": f"{config['base_url']}lightning/n/Marketplace__Conferences"
+        },
+        {
+            "name": "Dakota Marketplace Update Page",
+            "url": f"{config['base_url']}lightning/o/Marketplace__Activity_Stream__c/list?filterName=__Recent"
+        },
+        {
+            "name": "Dakota Task Page",
+            "url": f"{config['base_url']}lightning/o/Task/home"
+        },
+        {
+            "name": "Dakota Reports Page",
+            "url": f"{config['base_url']}lightning/o/Report/home?queryScope=mru"
+        },
+        {
+            "name": "Member Comment Page",
+            "url": f"{config['base_url']}lightning/n/Marketplace__Member_Comments"
+        },
+        {
+            "name": "Dakota Setup Page",
+            "url": f"{config['base_url']}lightning/n/Marketplace__Dakota_Setup"
+        },
+    ]
 
-    # Click on Marketplace Search button
-    try:
-        btn = WebDriverWait(driver, 30).until(EC.element_to_be_clickable((By.XPATH, "//one-app-nav-bar-item-root[@data-target-selection-name='sfdc:TabDefinition.Marketplace__Dakota_Search']")))
-        btn.click()
-    except (NoSuchElementException, TimeoutException) as e:
-        print(f"Message: {type(e).__name__}")
-    time.sleep(1)
+    # Iterate and measure each page
+    for page in pages:
+        measure_page_load(driver, page["url"], page["name"])
 
-
-    retries = 5
-    for attempt in range(retries):
-        try:
-            driver.get(f"{config['base_url']}lightning/n/Marketplace__Dakota_Setup")
-            break  # Exit the loop if the page loads successfully
-        except TimeoutException:
-            print(f"Attempt {attempt + 1} failed. Retrying...")
-            time.sleep(5)  # Wait before retrying
-    else:
-        print("All retry attempts failed.")
-    time.sleep(2)
-
-    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@class='profileTrigger branding-user-profile bgimg slds-avatar slds-avatar_profile-image-small circular forceEntityIcon']")))
-    btn.click()
-    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//a[normalize-space()='Log Out']")))
-    btn.click()
-    time.sleep(2)
-
-
-
-
-
-
-
-    driver.get(config["uat_login_url"])
-    wait = WebDriverWait(driver, 20)
-
-    # Perform login
-    username = wait.until(EC.element_to_be_clickable((By.ID, "username")))
-    username.send_keys(config["uat_username"])
-    password = wait.until(EC.element_to_be_clickable((By.ID, "password")))
-    password.send_keys(config["uat_password"])
-    login_button = wait.until(EC.element_to_be_clickable((By.ID, "Login")))
-    time.sleep(2)
-    login_button.click()
-
-    with allure.step("Waiting for Document Ready State to be Complete"):
-        WebDriverWait(driver, 90).until(
-            lambda d: print("Current Ready State:", d.execute_script('return document.readyState')) or
-                      d.execute_script('return document.readyState') == 'complete'
-        )
-    print("Document Ready State is COMPLETE!")
-    time.sleep(1)
-
-    # Click on Account button
-    try:
-        btn = WebDriverWait(driver, 30).until(EC.element_to_be_clickable((By.XPATH, "//one-app-nav-bar-item-root[@data-target-selection-name='sfdc:TabDefinition.standard-Account']")))
-        btn.click()
-    except (NoSuchElementException, TimeoutException) as e:
-        print(f"Message: {type(e).__name__}")
-    time.sleep(1)
-
-    # Move to account Tab and click on new button
-    driver.get(f"{config['uat_base_url']}lightning/o/Account/list?filterName=__Recent")
-    time.sleep(2)
-
-    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@class='profileTrigger branding-user-profile bgimg slds-avatar slds-avatar_profile-image-small circular forceEntityIcon']")))
-    btn.click()
-    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//a[normalize-space()='Log Out']")))
-    btn.click()
-    time.sleep(2)
-
-
-
-
-
-
-
-
-    # Navigate to login page of fuse app
-    driver.get(config["base_url"])
-    wait = WebDriverWait(driver, 20)
-
-    # Perform login
-    username = wait.until(EC.element_to_be_clickable((By.ID, "username")))
-    username.send_keys(config["username"])
-    password = wait.until(EC.element_to_be_clickable((By.ID, "password")))
-    password.send_keys(config["password"])
-    login_button = wait.until(EC.element_to_be_clickable((By.ID, "Login")))
-    time.sleep(2)
-    login_button.click()
-
-    with allure.step("Waiting for Document Ready State to be Complete"):
-        WebDriverWait(driver, 90).until(
-            lambda d: print("Current Ready State:", d.execute_script('return document.readyState')) or
-                      d.execute_script('return document.readyState') == 'complete'
-        )
-    print("Document Ready State is COMPLETE!")
-    time.sleep(1)
-
-    # Click on Marketplace Search button
-    try:
-        btn = WebDriverWait(driver, 30).until(EC.element_to_be_clickable((By.XPATH, "//one-app-nav-bar-item-root[@data-target-selection-name='sfdc:TabDefinition.Marketplace__Dakota_Search']")))
-        btn.click()
-    except (NoSuchElementException, TimeoutException) as e:
-        print(f"Message: {type(e).__name__}")
-    time.sleep(1)
-
-
-    retries = 5
-    for attempt in range(retries):
-        try:
-            driver.get(f"{config['base_url']}lightning/n/Marketplace__Dakota_Setup")
-            break  # Exit the loop if the page loads successfully
-        except TimeoutException:
-            print(f"Attempt {attempt + 1} failed. Retrying...")
-            time.sleep(5)  # Wait before retrying
-    else:
-        print("All retry attempts failed.")
-    time.sleep(2)
-
-    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@class='profileTrigger branding-user-profile bgimg slds-avatar slds-avatar_profile-image-small circular forceEntityIcon']")))
-    btn.click()
-    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//a[normalize-space()='Log Out']")))
-    btn.click()
-    time.sleep(2)
-
-
-
-
-
-
-
-
-
-
-
-    driver.get(config["uat_login_url"])
-    wait = WebDriverWait(driver, 20)
-
-    # Perform login
-    username = wait.until(EC.element_to_be_clickable((By.ID, "username")))
-    username.send_keys(config["uat_username"])
-    password = wait.until(EC.element_to_be_clickable((By.ID, "password")))
-    password.send_keys(config["uat_password"])
-    login_button = wait.until(EC.element_to_be_clickable((By.ID, "Login")))
-    time.sleep(2)
-    login_button.click()
-
-    with allure.step("Waiting for Document Ready State to be Complete"):
-        WebDriverWait(driver, 90).until(
-            lambda d: print("Current Ready State:", d.execute_script('return document.readyState')) or
-                      d.execute_script('return document.readyState') == 'complete'
-        )
-    print("Document Ready State is COMPLETE!")
-    time.sleep(1)
-
-    # Click on Account button
-    try:
-        btn = WebDriverWait(driver, 30).until(EC.element_to_be_clickable((By.XPATH, "//one-app-nav-bar-item-root[@data-target-selection-name='sfdc:TabDefinition.standard-Account']")))
-        btn.click()
-    except (NoSuchElementException, TimeoutException) as e:
-        print(f"Message: {type(e).__name__}")
-    time.sleep(1)
-
-    # Move to account Tab and click on new button
-    driver.get(f"{config['uat_base_url']}lightning/o/Account/list?filterName=__Recent")
-    time.sleep(2)
-
-    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@class='profileTrigger branding-user-profile bgimg slds-avatar slds-avatar_profile-image-small circular forceEntityIcon']")))
-    btn.click()
-    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//a[normalize-space()='Log Out']")))
-    btn.click()
-    time.sleep(2)
-
-
-
-
-
-
-
-
-
-    # Navigate to login page of fuse app
-    driver.get(config["base_url"])
-    wait = WebDriverWait(driver, 20)
-
-    # Perform login
-    username = wait.until(EC.element_to_be_clickable((By.ID, "username")))
-    username.send_keys(config["username"])
-    password = wait.until(EC.element_to_be_clickable((By.ID, "password")))
-    password.send_keys(config["password"])
-    login_button = wait.until(EC.element_to_be_clickable((By.ID, "Login")))
-    time.sleep(2)
-    login_button.click()
-
-    with allure.step("Waiting for Document Ready State to be Complete"):
-        WebDriverWait(driver, 90).until(
-            lambda d: print("Current Ready State:", d.execute_script('return document.readyState')) or
-                      d.execute_script('return document.readyState') == 'complete'
-        )
-    print("Document Ready State is COMPLETE!")
-    time.sleep(1)
-
-    # Click on Marketplace Search button
-    try:
-        btn = WebDriverWait(driver, 30).until(EC.element_to_be_clickable((By.XPATH, "//one-app-nav-bar-item-root[@data-target-selection-name='sfdc:TabDefinition.Marketplace__Dakota_Search']")))
-        btn.click()
-    except (NoSuchElementException, TimeoutException) as e:
-        print(f"Message: {type(e).__name__}")
-    time.sleep(1)
-
-
-    retries = 5
-    for attempt in range(retries):
-        try:
-            driver.get(f"{config['base_url']}lightning/n/Marketplace__Dakota_Setup")
-            break  # Exit the loop if the page loads successfully
-        except TimeoutException:
-            print(f"Attempt {attempt + 1} failed. Retrying...")
-            time.sleep(5)  # Wait before retrying
-    else:
-        print("All retry attempts failed.")
-    time.sleep(2)
-
-    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@class='profileTrigger branding-user-profile bgimg slds-avatar slds-avatar_profile-image-small circular forceEntityIcon']")))
-    btn.click()
-    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//a[normalize-space()='Log Out']")))
-    btn.click()
-    time.sleep(2)
