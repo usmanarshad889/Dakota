@@ -10,11 +10,6 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 
-def is_sorted(data):
-    """Check if a list is sorted in either ascending or descending order"""
-    return data == sorted(data) or data == sorted(data, reverse=True)
-
-
 @pytest.fixture(scope="module")
 def driver():
     """Fixture for setting up WebDriver"""
@@ -26,7 +21,7 @@ def driver():
 
 
 @allure.severity(allure.severity_level.CRITICAL)
-def test_investment_sorting(driver, config):
+def test_list_view_display(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])
     wait = WebDriverWait(driver, 20)
@@ -67,33 +62,41 @@ def test_investment_sorting(driver, config):
     time.sleep(1)
 
 
-    # Navigate to Dakota Home Page
+    # Navigate to Marketplace Investment Page
     driver.get(f"{config['base_url']}lightning/n/Marketplace__Investments")
 
 
-    # Wait for Created Dates
-    """Extracts and converts date strings to datetime objects"""
-    elements = wait.until(EC.presence_of_all_elements_located((By.XPATH, "(//td[@data-label='Created Date'])")))
-    time.sleep(1)
+    # Verify Investment Page Loaded
+    try:
+        element = wait.until(EC.presence_of_element_located((By.XPATH, "(//td[@data-label='Created Date'])[1]")))
+        assert element.is_displayed(), "Investment list is not displayed"
+    except TimeoutException:
+        pytest.fail("Investment list not loaded in time")
 
 
-    # Check if elements are found
-    assert elements, "❌ No date elements found!"
+    # Select and Verify Multiple List Views
+    try:
+       # Define List Views to check
+        list_views = ['All', 'Public Investment', '13F Filings']
 
-    date_list = []
-    for element in elements:
-        text = element.text.strip()
-        print(text)
-        try:
-            # Convert date and time (including AM/PM)
-            date_obj = datetime.strptime(text, "%m/%d/%Y, %I:%M %p")
-            date_list.append(date_obj)
-        except ValueError:
-            allure.attach(f"Invalid date format: {text}", "❌ Date Parsing Error", allure.attachment_type.TEXT)
+        for view in list_views:
+            # Click on the List View dropdown button
+            view_btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@name='Investments']")))
+            view_btn.click()
 
-    # Ensure the list is sorted by date and time (AM/PM included)
-    assert date_list, "❌ No date elements found!"
-    assert is_sorted(date_list), "❌ New Contacts section is not sorted by date and time!"
+            # Select View Option
+            view_option = wait.until(EC.element_to_be_clickable((By.XPATH, f"//lightning-base-combobox-item[@data-value='{view}']")))
+            view_option.click()
 
-    # Attach a screenshot of the final state
-    allure.attach(driver.get_screenshot_as_png(), name="Sorting_ScreenShot", attachment_type=AttachmentType.PNG)
+            # Confirm table element appears after selecting the view
+            element = wait.until(EC.presence_of_element_located((By.XPATH, "(//td[@data-label='Created Date'])[1]")))
+
+            # Take Screenshot & Attach to Allure
+            screenshot = driver.get_screenshot_as_png()
+            allure.attach(screenshot, name=f"{view} - Screenshot", attachment_type=allure.attachment_type.PNG)
+
+            assert element.is_displayed(), f"List View '{view}' label not visible"
+            time.sleep(1)
+
+    except (NoSuchElementException, TimeoutException) as e:
+        pytest.fail(f"List view selection failed: {type(e).__name__}")

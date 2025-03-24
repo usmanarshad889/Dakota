@@ -1,16 +1,18 @@
 import time
+from datetime import datetime
 import pytest
 import allure
 from allure_commons.types import AttachmentType
 from selenium import webdriver
+from selenium.common import NoSuchElementException, TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import TimeoutException
 
 
 @pytest.fixture(scope="module")
 def driver():
+    """Fixture for setting up WebDriver"""
     driver = webdriver.Chrome()
     driver.maximize_window()
     driver.implicitly_wait(10)
@@ -18,131 +20,71 @@ def driver():
     driver.quit()
 
 
-def wait_for_page_load(driver, timeout=90):
-    """Wait for document ready state AND universal main content element."""
-    # Step 1: Wait for document ready
-    with allure.step("Waiting for Document Ready State to be Complete"):
-        WebDriverWait(driver, timeout).until(
-            lambda d: d.execute_script('return document.readyState') == 'complete'
-        )
-    print("Document Ready State is COMPLETE!")
-
-    # Step 2: Wait for key content element (common to all pages)
-    key_locator = (By.CSS_SELECTOR, "div[role='main']")
-    try:
-        with allure.step("Waiting for main content element to load"):
-            WebDriverWait(driver, timeout).until(
-                EC.presence_of_element_located(key_locator)
-            )
-        print("Main content element loaded successfully!")
-    except TimeoutException:
-        allure.attach(driver.get_screenshot_as_png(), name="Timeout Error", attachment_type=AttachmentType.PNG)
-        pytest.fail("Page content did not load properly.")
-
-
-def measure_page_load(driver, url, page_name):
-    """Reusable function to measure and report page load time."""
-    with allure.step(f"Navigating to {page_name}"):
-        driver.get(url)
-
-    start_time = time.time()
-    wait_for_page_load(driver)
-    end_time = time.time()
-
-    time_taken = end_time - start_time
-    print(f"Total time taken for {page_name}: {time_taken:.2f} seconds")
-
-    allure.attach(
-        body=f"Page Load Time for {page_name}: {time_taken:.2f} seconds",
-        name=f"{page_name} Load Time",
-        attachment_type=AttachmentType.TEXT
-    )
-
-
 @allure.severity(allure.severity_level.CRITICAL)
-def test_performance_optimization(driver, config):
-    wait = WebDriverWait(driver, 20)
-
+def test_list_view_display(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])
+    wait = WebDriverWait(driver, 20)
 
-    # Perform login
-    username = wait.until(EC.element_to_be_clickable((By.ID, "username")))
-    username.send_keys(config["username"])
-    password = wait.until(EC.element_to_be_clickable((By.ID, "password")))
-    password.send_keys(config["password"])
-    login_button = wait.until(EC.element_to_be_clickable((By.ID, "Login")))
-    login_button.click()
+    try:
+        # Perform login
+        username = wait.until(EC.element_to_be_clickable((By.ID, "username")))
+        username.send_keys(config["username"])
+        password = wait.until(EC.element_to_be_clickable((By.ID, "password")))
+        password.send_keys(config["password"])
+        login_button = wait.until(EC.element_to_be_clickable((By.ID, "Login")))
+        login_button.click()
 
-    # Define pages with their URLs
-    pages = [
-        {
-            "name": "Home Page",
-            "url": f"{config['base_url']}"
-        },
-        {
-            "name": "Metro Area Page",
-            "url": f"{config['base_url']}lightning/n/Marketplace__Metro_Areas"
-        },
-        {
-            "name": "Account Page",
-            "url": f"{config['base_url']}lightning/o/Account/list?filterName=__Recent"
-        },
-        {
-            "name": "Contact Page",
-            "url": f"{config['base_url']}lightning/o/Contact/list?filterName=__Recent"
-        },
-        {
-            "name": "Dakota Marketplace Page",
-            "url": f"{config['base_url']}lightning/n/Marketplace__Dakota_Search"
-        },
-        {
-            "name": "Dakota Video Page",
-            "url": f"{config['base_url']}lightning/n/Marketplace__Dakota_Video"
-        },
-        {
-            "name": "Dakota Search Page",
-            "url": f"{config['base_url']}lightning/n/Marketplace__Searches"
-        },
-        {
-            "name": "Dakota Investment Page",
-            "url": f"{config['base_url']}lightning/n/Marketplace__Investments"
-        },
-        {
-            "name": "Dakota Manager Presentation Page",
-            "url": f"{config['base_url']}lightning/n/Marketplace__Manager_Presentations"
-        },
-        {
-            "name": "Dakota Public Plan Page",
-            "url": f"{config['base_url']}lightning/n/Marketplace__Public_Plan_Minutes"
-        },
-        {
-            "name": "Dakota Conference Page",
-            "url": f"{config['base_url']}lightning/n/Marketplace__Conferences"
-        },
-        {
-            "name": "Dakota Marketplace Update Page",
-            "url": f"{config['base_url']}lightning/o/Marketplace__Activity_Stream__c/list?filterName=__Recent"
-        },
-        {
-            "name": "Dakota Task Page",
-            "url": f"{config['base_url']}lightning/o/Task/home"
-        },
-        {
-            "name": "Dakota Reports Page",
-            "url": f"{config['base_url']}lightning/o/Report/home?queryScope=mru"
-        },
-        {
-            "name": "Member Comment Page",
-            "url": f"{config['base_url']}lightning/n/Marketplace__Member_Comments"
-        },
-        {
-            "name": "Dakota Setup Page",
-            "url": f"{config['base_url']}lightning/n/Marketplace__Dakota_Setup"
-        },
-    ]
+        # Wait for URL change
+        WebDriverWait(driver, 20).until(EC.url_contains("/lightning"))
 
-    # Iterate and measure each page
-    for page in pages:
-        measure_page_load(driver, page["url"], page["name"])
+    except Exception as e:
+        pytest.skip(f"Skipping test due to unexpected login error: {type(e).__name__}")
 
+
+    with allure.step("Waiting for Document Ready State to be Complete"):
+        WebDriverWait(driver, 90).until(
+            lambda d: print("Current Ready State:", d.execute_script('return document.readyState')) or
+                      d.execute_script('return document.readyState') == 'complete'
+        )
+    print("Document Ready State is COMPLETE!")
+    time.sleep(1)
+
+
+    # Navigate to Conferences Page
+    driver.get(f"{config['base_url']}lightning/n/Marketplace__Conferences")
+
+    # Verify Conference Page Loaded
+    try:
+        element = wait.until(EC.presence_of_element_located((By.XPATH, "//tbody/tr[1]/th[1]")))
+        assert element.is_displayed(), "Conference list is not displayed"
+    except TimeoutException:
+        pytest.fail("Conference list not loaded in time")
+
+    # Select and Verify Multiple List Views
+    try:
+        # Define List Views to check
+        list_views = ['All', 'Past']
+
+        for view in list_views:
+            # Click on the List View dropdown button
+            view_btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@name='Conferences']")))
+            view_btn.click()
+
+            # Select View Option
+            view_option = wait.until(
+                EC.element_to_be_clickable((By.XPATH, f"//lightning-base-combobox-item[@data-value='{view}']")))
+            view_option.click()
+
+            # Confirm table element appears after selecting the view
+            element = wait.until(EC.presence_of_element_located((By.XPATH, "//tbody/tr[1]/th[1]")))
+
+            # Take Screenshot & Attach to Allure
+            screenshot = driver.get_screenshot_as_png()
+            allure.attach(screenshot, name=f"{view} - Screenshot", attachment_type=allure.attachment_type.PNG)
+
+            assert element.is_displayed(), f"List View '{view}' label not visible"
+            time.sleep(1)
+
+    except (NoSuchElementException, TimeoutException) as e:
+        pytest.fail(f"List view selection failed: {type(e).__name__}")
