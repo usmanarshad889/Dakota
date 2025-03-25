@@ -47,6 +47,7 @@ def test_load_account_linked(driver, config):
 
     except Exception as e:
         pytest.skip(f"Skipping test due to unexpected login error: {type(e).__name__}")
+        driver.quit()
 
 
     with allure.step("Waiting for Document Ready State to be Complete"):

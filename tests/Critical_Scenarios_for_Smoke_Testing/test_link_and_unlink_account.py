@@ -23,7 +23,7 @@ def driver():
 @allure.feature("Linking/Unlinking - Account Linking and Unlinking")
 @allure.story("Validate successful linking and unlinking if Accounts.")
 def test_link_unlink_account(driver, config):
-    # Navigate to login page
+    # Navigate to login page of fuse app
     driver.get(config["base_url"])
     wait = WebDriverWait(driver, 30)
 
@@ -34,15 +34,19 @@ def test_link_unlink_account(driver, config):
         password = wait.until(EC.element_to_be_clickable((By.ID, "password")))
         password.send_keys(config["password"])
         login_button = wait.until(EC.element_to_be_clickable((By.ID, "Login")))
-        time.sleep(1)
-        login_button.click()
         time.sleep(2)
+        login_button.click()
+        time.sleep(3)
 
         # Wait for URL change
-        WebDriverWait(driver, 20).until(EC.url_contains("/lightning"))
+        wait.until(EC.url_contains("lightning.force.com"))
+
+        # Verify Login
+        wait.until(EC.element_to_be_clickable((By.XPATH, "//one-app-nav-bar-item-root[5]"))).click()
 
     except Exception as e:
         pytest.skip(f"Skipping test due to unexpected login error: {type(e).__name__}")
+        driver.quit()
 
 
     with allure.step("Waiting for Document Ready State to be Complete"):
@@ -51,14 +55,6 @@ def test_link_unlink_account(driver, config):
                       d.execute_script('return document.readyState') == 'complete'
         )
     print("Document Ready State is COMPLETE!")
-    time.sleep(1)
-
-    # Click on Marketplace Search button
-    try:
-        btn = WebDriverWait(driver, 30).until(EC.element_to_be_clickable((By.XPATH, "//one-app-nav-bar-item-root[@data-target-selection-name='sfdc:TabDefinition.Marketplace__Dakota_Search']")))
-        btn.click()
-    except (NoSuchElementException, TimeoutException) as e:
-        print(f"Message: {type(e).__name__}")
     time.sleep(1)
 
     # Navigate to installed pakages setup
