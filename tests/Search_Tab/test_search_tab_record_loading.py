@@ -1,15 +1,15 @@
 import time
 import pytest
 import allure
+
 from allure_commons.types import AttachmentType
 from selenium import webdriver
-from selenium.common import TimeoutException, NoSuchElementException
 from selenium.webdriver.support.ui import Select
-from selenium.webdriver import ActionChains
+from selenium.common import NoSuchElementException, TimeoutException
+from selenium.webdriver import Keys, ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-
 
 @pytest.fixture(scope="module")
 def driver():
@@ -19,13 +19,14 @@ def driver():
     yield driver
     driver.quit()
 
-@pytest.mark.load
-@pytest.mark.release_one
-@pytest.mark.P1
-def test_load_contacts_for_unlinked_accounts(driver, config):
-    # Navigate to login page of fuse app
+@pytest.mark.regression
+@allure.severity(allure.severity_level.CRITICAL)
+@allure.feature("Authentication - Correct Credentials")
+@allure.story("Validate successful authentication with correct credentials for the Heroku.")
+def test_search_tab_record_loading(driver, config):
+    # Navigate to login page
     driver.get(config["base_url"])
-    wait = WebDriverWait(driver, 30)
+    wait = WebDriverWait(driver, 20)
 
     try:
         # Perform login
@@ -39,10 +40,7 @@ def test_load_contacts_for_unlinked_accounts(driver, config):
         time.sleep(3)
 
         # Wait for URL change
-        wait.until(EC.url_contains("lightning.force.com"))
-
-        # Verify Login
-        wait.until(EC.element_to_be_clickable((By.XPATH, "//one-app-nav-bar-item-root[5]"))).click()
+        wait.until(EC.url_contains("/lightning"))
 
     except Exception as e:
         pytest.skip(f"Skipping test due to unexpected login error: {type(e).__name__}")
@@ -57,38 +55,18 @@ def test_load_contacts_for_unlinked_accounts(driver, config):
     time.sleep(1)
 
 
+    # Navigate to Search Page
+    driver.get(f"{config['base_url']}lightning/n/Marketplace__Searches")
 
-    # Click on Marketplace Search button
+    # Verify Search Page Loaded
     try:
-        btn = WebDriverWait(driver, 30).until(EC.element_to_be_clickable((By.XPATH, "//one-app-nav-bar-item-root[@data-target-selection-name='sfdc:TabDefinition.Marketplace__Dakota_Search']")))
-        btn.click()
-    except (NoSuchElementException, TimeoutException) as e:
-        print(f"Message: {type(e).__name__}")
-    time.sleep(1)
-
-    # Navigate to installed packages setup
-    driver.get(f"{config['base_url']}lightning/n/Marketplace__Dakota_Search")
-
-    # Print Current Tab
-    tab = wait.until(EC.element_to_be_clickable((By.XPATH, "//li[@title='Contacts']")))
-    print(f"Current Tab : {tab.text}")
-    tab.click()
-
-    button = wait.until(EC.visibility_of_element_located((By.XPATH, "//div[@class='buttonDiv']//button[@title='Search'][normalize-space()='Search']")))
-    print(f"Button Text : {button.text}")
-    time.sleep(8)
-
-    # Select linked accounts from filter
-    dropdown = wait.until(EC.element_to_be_clickable((By.XPATH, "(//select[@name='DisplayCriteria'])[2]")))
-    dropdown_option = Select(dropdown)
-    dropdown_option.select_by_visible_text("Unlinked Contacts with Linked Accounts")
-    time.sleep(1)
-
-    button = wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@class='buttonDiv']//button[@title='Search'][normalize-space()='Search']")))
-    button.click()
+        element = wait.until(EC.presence_of_element_located((By.XPATH, "(//th[@data-label='Search Name'])[1]")))
+        assert element.is_displayed(), "Search list is not displayed"
+    except TimeoutException:
+        pytest.fail("Search list not loaded in time")
 
     # Parameters
-    max_records = 200
+    max_records = 500
     retry_limit = 3  # How many times to retry if no new records load
 
     # Initial wait
@@ -98,7 +76,7 @@ def test_load_contacts_for_unlinked_accounts(driver, config):
 
     while True:
         # Get current loaded account names
-        names = wait.until(EC.presence_of_all_elements_located((By.XPATH, "//tbody/tr/td[2]")))
+        names = wait.until(EC.presence_of_all_elements_located((By.XPATH, "(//th[@data-label='Search Name'])")))
         new_count = len(names)
         print(f"Records Loaded: {new_count}")
 
@@ -117,7 +95,7 @@ def test_load_contacts_for_unlinked_accounts(driver, config):
 
             # Wait for new records to load
             time.sleep(5)
-            names_after_scroll = driver.find_elements(By.XPATH, "//tbody/tr/td[2]")
+            names_after_scroll = driver.find_elements(By.XPATH, "(//th[@data-label='Search Name'])")
             updated_count = len(names_after_scroll)
 
             if updated_count > new_count:
@@ -141,14 +119,14 @@ def test_load_contacts_for_unlinked_accounts(driver, config):
     print("All possible records loaded.")
     time.sleep(2)
 
+    # Screenshot & Allure attachment
+    screenshot = driver.get_screenshot_as_png()
+    allure.attach(screenshot, name=f"Loading Records", attachment_type=allure.attachment_type.PNG)
 
-    contact_icon_xpath = "//tbody/tr/th[1]/lightning-primitive-cell-factory[1]/span[1]/div[1]/lightning-icon[1]"
-    account_icon_xpath = "//tbody/tr/td[3]/lightning-primitive-cell-factory[1]/span[1]/div[1]/lightning-icon[1]"
+    # Verify the linked icon
+    xpath = '''(//th[@data-label='Search Name'])'''
+    all_records = driver.find_elements(By.XPATH, xpath)
 
-    # Find all contact and account icons
-    contact_icons = driver.find_elements(By.XPATH, contact_icon_xpath)
-    account_icons = driver.find_elements(By.XPATH, account_icon_xpath)
+    print(f"Displayed Records: {len(all_records)}")
 
-    # Assertions
-    assert len(contact_icons) == 0, "Some contacts have a linked icon unexpectedly."
-    assert len(account_icons) == len(names), f"Expected {len(names)} account icons, but found {len(account_icons)}."
+    assert len(all_records) >= 490 , f"Actual Records : {len(all_records)} but expected was 500"

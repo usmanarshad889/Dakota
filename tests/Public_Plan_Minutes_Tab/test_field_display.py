@@ -33,12 +33,12 @@ def test_field_display(driver, config):
         password = wait.until(EC.element_to_be_clickable((By.ID, "password")))
         password.send_keys(config["password"])
         login_button = wait.until(EC.element_to_be_clickable((By.ID, "Login")))
-        time.sleep(1)
-        login_button.click()
         time.sleep(2)
+        login_button.click()
+        time.sleep(3)
 
         # Wait for URL change
-        WebDriverWait(driver, 20).until(EC.url_contains("/lightning"))
+        wait.until(EC.url_contains("lightning.force.com"))
 
     except Exception as e:
         pytest.skip(f"Skipping test due to unexpected login error: {type(e).__name__}")
@@ -52,38 +52,35 @@ def test_field_display(driver, config):
     print("Document Ready State is COMPLETE!")
     time.sleep(1)
 
-    # Navigate to installed pakages setup
-    driver.get(f"{config['base_url']}lightning/n/Marketplace__Manager_Presentations")
+    # Navigate to Public Plan Meetings Minutes Page
+    driver.get(f"{config['base_url']}lightning/n/Marketplace__Public_Plan_Minutes")
 
 
-    # Verify Manager Presentation Page Loaded
+    # Verify Public Plan Minutes Page Loaded
     try:
-        element = wait.until(EC.presence_of_element_located((By.XPATH, "(//th[@data-label='Manager Presentation Name'])[1]")))
-        assert element.is_displayed(), "Manager Presentation list is not displayed"
+        element = wait.until(EC.presence_of_element_located((By.XPATH, "(//th[@data-label='Name'])[1]")))
+        assert element.is_displayed(), "Public Plan Minutes list is not displayed"
     except TimeoutException:
-        pytest.fail("Manager Presentation list not loaded in time")
+        pytest.fail("Public Plan Minutes list not loaded in time")
 
+        # Screenshot & Allure attachment
+        screenshot = driver.get_screenshot_as_png()
+        allure.attach(screenshot, name=f"Public Plan Meeting Page", attachment_type=allure.attachment_type.PNG)
 
     xpaths = [
-        "(//c-custom-datatable[@class='tablecol managerPresentationDataTable']//a[@role='button'])[1]",
-        "(//c-custom-datatable[@class='tablecol managerPresentationDataTable']//a[@role='button'])[2]",
-        "(//c-custom-datatable[@class='tablecol managerPresentationDataTable']//a[@role='button'])[3]",
-        "(//c-custom-datatable[@class='tablecol managerPresentationDataTable']//a[@role='button'])[4]",
-        "(//c-custom-datatable[@class='tablecol managerPresentationDataTable']//a[@role='button'])[5]",
-        "(//c-custom-datatable[@class='tablecol managerPresentationDataTable']//a[@role='button'])[6]",
-        "(//c-custom-datatable[@class='tablecol managerPresentationDataTable']//a[@role='button'])[7]",
-        "(//c-custom-datatable[@class='tablecol managerPresentationDataTable']//a[@role='button'])[8]"
+        "//th[@aria-label='Name']//a[@role='button']",
+        "//th[@aria-label='Account Name']//span[@class='slds-cell-fixed slds-has-button-menu']//a[@role='button']",
+        "//th[@aria-label='Meeting Date']//a[@role='button']",
+        "//th[@aria-label='Posted Date']//a[@role='button']",
+        "//div[@class='slds-cell-fixed slds-has-button-menu']",
     ]
 
     expected_field_text = [
-        "Manager Presentation Name",
-        "Type",
+        "Name",
         "Account Name",
-        "Public Plan Minute",
-        "Investment Strategy",
-        "Asset Class",
-        "Sub-Asset Class",
-        "Meeting Date"
+        "Meeting Date",
+        "Posted Date",
+        "Show Meeting Minutes URL column actions",
     ]
 
     extracted_field_text = []

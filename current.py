@@ -10,81 +10,28 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 
-@pytest.fixture(scope="module")
-def driver():
-    """Fixture for setting up WebDriver"""
-    driver = webdriver.Chrome()
-    driver.maximize_window()
-    driver.implicitly_wait(10)
-    yield driver
-    driver.quit()
+driver = webdriver.Chrome()
+driver.maximize_window()
+driver.implicitly_wait(10)
+wait = WebDriverWait(driver, 30)
 
 
-@allure.severity(allure.severity_level.CRITICAL)
-def test_list_view_display(driver, config):
-    # Navigate to login page
-    driver.get(config["base_url"])
-    wait = WebDriverWait(driver, 20)
-
-    try:
-        # Perform login
-        username = wait.until(EC.element_to_be_clickable((By.ID, "username")))
-        username.send_keys(config["username"])
-        password = wait.until(EC.element_to_be_clickable((By.ID, "password")))
-        password.send_keys(config["password"])
-        login_button = wait.until(EC.element_to_be_clickable((By.ID, "Login")))
-        login_button.click()
-
-        # Wait for URL change
-        WebDriverWait(driver, 20).until(EC.url_contains("/lightning"))
-
-    except Exception as e:
-        pytest.skip(f"Skipping test due to unexpected login error: {type(e).__name__}")
+try:
+    driver.get("https://dakotanetworks--fuseupgrad.sandbox.my.salesforce-setup.com/")
+    username = wait.until(EC.element_to_be_clickable((By.ID, "username")))
+    username.send_keys("draftsf@draftdata.com.fuseupgrad")
+    password = wait.until(EC.element_to_be_clickable((By.ID, "password")))
+    password.send_keys("LOWYqfakgQ8oo")
+    login_button = wait.until(EC.element_to_be_clickable((By.ID, "Login")))
+    login_button.click()
+    wait.until(EC.element_to_be_clickable((By.XPATH, "//one-app-nav-bar-item-root[5]"))).click()
+except Exception as e:
+    pytest.skip(f"Skipping test due to unexpected login error: {type(e).__name__}")
 
 
-    with allure.step("Waiting for Document Ready State to be Complete"):
-        WebDriverWait(driver, 90).until(
-            lambda d: print("Current Ready State:", d.execute_script('return document.readyState')) or
-                      d.execute_script('return document.readyState') == 'complete'
-        )
-    print("Document Ready State is COMPLETE!")
-    time.sleep(1)
+driver.get("https://dakotanetworks--fuseupgrad.sandbox.lightning.force.com/lightning/n/Marketplace__Dakota_Video")
+wait.until(EC.visibility_of_element_located((By.XPATH, "(//th[@data-label='Date'])[1]")))
+time.sleep(1)
 
-
-    # Navigate to Conferences Page
-    driver.get(f"{config['base_url']}lightning/n/Marketplace__Conferences")
-
-    # Verify Conference Page Loaded
-    try:
-        element = wait.until(EC.presence_of_element_located((By.XPATH, "//tbody/tr[1]/th[1]")))
-        assert element.is_displayed(), "Conference list is not displayed"
-    except TimeoutException:
-        pytest.fail("Conference list not loaded in time")
-
-    # Select and Verify Multiple List Views
-    try:
-        # Define List Views to check
-        list_views = ['All', 'Past']
-
-        for view in list_views:
-            # Click on the List View dropdown button
-            view_btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@name='Conferences']")))
-            view_btn.click()
-
-            # Select View Option
-            view_option = wait.until(
-                EC.element_to_be_clickable((By.XPATH, f"//lightning-base-combobox-item[@data-value='{view}']")))
-            view_option.click()
-
-            # Confirm table element appears after selecting the view
-            element = wait.until(EC.presence_of_element_located((By.XPATH, "//tbody/tr[1]/th[1]")))
-
-            # Take Screenshot & Attach to Allure
-            screenshot = driver.get_screenshot_as_png()
-            allure.attach(screenshot, name=f"{view} - Screenshot", attachment_type=allure.attachment_type.PNG)
-
-            assert element.is_displayed(), f"List View '{view}' label not visible"
-            time.sleep(1)
-
-    except (NoSuchElementException, TimeoutException) as e:
-        pytest.fail(f"List view selection failed: {type(e).__name__}")
+video_icon = driver.find_elements(By.XPATH, "(//*[name()='svg'][@class='slds-button__icon slds-button__icon_large'])")
+print(len(video_icon))
