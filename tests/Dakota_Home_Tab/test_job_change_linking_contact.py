@@ -99,7 +99,7 @@ def test_job_change_linking_creation_of_account(driver, config):
 
             # Check if the account has right permission or not
             try:
-                toast = wait.until(EC.element_to_be_clickable((By.XPATH, "//span[@class='toastMessage forceActionsText']")))
+                toast = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, "//span[@class='toastMessage forceActionsText']")))
                 toast_message = toast.text
                 # Check if the message is "You do not have permission rights to access this record."
                 if toast_message == "You do not have permission rights to access this record.":
