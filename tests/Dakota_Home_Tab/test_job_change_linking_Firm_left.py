@@ -150,8 +150,9 @@ def test_job_change_linking_firm_left(driver, config):
     # Click on first enabled button
     for button in enabled_buttons:
         driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", button)
-        button.click()
         time.sleep(2)
+        button.click()
+        time.sleep(1)
 
         toast_message = wait.until(EC.element_to_be_clickable(
             (By.XPATH, "//span[@class='toastMessage slds-text-heading--small forceActionsText']")))
