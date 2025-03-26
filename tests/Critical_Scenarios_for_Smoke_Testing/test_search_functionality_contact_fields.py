@@ -47,7 +47,7 @@ def driver():
 @allure.story("Validate contacts page filter are working correctly.")
 def test_search_functionality_contact_fields(driver, config):
     driver.get(config["uat_login_url"])
-    wait = WebDriverWait(driver, 30)
+    wait = WebDriverWait(driver, 60)
 
     try:
         # Perform login

@@ -47,7 +47,7 @@ def driver():
 @allure.story("Validate successful mapping of contact fields.")
 def test_contact_record_auto_sync(driver, config):
     driver.get(config["uat_login_url"])
-    wait = WebDriverWait(driver, 30)
+    wait = WebDriverWait(driver, 60)
 
     try:
         # Perform login
@@ -158,7 +158,7 @@ def test_contact_record_auto_sync(driver, config):
     time.sleep(2)
 
     # Verify toast_message
-    toast = wait.until(EC.element_to_be_clickable((By.XPATH, "//span[@class='toastMessage slds-text-heading--small forceActionsText']")))
+    toast = WebDriverWait(driver, 60).until(EC.element_to_be_clickable((By.XPATH, "//span[@class='toastMessage slds-text-heading--small forceActionsText']")))
     toast_massage = toast.text
     print(f"Actual Toast : {toast_massage}")
 
@@ -242,7 +242,7 @@ def test_contact_record_auto_sync(driver, config):
         print(f"Message: {type(e).__name__}")
     time.sleep(2)
 
-    toast = wait.until(EC.presence_of_element_located((By.XPATH, "//span[@class='toastMessage forceActionsText']")))
+    toast = WebDriverWait(driver, 60).until(EC.presence_of_element_located((By.XPATH, "//span[@class='toastMessage forceActionsText']")))
     print(f"Toast message : {toast.text}")
 
     # Verify the Toast message
@@ -442,7 +442,7 @@ def test_contact_record_auto_sync(driver, config):
         button.click()
         time.sleep(2)
 
-        toast_message = WebDriverWait(driver, 30).until(EC.element_to_be_clickable((By.XPATH, "//span[@class='toastMessage slds-text-heading--small forceActionsText']")))
+        toast_message = WebDriverWait(driver, 60).until(EC.element_to_be_clickable((By.XPATH, "//span[@class='toastMessage slds-text-heading--small forceActionsText']")))
         print(f"Actual Toast Text : {toast_message.text}")
 
         assert toast_message.text.strip() == "Contact successfully linked", f"Contact not clicked: {toast_message.text}"

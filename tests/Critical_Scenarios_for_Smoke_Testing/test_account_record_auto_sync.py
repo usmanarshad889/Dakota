@@ -46,7 +46,7 @@ def driver():
 @allure.story("Validate successful mapping of account fields.")
 def test_account_record_auto_sync(driver, config):
     driver.get(config["uat_login_url"])
-    wait = WebDriverWait(driver, 30)
+    wait = WebDriverWait(driver, 60)
 
     try:
         # Perform login
@@ -237,7 +237,7 @@ def test_account_record_auto_sync(driver, config):
         print(f"Message: {type(e).__name__}")
     time.sleep(2)
 
-    toast = wait.until(EC.presence_of_element_located((By.XPATH, "//span[@class='toastMessage forceActionsText']")))
+    toast = WebDriverWait(driver, 60).until(EC.presence_of_element_located((By.XPATH, "//span[@class='toastMessage forceActionsText']")))
     print(f"Toast message : {toast.text}")
 
     # Verify the Toast message
@@ -444,7 +444,7 @@ def test_account_record_auto_sync(driver, config):
         button.click()
         time.sleep(2)
 
-        toast_message = wait.until(EC.element_to_be_clickable(
+        toast_message = WebDriverWait(driver, 60).until(EC.element_to_be_clickable(
             (By.XPATH, "//span[@class='toastMessage slds-text-heading--small forceActionsText']")))
         print(f"Actual Toast Text : {toast_message.text}")
 

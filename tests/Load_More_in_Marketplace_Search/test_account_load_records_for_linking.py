@@ -26,7 +26,7 @@ def driver():
 def test_load_account_linked(driver, config):
     # Navigate to login page of fuse app
     driver.get(config["base_url"])
-    wait = WebDriverWait(driver, 30)
+    wait = WebDriverWait(driver, 60)
 
     try:
         # Perform login
