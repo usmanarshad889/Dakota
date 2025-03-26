@@ -44,7 +44,7 @@ def driver():
 @allure.story("Validate accounts page filter are working correctly.")
 def test_search_functionality_account_fields(driver, config):
     driver.get(config["uat_login_url"])
-    wait = WebDriverWait(driver, 60)
+    wait = WebDriverWait(driver, 60, poll_frequency=0.5)
 
     try:
         # Perform login

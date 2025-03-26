@@ -25,7 +25,7 @@ def driver():
 def test_link_unlink_contact(driver, config):
     # Navigate to login page of fuse app
     driver.get(config["base_url"])
-    wait = WebDriverWait(driver, 60)
+    wait = WebDriverWait(driver, 60, poll_frequency=0.5)
 
     try:
         # Perform login

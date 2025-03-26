@@ -46,7 +46,7 @@ def driver():
 @allure.story("Validate successful mapping of account fields.")
 def test_account_record_auto_sync(driver, config):
     driver.get(config["uat_login_url"])
-    wait = WebDriverWait(driver, 60)
+    wait = WebDriverWait(driver, 60, poll_frequency=0.5)
 
     try:
         # Perform login
