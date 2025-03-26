@@ -18,6 +18,7 @@ def driver():
     driver.quit()
 
 @pytest.mark.P1
+@pytest.mark.release_three
 def test_search_aum(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

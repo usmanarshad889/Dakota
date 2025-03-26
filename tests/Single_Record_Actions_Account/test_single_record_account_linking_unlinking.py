@@ -38,6 +38,7 @@ def driver():
 @pytest.mark.P1
 @pytest.mark.Skipped
 @pytest.mark.release_two
+@pytest.mark.release_three
 def test_single_record_linking_unlinking(driver, config):
     driver.get(config["uat_login_url"])
     wait = WebDriverWait(driver, 60, poll_frequency=0.5)

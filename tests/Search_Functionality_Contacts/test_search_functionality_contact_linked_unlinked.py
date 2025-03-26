@@ -19,6 +19,7 @@ def driver():
     driver.quit()
 
 @pytest.mark.P1
+@pytest.mark.release_three
 def test_search_linked_unlinked(driver, config):
     wait = WebDriverWait(driver, 20)
 

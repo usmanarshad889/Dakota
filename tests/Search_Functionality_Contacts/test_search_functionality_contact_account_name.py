@@ -20,6 +20,7 @@ def driver():
     driver.quit()
 
 @pytest.mark.P1
+@pytest.mark.release_three
 def test_search_functionality_by_contact_account_name(driver, config):
     wait = WebDriverWait(driver, 20)
 

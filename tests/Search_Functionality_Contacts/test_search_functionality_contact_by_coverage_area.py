@@ -17,6 +17,7 @@ def driver():
     driver.quit()
 
 @pytest.mark.P1
+@pytest.mark.release_three
 def test_search_coverage_area(driver, config):
     wait = WebDriverWait(driver, 20)
 
