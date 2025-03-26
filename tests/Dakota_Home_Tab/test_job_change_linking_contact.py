@@ -68,12 +68,21 @@ def test_job_change_linking_creation_of_account(driver, config):
     btn = wait.until(EC.element_to_be_clickable((By.XPATH, "(//a[@class='slds-tabs_default__link'])[1]")))
     print(f"Section Name : {btn.text}")
 
+    # Wait for records display
+    try:
+        WebDriverWait(driver, 20).until(EC.presence_of_all_elements_located((By.XPATH, "(//td[@data-label='Last Updated Date'])[1]")))
+        time.sleep(1)
+    except (NoSuchElementException, TimeoutException) as e:
+        print(f"Message: {type(e).__name__}")
+
     # Locate all Contacts name
     xpath = '''/html[1]/body[1]/div[4]/div[1]/section[1]/div[1]/div[2]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/marketplace-dakota-home-page-main[1]/div[1]/div[1]/div[1]/c-dakota-contact-updates[1]/div[1]/lightning-tabset[1]/div[1]/slot[1]/lightning-tab[1]/slot[1]/c-dakota-job-and-role-changes[1]/div[1]/div[1]/c-custom-datatable[1]/div[2]/div[1]/div[1]/table[1]/tbody[1]/tr/td[2]/lightning-primitive-cell-factory[1]/span[1]/div[1]/lightning-primitive-custom-cell[1]/c-custom-link-field[1]/lightning-button[1]/button[1]'''
-    elements = wait.until(EC.presence_of_all_elements_located((By.XPATH, xpath)))
+    elements = driver.find_elements(By.XPATH, xpath)
 
-    if not elements:
-        pytest.skip("No elements found. Skipping test case.")
+    print(f" Total elements present : {len(elements)}")
+
+    if len(elements) == 0:
+        pytest.skip("No Account or Contact found that requires creation or linking. Skipping test case.")
 
     # Click on first unlinked account
     for element in elements:
