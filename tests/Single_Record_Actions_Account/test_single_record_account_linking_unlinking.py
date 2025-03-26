@@ -71,15 +71,17 @@ def test_single_record_linking_unlinking(driver, config):
     print("Document Ready State is COMPLETE!")
     time.sleep(1)
 
+
     # Move to account Tab and click on new button
     driver.get(f"{config['uat_base_url']}lightning/o/Account/list?filterName=__Recent")
     new_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@title='New']")))
-    time.sleep(1)
+    time.sleep(2)
     new_button.click()
     time.sleep(2)
 
     # Select a record type
     record_type = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@class='slds-button slds-button_neutral slds-button slds-button_brand uiButton']")))
+    time.sleep(2)
     record_type.click()
 
     # Select account name
@@ -93,6 +95,16 @@ def test_single_record_linking_unlinking(driver, config):
     # Select website
     field = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='Website']")))
     field.send_keys(email_var)
+
+    # Select Type
+    field = wait.until(EC.element_to_be_clickable((By.XPATH, "(//button[@data-value='--None--'])[2]")))
+    field.click()
+    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "(//lightning-base-combobox-item[@role='option'])[4]")))
+    btn.click()
+
+    # Select CRD
+    field = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='CRD__c']")))
+    field.send_keys("3546")
 
     element = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='Website']")))
     driver.execute_script("arguments[0].scrollIntoView();", element)
@@ -117,6 +129,12 @@ def test_single_record_linking_unlinking(driver, config):
 
     element = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='SEC_Registered_Date__c']")))
     driver.execute_script("arguments[0].scrollIntoView();", element)
+
+    element = wait.until(EC.element_to_be_clickable((By.XPATH, "//label[normalize-space()='Billing Street']")))
+    driver.execute_script("arguments[0].scrollIntoView();", element)
+
+    element = wait.until(EC.element_to_be_clickable((By.XPATH, "//label[normalize-space()='Billing Zip/Postal Code']")))
+    driver.execute_script("arguments[0].scrollIntoView();", element)
     time.sleep(1)
 
     element = driver.find_element(By.XPATH, "//input[@name='X100_Marketplace__c']")
@@ -138,7 +156,6 @@ def test_single_record_linking_unlinking(driver, config):
 
     # Navigate to login page of fuse app
     driver.get(config["base_url"])
-    wait = WebDriverWait(driver, 20)
 
     try:
         # Perform login
@@ -147,15 +164,19 @@ def test_single_record_linking_unlinking(driver, config):
         password = wait.until(EC.element_to_be_clickable((By.ID, "password")))
         password.send_keys(config["password"])
         login_button = wait.until(EC.element_to_be_clickable((By.ID, "Login")))
-        time.sleep(1)
-        login_button.click()
         time.sleep(2)
+        login_button.click()
+        time.sleep(3)
 
         # Wait for URL change
-        WebDriverWait(driver, 20).until(EC.url_contains("/lightning"))
+        wait.until(EC.url_contains("lightning.force.com"))
+
+        # Verify Login
+        wait.until(EC.element_to_be_clickable((By.XPATH, "//one-app-nav-bar-item-root[5]"))).click()
 
     except Exception as e:
         pytest.skip(f"Skipping test due to unexpected login error: {type(e).__name__}")
+        driver.quit()
 
 
     with allure.step("Waiting for Document Ready State to be Complete"):

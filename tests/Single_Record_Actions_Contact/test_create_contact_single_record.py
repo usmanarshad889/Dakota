@@ -70,15 +70,18 @@ def test_create_contact_single_record(driver, config):
     print("Document Ready State is COMPLETE!")
     time.sleep(1)
 
+
     # Move to account Tab and click on new button
-    driver.get(f"{config['uat_base_url']}lightning/o/Contact/list")
+    url = f"{config['uat_base_url']}lightning/o/Contact/list"
+    driver.get(url)
     new_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@title='New']")))
-    time.sleep(1)
+    time.sleep(2)
     new_button.click()
     time.sleep(2)
 
     # Select a record type
     new_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@class='slds-button slds-button_neutral slds-button slds-button_brand uiButton']")))
+    time.sleep(2)
     new_button.click()
 
     # Select account name
@@ -134,11 +137,8 @@ def test_create_contact_single_record(driver, config):
         except NoSuchElementException:
             print(f"Element {r} not found, trying next...")
 
-
     wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='Email']"))).send_keys(email)
     wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='Title']"))).send_keys(title)
-
-
     wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@aria-label='Contact Type']"))).click()
     wait.until(EC.element_to_be_clickable((By.XPATH, "//lightning-base-combobox-item[@data-value='Administrator']"))).click()
 
@@ -149,12 +149,13 @@ def test_create_contact_single_record(driver, config):
     time.sleep(2)
 
     # Verify toast_message
-    toast = wait.until(EC.element_to_be_clickable((By.XPATH, "//span[@class='toastMessage slds-text-heading--small forceActionsText']")))
+    toast = WebDriverWait(driver, 60).until(EC.element_to_be_clickable((By.XPATH, "//span[@class='toastMessage slds-text-heading--small forceActionsText']")))
     toast_massage = toast.text
     print(f"Actual Toast : {toast_massage}")
 
     assert "was created" in toast_massage.lower().strip() , f"Error while creating contact : {toast_massage}"
     time.sleep(1)
+
 
     # Navigate to login page of fuse app
     driver.get(config["base_url"])
@@ -166,15 +167,19 @@ def test_create_contact_single_record(driver, config):
         password = wait.until(EC.element_to_be_clickable((By.ID, "password")))
         password.send_keys(config["password"])
         login_button = wait.until(EC.element_to_be_clickable((By.ID, "Login")))
-        time.sleep(1)
-        login_button.click()
         time.sleep(2)
+        login_button.click()
+        time.sleep(3)
 
         # Wait for URL change
-        WebDriverWait(driver, 20).until(EC.url_contains("/lightning"))
+        wait.until(EC.url_contains("lightning.force.com"))
+
+        # Verify Login
+        wait.until(EC.element_to_be_clickable((By.XPATH, "//one-app-nav-bar-item-root[5]"))).click()
 
     except Exception as e:
         pytest.skip(f"Skipping test due to unexpected login error: {type(e).__name__}")
+        driver.quit()
 
 
     with allure.step("Waiting for Document Ready State to be Complete"):
