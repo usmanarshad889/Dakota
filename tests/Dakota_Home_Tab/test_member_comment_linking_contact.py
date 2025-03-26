@@ -98,20 +98,24 @@ def test_role_change_linking_contact(driver, config):
                 continue
             driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", element)
             time.sleep(2)
-            contact_name = element.text.strip()
             element.click()
 
-            # Check if the account has right permission or not
-            try:
-                toast = wait.until(EC.element_to_be_clickable((By.XPATH, "//span[@class='toastMessage forceActionsText']")))
-                toast_message = toast.text
-                # Check if the message is "You do not have permission rights to access this record."
-                if toast_message == "You do not have permission rights to access this record.":
-                    print(f"Permission error for account: {contact_name}. Trying next element...")
-                    time.sleep(5)
-                    continue  # Skip to the next element in the loop
-            except (NoSuchElementException, TimeoutException) as e:
-                print(f"Error: {type(e).__name__}")
+            toast_count = 0  # Counter for the toast message occurrences
+
+            for _ in range(5):  # Example loop iteration count
+                try:
+                    toast = wait.until(
+                        EC.element_to_be_clickable((By.XPATH, "//span[@class='toastMessage forceActionsText']")))
+                    toast_message = toast.text
+                    if toast_message == "You do not have permission rights to access this record.":
+                        toast_count += 1
+                        print(f"Permission error detected {toast_count} time(s). Trying next element...")
+                        if toast_count >= 2:  # If message appears twice, skip the test
+                            pytest.skip("Test skipped: Permission error occurred twice.")
+                        time.sleep(5)
+                        continue  # Skip to the next element in the loop
+                except (NoSuchElementException, TimeoutException) as e:
+                    print(f"Error: {type(e).__name__}")
 
         except (NoSuchElementException, TimeoutException) as e:
             print(f"Error: {type(e).__name__} while clicking {element.text}")

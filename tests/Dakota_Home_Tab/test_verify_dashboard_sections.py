@@ -3,6 +3,7 @@ import pytest
 import allure
 from allure_commons.types import AttachmentType
 from selenium import webdriver
+from selenium.common import NoSuchElementException, TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -60,10 +61,21 @@ def test_verify_dashboard_sections(driver, config):
     # Navigate to Dakota Home Page
     driver.get(f"{config['base_url']}lightning/n/Marketplace__Home")
 
+    # Wait for records display
+    try:
+        WebDriverWait(driver, 20).until(EC.presence_of_all_elements_located((By.XPATH, "(//td[@data-label='Last Updated Date'])[1]")))
+        time.sleep(1)
+    except (NoSuchElementException, TimeoutException) as e:
+        print(f"Message: {type(e).__name__}")
+
     # Scroll down the element
     scroll_element = wait.until(EC.element_to_be_clickable((By.XPATH, "//span[@class='title-div'][normalize-space()='Dakota Videos']")))
-    driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center', inline: 'nearest'});",scroll_element)
+    driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'start', inline: 'nearest'});",scroll_element)
     time.sleep(1)
+
+    # Screenshot & Allure attachment
+    screenshot = driver.get_screenshot_as_png()
+    allure.attach(screenshot, name=f"Dakota Home Page", attachment_type=allure.attachment_type.PNG)
 
     elements_to_check = {
         "Job Changes": "(//a[@class='slds-tabs_default__link'])[1]",
@@ -82,12 +94,9 @@ def test_verify_dashboard_sections(driver, config):
         try:
             wait.until(EC.presence_of_element_located((By.XPATH, xpath)))
             print(f"{name} ✅ Found")
-        except:
+        except (NoSuchElementException, TimeoutException) as e:
+            print(f"Message: {type(e).__name__}")
             print(f"{name} ❌ Not Found")
             all_elements_present = False
-
-    screenshot_path = "salesforce_dashboard_check.png"
-    driver.save_screenshot(screenshot_path)
-    print(f"Screenshot saved to {screenshot_path}")
 
     assert all_elements_present, "❌ One or more required sections are missing!"

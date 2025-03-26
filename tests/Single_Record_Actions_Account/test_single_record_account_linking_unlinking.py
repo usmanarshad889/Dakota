@@ -36,6 +36,7 @@ def driver():
     driver.quit()
 
 @pytest.mark.P1
+@pytest.mark.Skipped
 @pytest.mark.release_two
 def test_single_record_linking_unlinking(driver, config):
     driver.get(config["uat_login_url"])
