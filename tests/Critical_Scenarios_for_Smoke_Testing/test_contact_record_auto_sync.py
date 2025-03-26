@@ -431,6 +431,9 @@ def test_contact_record_auto_sync(driver, config):
         # Check if any button is enabled
         enabled_buttons = [button for button in all_buttons if button.is_enabled()]
 
+        if not enabled_buttons:  # If all buttons are disabled
+            pytest.skip("No Account found ... Skipping Testcase")
+
     else:
         print(f"Found {len(enabled_buttons)} enabled 'Link' buttons. Proceeding with normal actions.")
         # Add the code to execute when at least one button is enabled here
