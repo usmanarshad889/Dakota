@@ -8,6 +8,8 @@ from selenium.common import TimeoutException
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
+src = "u"
+
 @pytest.fixture(scope="module")
 def driver():
     """Fixture for setting up WebDriver"""
@@ -118,7 +120,7 @@ def test_role_change_linking_contact(driver, config):
         # search the element
         btn = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[@name='SearchBar'])")))
         btn.clear()
-        btn.send_keys("Test")
+        btn.send_keys(src)
         btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@class='slds-button slds-button_brand'][normalize-space()='Search']")))
         btn.click()
         time.sleep(2)
