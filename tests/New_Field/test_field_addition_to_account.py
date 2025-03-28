@@ -22,7 +22,7 @@ def driver():
     yield driver
     driver.quit()
 
-@pytest.mark.release_three
+# @pytest.mark.release_three
 def test_field_addition_to_account(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])
