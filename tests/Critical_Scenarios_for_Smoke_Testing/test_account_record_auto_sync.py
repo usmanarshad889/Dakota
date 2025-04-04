@@ -451,7 +451,7 @@ def test_account_record_auto_sync(driver, config):
             (By.XPATH, "//span[@class='toastMessage slds-text-heading--small forceActionsText']")))
         print(f"Actual Toast Text : {toast_message.text}")
 
-        assert toast_message.text.strip() == "Account successfully linked", f"Contact not clicked: {toast_message.text}"
+        assert toast_message.text.strip() == "Account successfully linked", f"Account not Linked: {toast_message.text}"
         break  # Stop after clicking the first enabled button
 
     time.sleep(2)
