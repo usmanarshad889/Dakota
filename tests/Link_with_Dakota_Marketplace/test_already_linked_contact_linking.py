@@ -24,7 +24,7 @@ def driver():
 
 
 @pytest.mark.P1
-def test_already_linked_account_linking(driver, config):
+def test_already_linked_contact_linking(driver, config):
     # Navigate to login page of fuse app
     driver.get(config["base_url"])
     wait = WebDriverWait(driver, 60, poll_frequency=0.5)
@@ -65,24 +65,23 @@ def test_already_linked_account_linking(driver, config):
     driver.get(f"{config['base_url']}lightning/n/Marketplace__Dakota_Search")
 
 
+    # Switch to Contact Tab
+    button = wait.until(EC.element_to_be_clickable((By.XPATH, "//li[@title='Contacts']")))
+    button.click()
+
+
     # Wait for page loading
     time.sleep(20)
 
 
     # Select Display Criteria
-    dropdown = wait.until(EC.element_to_be_clickable((By.XPATH, "//select[@name='DisplayCriteria']")))
+    dropdown = wait.until(EC.element_to_be_clickable((By.XPATH, "(//select[@name='DisplayCriteria'])[2]")))
     dropdown_option = Select(dropdown)
-    dropdown_option.select_by_visible_text("Linked Accounts")
+    dropdown_option.select_by_visible_text("Linked Contacts")
 
 
-    # Click on search button
-    try:
-        btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='searchTerm']")))
-        btn.clear()
-    except (NoSuchElementException, TimeoutException) as e:
-        print(f"Error: {type(e).__name__}")
-
-    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@title='Search']")))
+    # Click on Search Button
+    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@class='buttonDiv']//button[@title='Search'][normalize-space()='Search']")))
     btn.click()
 
 
@@ -94,11 +93,11 @@ def test_already_linked_account_linking(driver, config):
     # Click on linked account
     dropdown = wait.until(EC.element_to_be_clickable((By.XPATH, "//select[@name='MassUploadActions']")))
     dropdown_option = Select(dropdown)
-    dropdown_option.select_by_visible_text("Link Account")
+    dropdown_option.select_by_visible_text("Link Selected Contacts to Existing Contacts")
 
 
     # Check the Toast
-    message = wait.until(EC.visibility_of_element_located((By.XPATH, "//tr[@class='slds-hint-parent tableRow']")))
+    message = wait.until(EC.visibility_of_element_located((By.XPATH, "//tr[@class='slds-hint-parent tableTr']")))
 
     print(f"Message : {message.text.strip()}")
 
@@ -106,5 +105,5 @@ def test_already_linked_account_linking(driver, config):
     screenshot = driver.get_screenshot_as_png()
     allure.attach(screenshot, name=f"ScreenShoot", attachment_type=allure.attachment_type.PNG)
 
-    assert message.text.strip() == 'No Accounts Available to Link!' , "Error Occurred ... Testcase Failed"
+    assert message.text.strip() == 'No Contacts Available to Link!' , "Error Occurred ... Testcase Failed"
     time.sleep(2)
