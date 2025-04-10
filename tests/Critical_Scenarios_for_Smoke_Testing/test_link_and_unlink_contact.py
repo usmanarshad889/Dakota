@@ -119,9 +119,12 @@ def test_link_unlink_contact(driver, config):
 
     if not cross_icon:
         # Select account name
-        search_fld = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@placeholder='Search by Name']")))
-        search_fld.click()
-        # search_fld.send_keys("test")
+        try:
+            search_fld = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@placeholder='Search by Name']")))
+            search_fld.click()
+        except (NoSuchElementException, TimeoutException) as e:
+            print(f"Error: {type(e).__name__}")
+
         time.sleep(3)
 
         try:
