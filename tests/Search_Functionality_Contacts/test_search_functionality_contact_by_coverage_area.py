@@ -85,6 +85,10 @@ def test_search_coverage_area(driver, config):
         (By.XPATH, "//lightning-datatable//tbody/tr/td[6]")
     ))
 
+    # Take Screenshot & Attach to Allure
+    screenshot = driver.get_screenshot_as_png()
+    allure.attach(screenshot, name=f"Verification Screenshot", attachment_type=allure.attachment_type.PNG)
+
     # Assert that at least one contact is found
     assert len(cov_names) > 0, "No coverage area found in the search results"
 

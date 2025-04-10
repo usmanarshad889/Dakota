@@ -116,6 +116,10 @@ def test_search_linked_unlinked(driver, config):
         (By.XPATH, "//lightning-datatable//tbody/tr/td[2]")
     ))
 
+    # Take Screenshot & Attach to Allure
+    screenshot = driver.get_screenshot_as_png()
+    allure.attach(screenshot, name=f"Verification Screenshot", attachment_type=allure.attachment_type.PNG)
+
     for name in account_names:
         print(name.text)
 

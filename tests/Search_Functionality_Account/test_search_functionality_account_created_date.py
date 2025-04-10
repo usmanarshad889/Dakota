@@ -92,6 +92,10 @@ def test_search_aum(driver, config):
     # Perform the range check
     is_within_range = start_date <= account_date <= current_date
 
+    # Take Screenshot & Attach to Allure
+    screenshot = driver.get_screenshot_as_png()
+    allure.attach(screenshot, name=f"Verification Screenshot", attachment_type=allure.attachment_type.PNG)
+
     # Use assert True with the range check result
     assert is_within_range, f"Date {account_date_text} is not within the last 90 days range."
     time.sleep(2)

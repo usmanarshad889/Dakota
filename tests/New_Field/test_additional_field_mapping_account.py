@@ -542,6 +542,10 @@ def test_field_addition_to_account(driver, config):
         except Exception as e:
             print(f"Skipping index {r} due to error: {e}")
 
+    # Take Screenshot & Attach to Allure
+    screenshot = driver.get_screenshot_as_png()
+    allure.attach(screenshot, name=f"Verification Screenshot", attachment_type=allure.attachment_type.PNG)
+
     # Assert if phone_var exists in the extracted automation_list
     assert phone_var in automation_list, f"Automation Text Mismatch: Expected '{phone_var}', but got '{automation_list}'"
     assert des_text == email_var, f"Description Mismatch: Expected '{email_var}', but got '{des_text}'"

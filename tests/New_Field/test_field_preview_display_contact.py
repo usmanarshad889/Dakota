@@ -194,6 +194,10 @@ def test_field_preview_display(driver, config):
     text_field = btn.text
     print(f"Field Text : {text_field}")
 
+    # Take Screenshot & Attach to Allure
+    screenshot = driver.get_screenshot_as_png()
+    allure.attach(screenshot, name=f"Verification Screenshot", attachment_type=allure.attachment_type.PNG)
+
     assert text_field == field_name , f"Expected field not displayed"
     time.sleep(1)
 

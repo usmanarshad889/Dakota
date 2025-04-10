@@ -85,6 +85,10 @@ def test_search_contact_type(driver, config):
         (By.XPATH, "//lightning-datatable//tbody/tr/td[10]")
     ))
 
+    # Take Screenshot & Attach to Allure
+    screenshot = driver.get_screenshot_as_png()
+    allure.attach(screenshot, name=f"Verification Screenshot", attachment_type=allure.attachment_type.PNG)
+
     # Assert that at least one contact type is found
     assert len(con_names) > 0, "No contact type found in the search results"
 

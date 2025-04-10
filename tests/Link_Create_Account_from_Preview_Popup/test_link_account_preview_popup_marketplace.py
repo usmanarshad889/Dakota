@@ -126,5 +126,9 @@ def test_link_account_preview_popup_marketplace(driver, config):
             (By.XPATH, "//span[@class='toastMessage slds-text-heading--small forceActionsText']")))
         print(f"Actual Toast Text : {toast_message.text}")
 
+        # Take Screenshot & Attach to Allure
+        screenshot = driver.get_screenshot_as_png()
+        allure.attach(screenshot, name=f"Verification Screenshot", attachment_type=allure.attachment_type.PNG)
+
         assert toast_message.text.strip() == "Account successfully linked", f"Contact not clicked: {toast_message.text}"
         break  # Stop after clicking the first enabled button

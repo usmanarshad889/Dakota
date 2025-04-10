@@ -116,6 +116,10 @@ def test_search_linked_unlinked(driver, config):
     # Extract all link icons
     link_icons = driver.find_elements(By.XPATH, "//tbody/tr/th[1]/lightning-primitive-cell-factory[1]/span[1]/div[1]/lightning-icon[1]")
 
+    # Take Screenshot & Attach to Allure
+    screenshot = driver.get_screenshot_as_png()
+    allure.attach(screenshot, name=f"Verification Screenshot", attachment_type=allure.attachment_type.PNG)
+
     # Assert that the no link icon found
     assert len(link_icons) <= 0, f"Error occurred: Link icon found : {len(link_icons)}"
     time.sleep(2)

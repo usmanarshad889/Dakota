@@ -82,6 +82,10 @@ def test_search_aum(driver, config):
     # Extract all AUM values from the table
     aum_results = wait.until(EC.presence_of_all_elements_located((By.XPATH, "//lightning-datatable//tbody/tr/td[3]")))
 
+    # Take Screenshot & Attach to Allure
+    screenshot = driver.get_screenshot_as_png()
+    allure.attach(screenshot, name=f"Verification Screenshot", attachment_type=allure.attachment_type.PNG)
+
     # Assert that at least one AUM is found
     assert aum_results, "❌ No AUM Range found in the search results!"
 

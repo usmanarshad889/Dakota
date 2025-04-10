@@ -83,6 +83,10 @@ def test_search_functionality_by_contact_account_name(driver, config):
         (By.XPATH, "//lightning-datatable//tbody/tr/td[4]")
     ))
 
+    # Take Screenshot & Attach to Allure
+    screenshot = driver.get_screenshot_as_png()
+    allure.attach(screenshot, name=f"Verification Screenshot", attachment_type=allure.attachment_type.PNG)
+
     # Assert that at least one account is found
     assert len(account_names) > 0, "No account name found in the search results"
 

@@ -122,6 +122,10 @@ def test_search_state_metro_area(driver, config):
         (By.XPATH, "//lightning-datatable//tbody/tr/td[5]")
     ))
 
+    # Take Screenshot & Attach to Allure
+    screenshot = driver.get_screenshot_as_png()
+    allure.attach(screenshot, name=f"Verification Screenshot", attachment_type=allure.attachment_type.PNG)
+
     # Assert that at least one State type is found
     assert len(con_names) > 0, "No State found in the search results"
 

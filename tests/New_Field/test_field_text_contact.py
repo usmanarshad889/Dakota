@@ -161,6 +161,10 @@ def test_field_text(driver, config):
     text = wait.until(EC.element_to_be_clickable((By.XPATH, "//td[normalize-space()='Text']"))).text
     print(f"Actual Text Type : {text}")
 
+    # Take Screenshot & Attach to Allure
+    screenshot = driver.get_screenshot_as_png()
+    allure.attach(screenshot, name=f"Verification Screenshot", attachment_type=allure.attachment_type.PNG)
+
     assert text == "Text" , f"Expected Data Type was 'Text' but got {text}"
     time.sleep(1)
 

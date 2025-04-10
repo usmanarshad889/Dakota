@@ -144,6 +144,10 @@ def test_field_addition_to_account(driver, config):
     actual_field = wait.until(EC.element_to_be_clickable((By.XPATH, "//tbody//tr//td[1]")))
     print(f"Actual field Text : {actual_field.text}")
 
+    # Take Screenshot & Attach to Allure
+    screenshot = driver.get_screenshot_as_png()
+    allure.attach(screenshot, name=f"Verification Screenshot", attachment_type=allure.attachment_type.PNG)
+
     assert actual_field.text == field_name , f"Expected field was {field_name} but got {actual_field.text}"
     time.sleep(1)
 
