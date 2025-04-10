@@ -154,6 +154,10 @@ def test_permission_set_users(driver, config):
     actual_status = status.text
     driver.find_element(By.XPATH, "//button[normalize-space()='Done']").click()
 
+    # Take Screenshot & Attach to Allure
+    screenshot = driver.get_screenshot_as_png()
+    allure.attach(screenshot, name=f"Verification Screenshot", attachment_type=allure.attachment_type.PNG)
+
     if actual_status == expected_status:
         print(f"Status Detail: {actual_status}")
         assert True

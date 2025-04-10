@@ -150,6 +150,11 @@ def test_non_admin_user_permission_set(driver, config):
 
     # Verify the added permission set
     permission_name = driver.find_element(By.XPATH, "//a[normalize-space()='13F Filings Permissions']")
+
+    # Take Screenshot & Attach to Allure
+    screenshot = driver.get_screenshot_as_png()
+    allure.attach(screenshot, name=f"Verification Screenshot", attachment_type=allure.attachment_type.PNG)
+
     assert permission_name.text.strip() == "13F Filings Permissions" , "Permission Set not added"
 
     # Delete the permission set

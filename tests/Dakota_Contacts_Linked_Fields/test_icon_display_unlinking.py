@@ -269,6 +269,10 @@ def test_icon_display_unlinking(driver, config):
         toast_message = WebDriverWait(driver, 30).until(EC.element_to_be_clickable((By.XPATH, "//span[@class='toastMessage slds-text-heading--small forceActionsText']")))
         print(f"Actual Toast Text : {toast_message.text}")
 
+        # Take Screenshot & Attach to Allure
+        screenshot = driver.get_screenshot_as_png()
+        allure.attach(screenshot, name=f"Verification Screenshot", attachment_type=allure.attachment_type.PNG)
+
         assert toast_message.text.strip() == "Contact successfully linked", f"Contact not clicked: {toast_message.text}"
         break  # Stop after clicking the first enabled button
 
@@ -308,6 +312,10 @@ def test_icon_display_unlinking(driver, config):
         (By.XPATH, "//span[@class='toastMessage slds-text-heading--small forceActionsText']")))
     print(f"Actual Toast Text : {toast_message.text}")
 
+    # Take Screenshot & Attach to Allure
+    screenshot = driver.get_screenshot_as_png()
+    allure.attach(screenshot, name=f"Verification Screenshot", attachment_type=allure.attachment_type.PNG)
+
     assert toast_message.text.strip() == "Contact successfully unlinked", f"Contact not clicked: {toast_message.text}"
     time.sleep(1)
 
@@ -334,5 +342,10 @@ def test_icon_display_unlinking(driver, config):
     # Check for SVG after exiting loop
     svg_element = driver.find_elements(By.XPATH,
                                        "//tbody/tr[1]/th[1]/lightning-primitive-cell-factory[1]/span[1]/div[1]/lightning-icon[1]/span[1]/lightning-primitive-icon[1]//*[name()='svg']")
+
+    # Take Screenshot & Attach to Allure
+    screenshot = driver.get_screenshot_as_png()
+    allure.attach(screenshot, name=f"Verification Screenshot", attachment_type=allure.attachment_type.PNG)
+
     assert len(svg_element) == 0, "Link icon not found or not visible"
     time.sleep(1)

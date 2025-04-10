@@ -98,8 +98,11 @@ def test_authentication_incorrect_credentials(driver, config):
     toast_message = toast.text.strip().lower()
     print(f"Toast message: {toast_message}")
 
+    # Take Screenshot & Attach to Allure
+    screenshot = driver.get_screenshot_as_png()
+    allure.attach(screenshot, name=f"Verification Screenshot", attachment_type=allure.attachment_type.PNG)
+
     # Verify the Toast message
     assert toast_message != "dakota marketplace account connected successfully.", f"Actual Toast : {toast.text}"
 
-    # Attach a screenshot of the final state
-    allure.attach(driver.get_screenshot_as_png(), name="Final_State_Screenshot", attachment_type=AttachmentType.PNG)
+
