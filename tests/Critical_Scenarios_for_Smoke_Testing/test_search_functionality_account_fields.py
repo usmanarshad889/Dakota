@@ -343,6 +343,11 @@ def test_search_functionality_account_fields(driver, config):
     search_element.click()
     # Verify AUM range filter
     checkboxes = driver.find_elements(By.XPATH, "(//span[@class='slds-checkbox_faux'])[2]")
+
+    # Take Screenshot & Attach to Allure
+    screenshot = driver.get_screenshot_as_png()
+    allure.attach(screenshot, name=f"AUM Range", attachment_type=allure.attachment_type.PNG)
+
     assert len(checkboxes) > 0, "Checkbox not found or not visible"
     time.sleep(1)
     print("AUM range filter verified")
@@ -359,6 +364,11 @@ def test_search_functionality_account_fields(driver, config):
     search_element.click()
     # Verify Metro Area Filter
     checkboxes = driver.find_elements(By.XPATH, "(//span[@class='slds-checkbox_faux'])[2]")
+
+    # Take Screenshot & Attach to Allure
+    screenshot = driver.get_screenshot_as_png()
+    allure.attach(screenshot, name=f"Metro Area", attachment_type=allure.attachment_type.PNG)
+
     assert len(checkboxes) > 0, "Checkbox not found or not visible"
     time.sleep(1)
     print("Metro Area filter verified")
@@ -375,6 +385,11 @@ def test_search_functionality_account_fields(driver, config):
     # search_element.click()
     # # Verify State filter
     # checkboxes = driver.find_elements(By.XPATH, "(//span[@class='slds-checkbox_faux'])[2]")
+
+    # # Take Screenshot & Attach to Allure
+    # screenshot = driver.get_screenshot_as_png()
+    # allure.attach(screenshot, name=f"State", attachment_type=allure.attachment_type.PNG)
+
     # assert len(checkboxes) > 0, "Checkbox not found or not visible"
     # time.sleep(1)
     # print("State filter verified")
@@ -391,6 +406,11 @@ def test_search_functionality_account_fields(driver, config):
     search_element.click()
     # Verify Type filter
     checkboxes = driver.find_elements(By.XPATH, "(//span[@class='slds-checkbox_faux'])[2]")
+
+    # Take Screenshot & Attach to Allure
+    screenshot = driver.get_screenshot_as_png()
+    allure.attach(screenshot, name=f"Type", attachment_type=allure.attachment_type.PNG)
+
     assert len(checkboxes) > 0, "Checkbox not found or not visible"
     time.sleep(1)
     print("Type filter verified")
@@ -403,6 +423,11 @@ def test_search_functionality_account_fields(driver, config):
     search_element.click()
     # Verify CRD filter
     checkboxes = driver.find_elements(By.XPATH, "(//span[@class='slds-checkbox_faux'])[2]")
+
+    # Take Screenshot & Attach to Allure
+    screenshot = driver.get_screenshot_as_png()
+    allure.attach(screenshot, name=f"CRD", attachment_type=allure.attachment_type.PNG)
+
     assert len(checkboxes) > 0, "Checkbox not found or not visible"
     time.sleep(1)
     print("CRD filter verified")

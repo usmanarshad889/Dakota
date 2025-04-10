@@ -79,6 +79,10 @@ def test_ask_dakota_sorting(driver, config):
     # Check if elements are found
     assert elements, "❌ No date elements found!"
 
+    # Take Screenshot & Attach to Allure
+    screenshot = driver.get_screenshot_as_png()
+    allure.attach(screenshot, name=f"Verification Screenshot", attachment_type=allure.attachment_type.PNG)
+
     date_list = []
     for element in elements:
         text = element.text.strip()

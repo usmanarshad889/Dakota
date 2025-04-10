@@ -296,6 +296,11 @@ def test_search_functionality_contact_fields(driver, config):
 
     # Verify Contact name filter
     checkboxes = driver.find_elements(By.XPATH, "(//span[@class='slds-checkbox_faux'])[2]")
+
+    # Take Screenshot & Attach to Allure
+    screenshot = driver.get_screenshot_as_png()
+    allure.attach(screenshot, name=f"Contact Name", attachment_type=allure.attachment_type.PNG)
+
     assert len(checkboxes) > 0, "Checkbox not found or not visible"
     print("Contact name filter verified")
     time.sleep(1)
@@ -310,6 +315,11 @@ def test_search_functionality_contact_fields(driver, config):
 
     # Verify Account name filter
     checkboxes = driver.find_elements(By.XPATH, "(//span[@class='slds-checkbox_faux'])[2]")
+
+    # Take Screenshot & Attach to Allure
+    screenshot = driver.get_screenshot_as_png()
+    allure.attach(screenshot, name=f"Account Name", attachment_type=allure.attachment_type.PNG)
+
     assert len(checkboxes) > 0, "Checkbox not found or not visible"
     print("Account name filter verified")
     time.sleep(1)
@@ -328,6 +338,11 @@ def test_search_functionality_contact_fields(driver, config):
 
     # Verify Coverage Area filter
     checkboxes = driver.find_elements(By.XPATH, "(//span[@class='slds-checkbox_faux'])[2]")
+
+    # Take Screenshot & Attach to Allure
+    screenshot = driver.get_screenshot_as_png()
+    allure.attach(screenshot, name=f"Coverage Area", attachment_type=allure.attachment_type.PNG)
+
     assert len(checkboxes) > 0, "Checkbox not found or not visible"
     print("Coverage Area filter is verified")
     time.sleep(1)
@@ -346,6 +361,11 @@ def test_search_functionality_contact_fields(driver, config):
 
     # Verify Channel Focus filter
     checkboxes = driver.find_elements(By.XPATH, "(//span[@class='slds-checkbox_faux'])[2]")
+
+    # Take Screenshot & Attach to Allure
+    screenshot = driver.get_screenshot_as_png()
+    allure.attach(screenshot, name=f"Channel Focus", attachment_type=allure.attachment_type.PNG)
+
     assert len(checkboxes) > 0, "Checkbox not found or not visible"
     print("Channel Focus filter is verified")
     time.sleep(1)
@@ -368,6 +388,11 @@ def test_search_functionality_contact_fields(driver, config):
 
     # Verify Metro Area filter
     checkboxes = driver.find_elements(By.XPATH, "(//span[@class='slds-checkbox_faux'])[2]")
+
+    # Take Screenshot & Attach to Allure
+    screenshot = driver.get_screenshot_as_png()
+    allure.attach(screenshot, name=f"Metro Area", attachment_type=allure.attachment_type.PNG)
+
     assert len(checkboxes) > 0, "Checkbox not found or not visible"
     print("Metro Area filter is verified")
     time.sleep(1)
@@ -386,6 +411,11 @@ def test_search_functionality_contact_fields(driver, config):
     #
     # # Verify State filter
     # checkboxes = driver.find_elements(By.XPATH, "(//span[@class='slds-checkbox_faux'])[2]")
+
+    # # Take Screenshot & Attach to Allure
+    # screenshot = driver.get_screenshot_as_png()
+    # allure.attach(screenshot, name=f"State", attachment_type=allure.attachment_type.PNG)
+
     # assert len(checkboxes) > 0, "Checkbox not found or not visible"
     # print("State filter is verified")
     # time.sleep(1)
@@ -404,6 +434,11 @@ def test_search_functionality_contact_fields(driver, config):
 
     # Verify Contact Type filter
     checkboxes = driver.find_elements(By.XPATH, "(//span[@class='slds-checkbox_faux'])[2]")
+
+    # Take Screenshot & Attach to Allure
+    screenshot = driver.get_screenshot_as_png()
+    allure.attach(screenshot, name=f"Contact Type", attachment_type=allure.attachment_type.PNG)
+
     assert len(checkboxes) > 0, "Checkbox not found or not visible"
     print("Contact Type filter is verified")
     time.sleep(1)

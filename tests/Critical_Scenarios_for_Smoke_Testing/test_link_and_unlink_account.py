@@ -155,5 +155,10 @@ def test_link_unlink_account(driver, config):
     ]
 
     toast_text = toast_message.text.strip()
+
+    # Take Screenshot & Attach to Allure
+    screenshot = driver.get_screenshot_as_png()
+    allure.attach(screenshot, name=f"Linking/Unlinking Account", attachment_type=allure.attachment_type.PNG)
+
     assert toast_text in valid_messages, f"Unexpected Toast Message: {toast_text}"
     time.sleep(2)

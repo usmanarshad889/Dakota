@@ -136,11 +136,13 @@ def test_member_comment_create_account_from_account(driver, config):
         toast_message = wait.until(EC.element_to_be_clickable((By.XPATH, "//span[@class='toastMessage slds-text-heading--small forceActionsText']")))
         print(f"Toast message: {toast_message.text}")
 
+        # Take Screenshot & Attach to Allure
+        screenshot = driver.get_screenshot_as_png()
+        allure.attach(screenshot, name=f"Verification Screenshot", attachment_type=allure.attachment_type.PNG)
+
         # Verify the Toast message
         assert "are inserted successfully" in toast_message.text.lower(), f"Test failed: {toast_message.text}"
 
-        # Attach a screenshot of the final state
-        allure.attach(driver.get_screenshot_as_png(), name="Final_State_Screenshot", attachment_type=AttachmentType.PNG)
 
     else:
         # Add Account with Related Contact(s)
@@ -155,8 +157,10 @@ def test_member_comment_create_account_from_account(driver, config):
         toast_message = wait.until(EC.element_to_be_clickable((By.XPATH, "//span[@class='toastMessage slds-text-heading--small forceActionsText']")))
         print(f"Toast message: {toast_message.text}")
 
+        # Take Screenshot & Attach to Allure
+        screenshot = driver.get_screenshot_as_png()
+        allure.attach(screenshot, name=f"Verification Screenshot", attachment_type=allure.attachment_type.PNG)
+
         # Verify the Toast message
         assert "are inserted successfully" in toast_message.text.lower(), f"Test failed: {toast_message.text}"
 
-        # Attach a screenshot of the final state
-        allure.attach(driver.get_screenshot_as_png(), name="Final_State_Screenshot", attachment_type=AttachmentType.PNG)

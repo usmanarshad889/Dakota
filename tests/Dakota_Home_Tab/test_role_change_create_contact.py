@@ -157,44 +157,6 @@ def test_role_change_creation_of_account(driver, config):
     field = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='Email']")))
     field.send_keys(email)
 
-    # # Enter CRD
-    # field = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='CRD__c']")))
-    # field.send_keys(CRD)
-    #
-    # # Select Contact Type
-    # wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@aria-label='Contact Type']"))).click()
-    # time.sleep(1)
-    # wait.until(EC.element_to_be_clickable((By.XPATH, "//lightning-base-combobox-item[@data-value='Administrator']"))).click()
-    #
-    # # Select Asset Class Coverage
-    # wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@aria-label='Asset Class Coverage']"))).click()
-    # time.sleep(1)
-    # wait.until(EC.element_to_be_clickable((By.XPATH, "//lightning-base-combobox-item[@data-value='Alternatives']"))).click()
-    #
-    # element = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='GHIN__c']")))
-    # driver.execute_script("arguments[0].scrollIntoView();", element)
-    #
-    # element = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='Secondary_Metro_Area__c']")))
-    # driver.execute_script("arguments[0].scrollIntoView();", element)
-    #
-    # element = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='QA_Last_Name_Field__c']")))
-    # driver.execute_script("arguments[0].scrollIntoView();", element)
-    #
-    # element = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='QA_Number_Field__c']")))
-    # driver.execute_script("arguments[0].scrollIntoView();", element)
-    #
-    # element = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='postalCode']")))
-    # driver.execute_script("arguments[0].scrollIntoView();", element)
-    #
-    # element = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='QA_Text_Permission_Test__c']")))
-    # driver.execute_script("arguments[0].scrollIntoView();", element)
-    #
-    #
-    # # Click Marketplace Verified Contact
-    # marketplace_contact = wait.until(
-    #     EC.element_to_be_clickable((By.XPATH, "(//input[@name='Marketplace_Verified_Contact__c'])[1]")))
-    # marketplace_contact.click()
-
     # click on save button
     save_btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[normalize-space()='Save']")))
     save_btn.click()
@@ -205,8 +167,10 @@ def test_role_change_creation_of_account(driver, config):
     toast_message = wait.until(EC.element_to_be_clickable((By.XPATH, "//span[@class='toastMessage slds-text-heading--small forceActionsText']")))
     print(f"Toast message: {toast_message.text}")
 
+    # Take Screenshot & Attach to Allure
+    screenshot = driver.get_screenshot_as_png()
+    allure.attach(screenshot, name=f"Verification Screenshot", attachment_type=allure.attachment_type.PNG)
+
     # Verify the Toast message
     assert "was created" in toast_message.text.lower(), f"Test failed: {toast_message.text}"
 
-    # Attach a screenshot of the final state
-    allure.attach(driver.get_screenshot_as_png(), name="Final_State_Screenshot", attachment_type=AttachmentType.PNG)

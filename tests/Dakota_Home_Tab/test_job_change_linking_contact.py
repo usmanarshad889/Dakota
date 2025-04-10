@@ -143,6 +143,11 @@ def test_job_change_linking_creation_of_account(driver, config):
         enabled_buttons = [button for button in all_buttons if button.is_enabled()]
 
         if not enabled_buttons:  # If all buttons are disabled
+
+            # Take Screenshot & Attach to Allure
+            screenshot = driver.get_screenshot_as_png()
+            allure.attach(screenshot, name=f"Verification Screenshot", attachment_type=allure.attachment_type.PNG)
+
             pytest.skip("No Account found ... Skipping Testcase")
 
     else:
@@ -158,5 +163,10 @@ def test_job_change_linking_creation_of_account(driver, config):
 
         toast_message = wait.until(EC.element_to_be_clickable(
             (By.XPATH, "//span[@class='toastMessage slds-text-heading--small forceActionsText']")))
+
+        # Take Screenshot & Attach to Allure
+        screenshot = driver.get_screenshot_as_png()
+        allure.attach(screenshot, name=f"Verification Screenshot", attachment_type=allure.attachment_type.PNG)
+
         assert toast_message.text.strip().lower() == "contact successfully linked", f"Contact not clicked: {toast_message.text}"
         break  # Stop after clicking the first enabled button

@@ -13,7 +13,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-value_src = "b"
+value_src = "uuu"
 
 # Initialize Faker
 fake = Faker()
@@ -499,6 +499,12 @@ def test_contact_record_auto_sync(driver, config):
     element = wait.until(EC.element_to_be_clickable((By.XPATH, xpath)))
     driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", element)
     time.sleep(2)
+
+
+    # Take Screenshot & Attach to Allure
+    screenshot = driver.get_screenshot_as_png()
+    allure.attach(screenshot, name=f"Field Mapping", attachment_type=allure.attachment_type.PNG)
+
 
     # # Verify the Phone with phone
     # xpath = '''(//span[@class='test-id__field-value slds-form-element__static slds-grow word-break-ie11'])[3]'''
