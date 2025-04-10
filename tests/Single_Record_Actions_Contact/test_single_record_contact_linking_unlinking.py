@@ -322,5 +322,9 @@ def test_create_contact_linking_unlinking(driver, config):
         (By.XPATH, "//span[@class='toastMessage slds-text-heading--small forceActionsText']")))
     print(f"Actual Toast Text : {toast_message.text}")
 
+    # Take Screenshot & Attach to Allure
+    screenshot = driver.get_screenshot_as_png()
+    allure.attach(screenshot, name=f"Verification Screenshot", attachment_type=allure.attachment_type.PNG)
+
     assert toast_message.text.strip() == "Contact successfully unlinked", f"Contact not clicked: {toast_message.text}"
     time.sleep(1)

@@ -140,6 +140,10 @@ def test_load_contacts_linked(driver, config):
     print(f"Actual Displayed Contacts: {len(names)}")
     print(f"Actual Displayed Icons: {len(all_linked_icons)}")
 
+    # Take Screenshot & Attach to Allure
+    screenshot = driver.get_screenshot_as_png()
+    allure.attach(screenshot, name=f"Verification Screenshot", attachment_type=allure.attachment_type.PNG)
+
     assert len(all_linked_icons) == len(names), (
         f"Mismatch in linked accounts verification: "
         f"Expected {len(names)} icons but found {len(all_linked_icons)}."

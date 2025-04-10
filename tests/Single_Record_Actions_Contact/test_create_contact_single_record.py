@@ -233,5 +233,10 @@ def test_create_contact_single_record(driver, config):
 
     # Check for checkboxes after exiting loop
     checkboxes = driver.find_elements(By.XPATH, "(//span[@class='slds-checkbox_faux'])[2]")
+
+    # Take Screenshot & Attach to Allure
+    screenshot = driver.get_screenshot_as_png()
+    allure.attach(screenshot, name=f"Verification Screenshot", attachment_type=allure.attachment_type.PNG)
+
     assert len(checkboxes) > 0, "Checkbox not found or not visible"
     time.sleep(2)

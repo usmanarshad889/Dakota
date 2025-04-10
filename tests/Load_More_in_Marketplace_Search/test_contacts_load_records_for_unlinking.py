@@ -139,4 +139,8 @@ def test_load_contacts_unlinked(driver, config):
     print(f"Actual Displayed Contacts: {len(names)}")
     print(f"Actual Displayed Icons: {len(all_linked_icons)}")
 
+    # Take Screenshot & Attach to Allure
+    screenshot = driver.get_screenshot_as_png()
+    allure.attach(screenshot, name=f"Verification Screenshot", attachment_type=allure.attachment_type.PNG)
+
     assert len(all_linked_icons) <= 0 , f"Found Linked icons : {len(all_linked_icons)}"

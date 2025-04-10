@@ -140,4 +140,8 @@ def test_load_accounts_all(driver, config):
     print(f"Displayed Accounts: {len(names)}")
     print(f"Displayed Icons: {len(all_linked_icons)}")
 
+    # Take Screenshot & Attach to Allure
+    screenshot = driver.get_screenshot_as_png()
+    allure.attach(screenshot, name=f"Verification Screenshot", attachment_type=allure.attachment_type.PNG)
+
     assert len(names) >= 200 , f"Actual Accounts : {len(names)} but expected was 200"

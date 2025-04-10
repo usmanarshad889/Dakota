@@ -109,6 +109,10 @@ def test_mass_create_link_account_by_crd(driver, config):
         (By.XPATH, "//span[@class='toastMessage slds-text-heading--small forceActionsText']")))
     print(f"Actual Toast Text : {toast_message.text}")
 
+    # Take Screenshot & Attach to Allure
+    screenshot = driver.get_screenshot_as_png()
+    allure.attach(screenshot, name=f"Verification Screenshot", attachment_type=allure.attachment_type.PNG)
+
     valid_messages = [
         "Account(s) linking is in progress",
         "No account to link."
