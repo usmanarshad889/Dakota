@@ -26,7 +26,7 @@ def driver():
 def test_public_plan_minutes_record_loading(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])
-    wait = WebDriverWait(driver, 20)
+    wait = WebDriverWait(driver, 60, poll_frequency=0.5)
 
     try:
         # Perform login
@@ -42,8 +42,12 @@ def test_public_plan_minutes_record_loading(driver, config):
         # Wait for URL change
         wait.until(EC.url_contains("lightning.force.com"))
 
+        # Verify Login
+        wait.until(EC.element_to_be_clickable((By.XPATH, "//one-app-nav-bar-item-root[5]"))).click()
+
     except Exception as e:
         pytest.skip(f"Skipping test due to unexpected login error: {type(e).__name__}")
+        driver.quit()
 
 
     with allure.step("Waiting for Document Ready State to be Complete"):

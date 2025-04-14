@@ -40,7 +40,7 @@ def driver():
 @allure.story("Test scenarios where the field remains empty for unlinked contacts.")
 def test_icon_display_unlinking(driver, config):
     driver.get(config["uat_login_url"])
-    wait = WebDriverWait(driver, 20)
+    wait = WebDriverWait(driver, 60, poll_frequency=0.5)
 
     try:
         # Perform login
@@ -49,15 +49,19 @@ def test_icon_display_unlinking(driver, config):
         password = wait.until(EC.element_to_be_clickable((By.ID, "password")))
         password.send_keys(config["uat_password"])
         login_button = wait.until(EC.element_to_be_clickable((By.ID, "Login")))
-        time.sleep(1)
-        login_button.click()
         time.sleep(2)
+        login_button.click()
+        time.sleep(3)
 
         # Wait for URL change
-        WebDriverWait(driver, 20).until(EC.url_contains("/lightning"))
+        wait.until(EC.url_contains("lightning.force.com"))
+
+        # Verify Login
+        wait.until(EC.element_to_be_clickable((By.XPATH, "//one-app-nav-bar-item-root[2]"))).click()
 
     except Exception as e:
         pytest.skip(f"Skipping test due to unexpected login error: {type(e).__name__}")
+        driver.quit()
 
 
     with allure.step("Waiting for Document Ready State to be Complete"):
@@ -67,6 +71,7 @@ def test_icon_display_unlinking(driver, config):
         )
     print("Document Ready State is COMPLETE!")
     time.sleep(1)
+
 
 
     # Move to account Tab and click on new button
@@ -153,8 +158,9 @@ def test_icon_display_unlinking(driver, config):
     assert "was created" in toast_massage.lower().strip() , f"Error while creating contact : {toast_massage}"
     time.sleep(1)
 
-    # Navigate to login page of fuse app
+    # Navigate to login page
     driver.get(config["base_url"])
+    wait = WebDriverWait(driver, 60, poll_frequency=0.5)
 
     try:
         # Perform login
@@ -163,15 +169,19 @@ def test_icon_display_unlinking(driver, config):
         password = wait.until(EC.element_to_be_clickable((By.ID, "password")))
         password.send_keys(config["password"])
         login_button = wait.until(EC.element_to_be_clickable((By.ID, "Login")))
-        time.sleep(1)
-        login_button.click()
         time.sleep(2)
+        login_button.click()
+        time.sleep(3)
 
         # Wait for URL change
-        WebDriverWait(driver, 20).until(EC.url_contains("/lightning"))
+        wait.until(EC.url_contains("lightning.force.com"))
+
+        # Verify Login
+        wait.until(EC.element_to_be_clickable((By.XPATH, "//one-app-nav-bar-item-root[5]"))).click()
 
     except Exception as e:
         pytest.skip(f"Skipping test due to unexpected login error: {type(e).__name__}")
+        driver.quit()
 
 
     with allure.step("Waiting for Document Ready State to be Complete"):

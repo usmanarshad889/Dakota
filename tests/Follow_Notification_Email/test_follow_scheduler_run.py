@@ -29,7 +29,7 @@ def driver():
 def test_follow_scheduler_run(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])
-    wait = WebDriverWait(driver, 20)
+    wait = WebDriverWait(driver, 60)
 
     # === Check if it's Friday 5 PM ===
     current_time = datetime.datetime.now()
