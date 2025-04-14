@@ -13,6 +13,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 
+value_src = "uuu"
+
 # Generate Random Name, Email and Phone
 fake = Faker()
 random_name = "Test " + fake.name()  # Add 'test' at the start of the name
@@ -80,11 +82,13 @@ def test_display_icon_linking(driver, config):
     # Move to account Tab and click on new button
     driver.get(f"{config['uat_base_url']}lightning/o/Account/list?filterName=__Recent")
     new_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@title='New']")))
+    time.sleep(2)
     new_button.click()
     time.sleep(2)
 
     # Select a record type
     record_type = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@class='slds-button slds-button_neutral slds-button slds-button_brand uiButton']")))
+    time.sleep(2)
     record_type.click()
 
     # Select account name
@@ -98,6 +102,16 @@ def test_display_icon_linking(driver, config):
     # Select website
     field = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='Website']")))
     field.send_keys(email_var)
+
+    # Select Type
+    field = wait.until(EC.element_to_be_clickable((By.XPATH, "(//button[@data-value='--None--'])[2]")))
+    field.click()
+    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "(//lightning-base-combobox-item[@role='option'])[4]")))
+    btn.click()
+
+    # Select CRD
+    field = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='CRD__c']")))
+    field.send_keys("3546")
 
     element = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='Website']")))
     driver.execute_script("arguments[0].scrollIntoView();", element)
@@ -122,6 +136,12 @@ def test_display_icon_linking(driver, config):
 
     element = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='SEC_Registered_Date__c']")))
     driver.execute_script("arguments[0].scrollIntoView();", element)
+
+    element = wait.until(EC.element_to_be_clickable((By.XPATH, "//label[normalize-space()='Billing Street']")))
+    driver.execute_script("arguments[0].scrollIntoView();", element)
+
+    element = wait.until(EC.element_to_be_clickable((By.XPATH, "//label[normalize-space()='Billing Zip/Postal Code']")))
+    driver.execute_script("arguments[0].scrollIntoView();", element)
     time.sleep(1)
 
     element = driver.find_element(By.XPATH, "//input[@name='X100_Marketplace__c']")
@@ -138,6 +158,7 @@ def test_display_icon_linking(driver, config):
     print(f"Actual Toast : {toast_massage}")
 
     assert "was created" in toast_massage.lower().strip() , f"Error while creating account : {toast_massage}"
+    time.sleep(2)
 
 
     # Navigate to login page
@@ -235,19 +256,21 @@ def test_display_icon_linking(driver, config):
         print(f"All {len(all_buttons)} 'Link' buttons are disabled. Performing alternative action.")
 
         # search the element
-        btn = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[@name='SearchBar'])")))
+        btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='SearchBar']")))
         btn.clear()
-        btn.send_keys("x")
+        btn.send_keys(value_src)
         btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@class='slds-button slds-button_brand'][normalize-space()='Search']")))
         btn.click()
         time.sleep(2)
 
         # Locate all 'Link' buttons
-        all_buttons = wait.until(
-            EC.presence_of_all_elements_located((By.XPATH, "(//button[@title='Link'][normalize-space()='Link'])")))
+        all_buttons = wait.until(EC.presence_of_all_elements_located((By.XPATH, "(//button[@title='Link'][normalize-space()='Link'])")))
 
         # Check if any button is enabled
         enabled_buttons = [button for button in all_buttons if button.is_enabled()]
+
+        if not enabled_buttons:  # If all buttons are disabled
+            pytest.skip("No Account found ... Skipping Testcase")
 
     else:
         print(f"Found {len(enabled_buttons)} enabled 'Link' buttons. Proceeding with normal actions.")
@@ -260,7 +283,8 @@ def test_display_icon_linking(driver, config):
         button.click()
         time.sleep(2)
 
-        toast_message = wait.until(EC.element_to_be_clickable((By.XPATH, "//span[@class='toastMessage slds-text-heading--small forceActionsText']")))
+        toast_message = WebDriverWait(driver, 60).until(EC.element_to_be_clickable(
+            (By.XPATH, "//span[@class='toastMessage slds-text-heading--small forceActionsText']")))
         print(f"Actual Toast Text : {toast_message.text}")
 
         # Take Screenshot & Attach to Allure

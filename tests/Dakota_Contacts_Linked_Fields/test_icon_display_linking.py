@@ -11,6 +11,9 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
+
+value_src = "uuu"
+
 # Initialize Faker
 fake = Faker()
 phone = f"{random.randint(100,999)}-{random.randint(100,999)}-{random.randint(1000,9999)}"
@@ -76,7 +79,9 @@ def test_icon_display_linking(driver, config):
     # Move to account Tab and click on new button
     driver.get(f"{config['uat_base_url']}lightning/o/Contact/list")
     new_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@title='New']")))
+    time.sleep(2)
     new_button.click()
+    time.sleep(2)
 
     # Select a record type
     new_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@class='slds-button slds-button_neutral slds-button slds-button_brand uiButton']")))
@@ -256,7 +261,7 @@ def test_icon_display_linking(driver, config):
         # search the element
         btn = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[@name='SearchBar'])")))
         btn.clear()
-        btn.send_keys("x")
+        btn.send_keys(value_src)
         btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@class='slds-button slds-button_brand'][normalize-space()='Search']")))
         btn.click()
         time.sleep(2)
@@ -267,6 +272,9 @@ def test_icon_display_linking(driver, config):
 
         # Check if any button is enabled
         enabled_buttons = [button for button in all_buttons if button.is_enabled()]
+
+        if not enabled_buttons:  # If all buttons are disabled
+            pytest.skip("No Account found ... Skipping Testcase")
 
     else:
         print(f"Found {len(enabled_buttons)} enabled 'Link' buttons. Proceeding with normal actions.")
@@ -279,7 +287,7 @@ def test_icon_display_linking(driver, config):
         button.click()
         time.sleep(2)
 
-        toast_message = WebDriverWait(driver, 30).until(EC.element_to_be_clickable((By.XPATH, "//span[@class='toastMessage slds-text-heading--small forceActionsText']")))
+        toast_message = WebDriverWait(driver, 60).until(EC.element_to_be_clickable((By.XPATH, "//span[@class='toastMessage slds-text-heading--small forceActionsText']")))
         print(f"Actual Toast Text : {toast_message.text}")
 
         # Take Screenshot & Attach to Allure

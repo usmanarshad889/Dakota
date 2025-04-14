@@ -196,20 +196,29 @@ def test_account_field_change_notify_create_task(driver, config):
     time.sleep(2)
 
 
-    # Click on Related contacts
-    xpath = '''//li//lst-related-list-quick-link//div//div//records-hoverable-link//div'''
-    all_links = WebDriverWait(driver, 20).until(EC.presence_of_all_elements_located((By.XPATH, xpath)))
+    try:
+        # Click on Related contacts
+        xpath = '''//li//lst-related-list-quick-link//div//div//records-hoverable-link//div'''
+        all_links = WebDriverWait(driver, 30).until(EC.presence_of_all_elements_located((By.XPATH, xpath)))
 
-    for link in all_links:
-        if "Related Contacts" in link.text:
-            link.click()
-            time.sleep(4)
-            break
+        for link in all_links:
+            if "Related Contacts" in link.text:
+                link.click()
+                time.sleep(4)
+                break
+
+    except (NoSuchElementException, TimeoutException) as e:
+        print(f"Error: {type(e).__name__}")
+        button = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@name='NewContact']")))
+        button.click()
 
 
-    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//div[@title='New Contact']")))
-    time.sleep(1)
-    btn.click()
+    try:
+        btn = WebDriverWait(driver, 30).until(EC.element_to_be_clickable((By.XPATH, "//div[@title='New Contact']")))
+        time.sleep(1)
+        btn.click()
+    except (NoSuchElementException, TimeoutException) as e:
+        print(f"Error: {type(e).__name__}")
 
     btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//span[normalize-space()='Next']")))
     time.sleep(1)

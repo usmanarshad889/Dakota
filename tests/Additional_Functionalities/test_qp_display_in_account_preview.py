@@ -87,7 +87,7 @@ def test_qp_display_in_account_preview(driver, config):
 
 
     # Verify the '# of QP's field display'
-    expected_field = 'Dakota # of QPs'
+    expected_field = ['Dakota', '#', 'of', 'QPs']
     actual_field = driver.find_element(By.XPATH, "//label[normalize-space()='Dakota # of QPs']")
     text = actual_field.text.split()
 
