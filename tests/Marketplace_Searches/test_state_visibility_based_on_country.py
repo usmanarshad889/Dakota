@@ -24,6 +24,9 @@ def driver():
 
 
 @pytest.mark.P1
+@allure.severity(allure.severity_level.CRITICAL)
+@allure.feature("Filters")
+@allure.story("Confirm state visibility changes based on selected countries.")
 def test_state_visibility_based_on_country(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

@@ -1,13 +1,13 @@
 import time
 import pytest
 import allure
-from allure_commons.types import AttachmentType
+
 from selenium import webdriver
 from selenium.common import NoSuchElementException, TimeoutException
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import Select
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+
 
 @pytest.fixture(scope="module")
 def driver():
@@ -18,6 +18,9 @@ def driver():
     driver.quit()
 
 
+@allure.severity(allure.severity_level.CRITICAL)
+@allure.feature("User Settings - Toggles")
+@allure.story("Confirm users can manually re-enable and save these toggles.")
 def test_additional_settings_toggle_buttons(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

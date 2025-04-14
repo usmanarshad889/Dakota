@@ -20,6 +20,9 @@ def driver():
     driver.quit()
 
 @pytest.mark.P1
+@allure.severity(allure.severity_level.CRITICAL)
+@allure.feature("Contact Linking")
+@allure.story("Verify the correct linking of contact in Metro Area.")
 def test_metro_area_account_linking(driver, config):
     # Navigate to login page of fuse app
     driver.get(config["base_url"])

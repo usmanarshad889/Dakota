@@ -19,6 +19,9 @@ def driver():
 
 
 @pytest.mark.P1
+@allure.severity(allure.severity_level.CRITICAL)
+@allure.feature("Scheduler Display")
+@allure.story('Confirm the display of the Resync Accounts and Contacts fields scheduler and its run time.')
 def test_resync_accounts_and_contacts_scheduler_display(driver, config):
     # Navigate to login page of fuse app
     driver.get(config["base_url"])

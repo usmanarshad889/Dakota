@@ -19,6 +19,9 @@ def driver():
     driver.quit()
 
 @pytest.mark.P1
+@allure.severity(allure.severity_level.CRITICAL)
+@allure.feature("Metro Area")
+@allure.story("Verify the correct search functionality of Metro Area records.")
 def test_metro_area_search_functionality(driver, config):
     # Navigate to login page of fuse app
     driver.get(config["base_url"])

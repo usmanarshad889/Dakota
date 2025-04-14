@@ -19,8 +19,8 @@ def driver():
 
 @pytest.mark.P1
 @allure.severity(allure.severity_level.CRITICAL)
-@allure.feature("Linking/Unlinking - Contact Linking and Unlinking")
-@allure.story("Validate successful linking and unlinking if Contacts.")
+@allure.feature("Process Builders")
+@allure.story("Ensure users can activate/deactivate process builders manually via Setup.")
 def test_process_builder_activation_deactivation(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

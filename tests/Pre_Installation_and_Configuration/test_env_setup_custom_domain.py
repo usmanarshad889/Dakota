@@ -27,7 +27,7 @@ def driver():
 
 @allure.severity(allure.severity_level.NORMAL)
 @allure.feature("Environment Setup")
-@allure.story("Validate that the environment is set up with a custom domain and email deliverability settings.")
+@allure.story("Validate that the environment is set up with a custom domain and email deliver-ability settings.")
 def test_env_setup_custom_domain(driver, config):
     test_status = True  # Flag to track test success
 

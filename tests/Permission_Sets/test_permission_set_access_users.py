@@ -17,6 +17,10 @@ def driver():
     yield driver
     driver.quit()
 
+
+@allure.severity(allure.severity_level.CRITICAL)
+@allure.feature("Permission Sets")
+@allure.story("Ensure permission sets User restrict or grant access as expected.")
 def test_permission_set_users(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

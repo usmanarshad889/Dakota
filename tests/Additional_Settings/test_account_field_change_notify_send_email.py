@@ -60,8 +60,8 @@ def driver():
 
 @pytest.mark.P1
 @allure.severity(allure.severity_level.CRITICAL)
-@allure.feature("Mapping - Account field Mapping")
-@allure.story("Validate successful mapping of account fields.")
+@allure.feature("Field Change Notification")
+@allure.story('Validate that when the toggle button "Notify when any field changes" is enabled, an email is triggered whenever any field in the account is modified.')
 def test_account_field_change_notify_send_email(driver, config):
     driver.get(config["uat_login_url"])
     wait = WebDriverWait(driver, 20)

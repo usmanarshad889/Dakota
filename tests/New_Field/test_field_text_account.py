@@ -22,7 +22,10 @@ def driver():
     yield driver
     driver.quit()
 
-# @pytest.mark.release_three
+@pytest.mark.release_three
+@allure.severity(allure.severity_level.CRITICAL)
+@allure.feature("Field Display")
+@allure.story("Validate that the newly added field is displayed as plain text.")
 def test_field_text(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

@@ -22,6 +22,11 @@ def driver():
     yield driver
     driver.quit()
 
+
+
+@allure.severity(allure.severity_level.CRITICAL)
+@allure.feature("Picklist Values")
+@allure.story("Confirm picklist value deactivation functionality.")
 def test_picklist_value_addition_to_account_field_type(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

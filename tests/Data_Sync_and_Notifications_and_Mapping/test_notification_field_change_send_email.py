@@ -17,7 +17,11 @@ def driver():
     yield driver
     driver.quit()
 
-def test_notification_field_change_create_task(driver, config):
+
+@allure.severity(allure.severity_level.CRITICAL)
+@allure.feature("Field Change Notification")
+@allure.story("Ensure that 'Notify when any field changes' triggers correctly for linked records.")
+def test_notification_field_change_send_email(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])
     wait = WebDriverWait(driver, 20)

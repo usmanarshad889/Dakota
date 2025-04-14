@@ -16,6 +16,9 @@ def driver():
     yield driver
     driver.quit()
 
+@allure.severity(allure.severity_level.CRITICAL)
+@allure.feature("Package Upgrade")
+@allure.story("Test reloading of marketplace setup page after package Installation.")
 def test_upgrade_and_reload(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

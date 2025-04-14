@@ -29,6 +29,7 @@ name_var = random_name
 email_var = random_email
 phone_var = random_phone
 
+
 @pytest.fixture(scope="module")
 def driver():
     driver = webdriver.Chrome()
@@ -37,6 +38,10 @@ def driver():
     yield driver
     driver.quit()
 
+
+@allure.severity(allure.severity_level.CRITICAL)
+@allure.feature("Account Linking")
+@allure.story('Validate the "Dakota Account Linked" field displays a linked icon after linking.')
 def test_display_icon_linking(driver, config):
     driver.get(config["uat_login_url"])
     wait = WebDriverWait(driver, 20)

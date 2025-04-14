@@ -20,6 +20,9 @@ def driver():
 
 
 @pytest.mark.P1
+@allure.severity(allure.severity_level.CRITICAL)
+@allure.feature("Contact Linking")
+@allure.story('Ensure the "Dakota Contact CRD" field is available for linking contacts.')
 def test_crd_field_display_for_linking_contact(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

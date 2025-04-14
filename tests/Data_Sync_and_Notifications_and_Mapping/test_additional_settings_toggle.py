@@ -17,6 +17,10 @@ def driver():
     yield driver
     driver.quit()
 
+
+@allure.severity(allure.severity_level.CRITICAL)
+@allure.feature("User Settings - Toggles")
+@allure.story("Confirm users can manually re-enable and save these toggles.")
 def test_additional_settings_toggle(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

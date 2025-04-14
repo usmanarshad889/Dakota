@@ -23,6 +23,8 @@ def driver():
 
 
 @allure.severity(allure.severity_level.CRITICAL)
+@allure.feature("Search Functionality")
+@allure.story("Ensure search by investment name returns accurate results and test search functionality with partial and complete names.")
 def test_investment_tab_search_functionality(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

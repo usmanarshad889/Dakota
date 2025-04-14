@@ -21,6 +21,8 @@ def driver():
 
 
 @allure.severity(allure.severity_level.CRITICAL)
+@allure.feature("Default List Views")
+@allure.story('Verify default list views ("All," "Public Investments," "13F Filings") display records accurately.')
 def test_list_view_display(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

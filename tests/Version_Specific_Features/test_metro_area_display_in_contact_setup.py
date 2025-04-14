@@ -18,6 +18,9 @@ def driver():
 
 
 @pytest.mark.P1
+@allure.severity(allure.severity_level.CRITICAL)
+@allure.feature("Contact Tab Setup")
+@allure.story("Validate the display of Metro Area field in contact tab setup.")
 def test_metro_area_display_in_contact_setup(driver, config):
     # Navigate to login page of fuse app
     driver.get(config["base_url"])

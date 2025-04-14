@@ -34,6 +34,10 @@ def driver():
     yield driver
     driver.quit()
 
+
+@allure.severity(allure.severity_level.CRITICAL)
+@allure.feature("Contact Linking")
+@allure.story("Test scenarios where the field remains empty for unlinked contacts.")
 def test_icon_display_unlinking(driver, config):
     driver.get(config["uat_login_url"])
     wait = WebDriverWait(driver, 20)

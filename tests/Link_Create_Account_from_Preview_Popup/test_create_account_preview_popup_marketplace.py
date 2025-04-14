@@ -19,6 +19,10 @@ def driver():
 
 @pytest.mark.P1
 @pytest.mark.release_three
+
+@allure.severity(allure.severity_level.CRITICAL)
+@allure.feature("Marketplace Search")
+@allure.story('Validate the "Create Account and Related Contact" button in the preview popup for Marketplace Search and proper creation.')
 def test_create_account_preview_popup_marketplace(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

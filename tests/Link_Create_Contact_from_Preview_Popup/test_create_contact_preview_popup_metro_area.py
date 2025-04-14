@@ -43,7 +43,10 @@ def driver():
 
 
 @pytest.mark.P1
-# @pytest.mark.release_three
+@pytest.mark.release_three
+@allure.severity(allure.severity_level.CRITICAL)
+@allure.feature("Metro Areas")
+@allure.story('Validate the "Create Contact" button in the preview popup for Metro Areas tabs and proper creation.')
 def test_link_contact_preview_popup_metro_area(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

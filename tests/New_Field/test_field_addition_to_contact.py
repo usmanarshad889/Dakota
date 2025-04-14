@@ -22,6 +22,10 @@ def driver():
     yield driver
     driver.quit()
 
+
+@allure.severity(allure.severity_level.CRITICAL)
+@allure.feature("Field Addition")
+@allure.story("Verify the successful addition of a new field in the Contact object.")
 def test_field_addition_to_account(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

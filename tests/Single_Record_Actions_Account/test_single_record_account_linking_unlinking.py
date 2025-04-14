@@ -39,6 +39,9 @@ def driver():
 @pytest.mark.Skipped
 @pytest.mark.release_two
 @pytest.mark.release_three
+@allure.severity(allure.severity_level.CRITICAL)
+@allure.feature("Account Linking")
+@allure.story("Test linking/unlinking actions for individual accounts.")
 def test_single_record_linking_unlinking(driver, config):
     driver.get(config["uat_login_url"])
     wait = WebDriverWait(driver, 60, poll_frequency=0.5)

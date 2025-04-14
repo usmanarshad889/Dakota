@@ -59,8 +59,8 @@ def driver():
 
 @pytest.mark.P1
 @allure.severity(allure.severity_level.CRITICAL)
-@allure.feature("Mapping - Account field Mapping")
-@allure.story("Validate successful mapping of account fields.")
+@allure.feature("Auto Sync Functionality")
+@allure.story('Validate that when the toggle button "Auto Sync New Accounts and Related Contacts" is enabled, newly created accounts are synced correctly, and a task is created.')
 def test_sync_of_new_accounts_created_by_create_task(driver, config):
     driver.get(config["uat_login_url"])
     wait = WebDriverWait(driver, 20)

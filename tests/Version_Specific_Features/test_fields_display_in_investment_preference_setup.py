@@ -18,6 +18,9 @@ def driver():
 
 
 @pytest.mark.P1
+@allure.severity(allure.severity_level.CRITICAL)
+@allure.feature("Marketplace Setup")
+@allure.story("Validate the display of the Investment field and its related fields in Marketplace Setup.")
 def test_fields_display_in_investment_preference_setup(driver, config):
     # Navigate to login page of fuse app
     driver.get(config["base_url"])

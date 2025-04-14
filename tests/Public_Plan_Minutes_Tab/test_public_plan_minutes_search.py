@@ -11,6 +11,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
+
 @pytest.fixture(scope="module")
 def driver():
     driver = webdriver.Chrome()
@@ -19,10 +20,11 @@ def driver():
     yield driver
     driver.quit()
 
+
 @pytest.mark.regression
 @allure.severity(allure.severity_level.CRITICAL)
-@allure.feature("Authentication - Correct Credentials")
-@allure.story("Validate successful authentication with correct credentials for the Heroku.")
+@allure.feature("Public Plan Minutes")
+@allure.story("Verify search functionality for Public Plan Minute names.")
 def test_public_plan_search(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

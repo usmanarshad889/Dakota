@@ -18,6 +18,9 @@ def driver():
 
 @pytest.mark.P1
 @pytest.mark.release_three
+@allure.severity(allure.severity_level.CRITICAL)
+@allure.feature("Marketplace Search")
+@allure.story('Validate the "Link Account" button in the preview popup for Marketplace Search and proper linking.')
 def test_link_account_preview_popup_marketplace(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

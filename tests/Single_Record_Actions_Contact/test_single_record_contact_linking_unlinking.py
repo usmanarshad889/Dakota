@@ -38,6 +38,9 @@ def driver():
 @pytest.mark.Skipped
 @pytest.mark.release_two
 @pytest.mark.release_three
+@allure.severity(allure.severity_level.CRITICAL)
+@allure.feature("Contact Linking")
+@allure.story("Validate linking/unlinking actions for individual contacts.")
 def test_create_contact_linking_unlinking(driver, config):
     driver.get(config["uat_login_url"])
     wait = WebDriverWait(driver, 60, poll_frequency=0.5)

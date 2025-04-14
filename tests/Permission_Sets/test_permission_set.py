@@ -15,6 +15,9 @@ def driver():
     yield driver
     driver.quit()
 
+@allure.severity(allure.severity_level.CRITICAL)
+@allure.feature("Permission Sets")
+@allure.story("Verify that the user does not have both Admin and User permission sets assigned.")
 def test_permission_set(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

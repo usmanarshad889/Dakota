@@ -20,6 +20,9 @@ def driver():
 
 
 @pytest.mark.P1
+@allure.severity(allure.severity_level.CRITICAL)
+@allure.feature("Account Preview Display")
+@allure.story('Verify the " of QPs" field is displayed correctly in account previews.')
 def test_qp_display_in_account_preview(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

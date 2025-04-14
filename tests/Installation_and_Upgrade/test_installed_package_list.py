@@ -15,9 +15,10 @@ def driver():
     yield driver
     driver.quit()
 
+
 @allure.severity(allure.severity_level.CRITICAL)
-@allure.feature("Managed Package Installation")
-@allure.story("Verify the package appears in the 'Installed Packages' list after installation")
+@allure.feature("Package Installation")
+@allure.story("Verify that the package appears in the 'Installed Packages' list after installation.")
 def test_package_name(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

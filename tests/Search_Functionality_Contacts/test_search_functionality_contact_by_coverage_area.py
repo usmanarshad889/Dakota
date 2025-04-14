@@ -18,6 +18,9 @@ def driver():
 
 @pytest.mark.P1
 @pytest.mark.release_three
+@allure.severity(allure.severity_level.CRITICAL)
+@allure.feature("Contacts")
+@allure.story("Validate search filter for Coverage Area.")
 def test_search_coverage_area(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

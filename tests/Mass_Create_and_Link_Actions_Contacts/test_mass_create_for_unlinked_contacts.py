@@ -19,6 +19,9 @@ def driver():
 
 @pytest.mark.P1
 @pytest.mark.release_two
+@allure.severity(allure.severity_level.CRITICAL)
+@allure.feature("Contact Creation")
+@allure.story('Verify "Create Selected Contacts with Accounts" for unlinked contacts.')
 def test_mass_create_for_unlinked_contacts(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

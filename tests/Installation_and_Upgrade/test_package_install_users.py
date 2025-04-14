@@ -16,8 +16,8 @@ def driver():
     driver.quit()
 
 @allure.severity(allure.severity_level.CRITICAL)
-@allure.feature("Managed Package Installation")
-@allure.story("Confirm the package displays install options for different user groups")
+@allure.feature("Package Installation")
+@allure.story("Confirm the package shows install users as: Admin only, All users, Specific profiles.")
 def test_package_install_users(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

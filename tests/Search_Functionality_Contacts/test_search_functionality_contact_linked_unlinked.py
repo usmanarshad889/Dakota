@@ -20,6 +20,9 @@ def driver():
 
 @pytest.mark.P1
 @pytest.mark.release_three
+@allure.severity(allure.severity_level.CRITICAL)
+@allure.feature("Contacts")
+@allure.story("Ensure correct results for linked and unlinked contacts.")
 def test_search_linked_unlinked(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

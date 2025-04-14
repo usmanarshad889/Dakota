@@ -28,6 +28,9 @@ def driver():
 
 
 @pytest.mark.smoke
+@allure.severity(allure.severity_level.CRITICAL)
+@allure.feature("Field Change Notification")
+@allure.story("Ensure that 'Notify when any field changes' triggers correctly for linked records.")
 def test_notification_mapped_field_none(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

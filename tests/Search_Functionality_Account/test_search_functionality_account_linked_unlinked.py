@@ -18,6 +18,9 @@ def driver():
 
 @pytest.mark.P1
 @pytest.mark.release_three
+@allure.severity(allure.severity_level.CRITICAL)
+@allure.feature("Accounts")
+@allure.story("Test search result accuracy for linked, unlinked, or all accounts.")
 def test_search_linked_unlinked(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

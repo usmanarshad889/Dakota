@@ -17,6 +17,10 @@ def driver():
     yield driver
     driver.quit()
 
+
+@allure.severity(allure.severity_level.CRITICAL)
+@allure.feature("Permission Sets")
+@allure.story("Validate permission set assignment for non-admin users.")
 def test_non_admin_user_permission_set(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

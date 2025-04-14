@@ -20,6 +20,9 @@ def driver():
     driver.quit()
 
 @pytest.mark.P1
+@allure.severity(allure.severity_level.CRITICAL)
+@allure.feature("Search Functionality")
+@allure.story("Test search functionality with multiple keywords.")
 def test_video_playback_for_content_on(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

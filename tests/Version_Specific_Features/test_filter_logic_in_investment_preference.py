@@ -17,6 +17,9 @@ def driver():
 
 
 @pytest.mark.P1
+@allure.severity(allure.severity_level.CRITICAL)
+@allure.feature("Investment Preference Settings")
+@allure.story("Validate filters and logical operators in Investment Preference settings.")
 def test_filter_logic_in_investment_preference(driver, config):
     # Navigate to login page of fuse app
     driver.get(config["base_url"])

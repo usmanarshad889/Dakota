@@ -23,6 +23,9 @@ def driver():
     driver.quit()
 
 @pytest.mark.P1
+@allure.severity(allure.severity_level.CRITICAL)
+@allure.feature("Filters")
+@allure.story("Verify duplicate removal in the 'Country' filter.")
 def test_country_duplication(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

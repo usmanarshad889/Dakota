@@ -19,8 +19,8 @@ def driver():
 
 @pytest.mark.regression
 @allure.severity(allure.severity_level.CRITICAL)
-@allure.feature("Authentication - Correct Credentials")
-@allure.story("Validate successful authentication with correct credentials for the Heroku.")
+@allure.feature("Manager Presentations")
+@allure.story("Verify correct display of Manager Presentations with all required fields.")
 def test_field_display(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

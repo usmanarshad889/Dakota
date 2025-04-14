@@ -38,6 +38,10 @@ def driver():
     yield driver
     driver.quit()
 
+
+@allure.severity(allure.severity_level.CRITICAL)
+@allure.feature("Account Linking")
+@allure.story("Confirm the page refresh requirement for updating the linked icon.")
 def test_refresh_page_icon(driver, config):
     driver.get(config["uat_login_url"])
     wait = WebDriverWait(driver, 20)

@@ -23,6 +23,8 @@ def driver():
 
 
 @allure.severity(allure.severity_level.CRITICAL)
+@allure.feature("Search Functionality")
+@allure.story("Test the search functionality for search names.")
 def test_search_tab_search_functionality(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

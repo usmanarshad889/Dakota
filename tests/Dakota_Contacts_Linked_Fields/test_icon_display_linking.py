@@ -34,6 +34,10 @@ def driver():
     yield driver
     driver.quit()
 
+
+@allure.severity(allure.severity_level.CRITICAL)
+@allure.feature("Contact Linking")
+@allure.story('Validate the "Dakota Contact Linked" field displays a linked icon after linking.')
 def test_icon_display_linking(driver, config):
     driver.get(config["uat_login_url"])
     wait = WebDriverWait(driver, 20)

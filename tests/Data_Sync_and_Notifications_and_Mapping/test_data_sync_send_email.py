@@ -37,6 +37,10 @@ def driver():
     yield driver
     driver.quit()
 
+
+@allure.severity(allure.severity_level.CRITICAL)
+@allure.feature("Notification Settings")
+@allure.story("Send Email: Email notifications sent to assigned recipients.")
 def test_account_record_auto_sync_send_email(driver, config):
     driver.get(config["uat_login_url"])
     wait = WebDriverWait(driver, 20)

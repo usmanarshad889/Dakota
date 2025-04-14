@@ -19,6 +19,9 @@ def driver():
     driver.quit()
 
 @pytest.mark.P1
+@allure.severity(allure.severity_level.CRITICAL)
+@allure.feature("Notification Settings")
+@allure.story("Test the activation of the 'Receive Follow Notification' toggle.")
 def test_activation_of_receive_follow_toggle(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

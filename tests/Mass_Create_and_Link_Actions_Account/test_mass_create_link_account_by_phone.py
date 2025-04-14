@@ -19,6 +19,9 @@ def driver():
 
 @pytest.mark.P1
 @pytest.mark.release_two
+@allure.severity(allure.severity_level.CRITICAL)
+@allure.feature("Account Linking")
+@allure.story('Validate "Link Account" functionality with search by Phone.')
 def test_mass_create_link_account_by_phone(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

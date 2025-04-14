@@ -18,6 +18,9 @@ def driver():
     driver.quit()
 
 @pytest.mark.P1
+@allure.severity(allure.severity_level.CRITICAL)
+@allure.feature("Video Playback")
+@allure.story('Test video playback for "Content Name" columns.')
 def test_video_playback_for_content_on(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

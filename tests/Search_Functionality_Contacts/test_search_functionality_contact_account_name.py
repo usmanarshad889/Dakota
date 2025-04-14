@@ -21,6 +21,9 @@ def driver():
 
 @pytest.mark.P1
 @pytest.mark.release_three
+@allure.severity(allure.severity_level.CRITICAL)
+@allure.feature("Contacts")
+@allure.story("Validate search filter for Account Name.")
 def test_search_functionality_by_contact_account_name(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

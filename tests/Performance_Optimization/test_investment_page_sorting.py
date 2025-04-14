@@ -26,6 +26,8 @@ def driver():
 
 
 @allure.severity(allure.severity_level.CRITICAL)
+@allure.feature("Investment Sorting")
+@allure.story('Verify default sorting of investments by "Created Date" in descending order.')
 def test_investment_sorting(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

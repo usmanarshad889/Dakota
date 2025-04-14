@@ -19,8 +19,8 @@ def driver():
 
 @pytest.mark.P1
 @allure.severity(allure.severity_level.CRITICAL)
-@allure.feature("Linking/Unlinking - Contact Linking and Unlinking")
-@allure.story("Validate successful linking and unlinking if Contacts.")
+@allure.feature("Field Settings")
+@allure.story("Verify the Auto Sync Field Updates toggle is visible at the top of the mapping section and is activated/inactivated based on user preferences.")
 def test_verify_auto_sync_toggle(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

@@ -39,6 +39,9 @@ def driver():
 @pytest.mark.Skipped
 @pytest.mark.release_two
 @pytest.mark.release_three
+@allure.severity(allure.severity_level.CRITICAL)
+@allure.feature("Account Creation")
+@allure.story("Verify 'Create Account' action for new records.")
 def test_create_account_single_record(driver, config):
     driver.get(config["uat_login_url"])
     wait = WebDriverWait(driver, 60, poll_frequency=0.5)

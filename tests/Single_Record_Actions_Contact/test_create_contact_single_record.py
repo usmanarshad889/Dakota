@@ -38,6 +38,9 @@ def driver():
 @pytest.mark.Skipped
 @pytest.mark.release_two
 @pytest.mark.release_three
+@allure.severity(allure.severity_level.CRITICAL)
+@allure.feature("Contact Creation")
+@allure.story("Confirm 'Create Contact' action for new records.")
 def test_create_contact_single_record(driver, config):
     driver.get(config["uat_login_url"])
     wait = WebDriverWait(driver, 60, poll_frequency=0.5)

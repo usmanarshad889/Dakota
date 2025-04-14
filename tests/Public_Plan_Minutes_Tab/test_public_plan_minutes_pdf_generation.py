@@ -21,8 +21,8 @@ def driver():
 
 @pytest.mark.regression
 @allure.severity(allure.severity_level.CRITICAL)
-@allure.feature("Authentication - Correct Credentials")
-@allure.story("Validate successful authentication with correct credentials for the Heroku.")
+@allure.feature("PDF Generation")
+@allure.story("Validate the ability to generate PDFs for 1–100 selected records.")
 def test_public_plan_minutes_pdf_generation(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

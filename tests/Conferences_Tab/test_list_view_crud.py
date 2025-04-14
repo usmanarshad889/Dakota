@@ -21,6 +21,8 @@ def driver():
 
 
 @allure.severity(allure.severity_level.CRITICAL)
+@allure.feature("Custom List View Functionality")
+@allure.story("Test custom list view functionality (creation, renaming, editing, and deletion).")
 def test_list_view_crud(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

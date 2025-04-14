@@ -20,7 +20,10 @@ def driver():
     driver.quit()
 
 
+
 @allure.severity(allure.severity_level.CRITICAL)
+@allure.feature("Custom List Views")
+@allure.story("Test custom list view creation.")
 def test_list_view_crud(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

@@ -41,8 +41,8 @@ def driver():
 
 @pytest.mark.P1
 @allure.severity(allure.severity_level.CRITICAL)
-@allure.feature("Mapping - Account field Mapping")
-@allure.story("Validate successful mapping of account fields.")
+@allure.feature("Task Creation")
+@allure.story("Ensure that a Task is created when a field is updated, only when the Auto Sync Field Updates is enabled.")
 def test_task_creation_when_fields_change(driver, config):
     driver.get(config["uat_login_url"])
     wait = WebDriverWait(driver, 20)

@@ -22,6 +22,10 @@ def driver():
     yield driver
     driver.quit()
 
+
+@allure.severity(allure.severity_level.CRITICAL)
+@allure.feature("Field Display")
+@allure.story("Validate that the newly added field is displayed correctly in the preview popup.")
 def test_field_preview_display(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

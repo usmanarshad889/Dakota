@@ -21,6 +21,9 @@ def driver():
     driver.quit()
 
 @pytest.mark.P1
+@allure.severity(allure.severity_level.CRITICAL)
+@allure.feature("Followed Contacts Notifications")
+@allure.story("Validate email notifications sent on updates to followed contacts.")
 def test_follow_contact_notification(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

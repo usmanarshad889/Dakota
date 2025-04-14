@@ -21,6 +21,8 @@ def driver():
 
 
 @allure.severity(allure.severity_level.CRITICAL)
+@allure.feature("Custom List View Filters")
+@allure.story("Validate filters and filter logic in custom list views.")
 def test_list_view_filter_logic(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

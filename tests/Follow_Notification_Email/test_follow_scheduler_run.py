@@ -23,6 +23,9 @@ def driver():
     driver.quit()
 
 @pytest.mark.P1
+@allure.severity(allure.severity_level.CRITICAL)
+@allure.feature("Scheduler Functionality")
+@allure.story("Ensure the scheduler runs every Friday at 5 PM.")
 def test_follow_scheduler_run(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

@@ -19,6 +19,9 @@ def driver():
 
 @pytest.mark.P1
 @pytest.mark.release_two
+@allure.severity(allure.severity_level.CRITICAL)
+@allure.feature("Contact Linking")
+@allure.story('Test "Link Selected Contacts to Existing Contacts" with search by Last Name.')
 def test_mass_create_for_existing_contacts_lastname(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

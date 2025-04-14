@@ -24,6 +24,9 @@ def driver():
 
 
 @pytest.mark.P1
+@allure.severity(allure.severity_level.CRITICAL)
+@allure.feature("Contact Linking")
+@allure.story("Ensure error handling for relinking already linked contacts.")
 def test_already_linked_contact_linking(driver, config):
     # Navigate to login page of fuse app
     driver.get(config["base_url"])

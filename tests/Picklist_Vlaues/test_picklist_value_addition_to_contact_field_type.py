@@ -22,6 +22,10 @@ def driver():
     yield driver
     driver.quit()
 
+
+@allure.severity(allure.severity_level.CRITICAL)
+@allure.feature("Picklist Values")
+@allure.story("Test the addition of new picklist values via the Sync Contact Type Field scheduler.")
 def test_picklist_value_addition_to_contact_field_type(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

@@ -30,6 +30,9 @@ def driver():
 
 
 @pytest.mark.P1
+@allure.severity(allure.severity_level.CRITICAL)
+@allure.feature("Contact Linking")
+@allure.story("Test linking Salesforce Contacts with Dakota Marketplace contacts using the button.")
 def test_contact_linking_using_button(driver, config):
     # Navigate to login page of fuse app
     driver.get(config["base_url"])

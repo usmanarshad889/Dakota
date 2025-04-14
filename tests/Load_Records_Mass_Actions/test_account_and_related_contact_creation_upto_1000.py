@@ -19,6 +19,9 @@ def driver():
     driver.quit()
 
 @pytest.mark.P1
+@allure.severity(allure.severity_level.CRITICAL)
+@allure.feature("Mass Actions")
+@allure.story("Test mass actions for creating related contacts for up to 1000 records.")
 def test_account_creation_upto_1000(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

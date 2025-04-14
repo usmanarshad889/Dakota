@@ -22,6 +22,9 @@ def driver():
 @pytest.mark.load
 @pytest.mark.release_one
 @pytest.mark.P1
+@allure.severity(allure.severity_level.CRITICAL)
+@allure.feature("Marketplace Search")
+@allure.story("Validate the 'Load More' functionality for unlinked accounts in Marketplace search.")
 def test_load_account_unlinked(driver, config):
     # Navigate to login page of fuse app
     driver.get(config["base_url"])

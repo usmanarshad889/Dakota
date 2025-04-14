@@ -21,8 +21,8 @@ def driver():
 
 @pytest.mark.regression
 @allure.severity(allure.severity_level.CRITICAL)
-@allure.feature("Authentication - Correct Credentials")
-@allure.story("Validate successful authentication with correct credentials for the Heroku.")
+@allure.feature("Search Tab")
+@allure.story("Test the records loading functionality of search tab.")
 def test_search_tab_record_loading(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

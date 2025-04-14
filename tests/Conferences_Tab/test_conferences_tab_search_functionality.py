@@ -23,6 +23,8 @@ def driver():
 
 
 @allure.severity(allure.severity_level.CRITICAL)
+@allure.feature("Search Functionality")
+@allure.story('Confirm accurate results when searching by conference name.')
 def test_conferences_tab_search_functionality(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])
