@@ -29,6 +29,7 @@ name_var = random_name
 email_var = random_email
 phone_var = random_phone
 
+
 @pytest.fixture(scope="module")
 def driver():
     driver = webdriver.Chrome()
@@ -36,6 +37,7 @@ def driver():
     driver.implicitly_wait(10)
     yield driver
     driver.quit()
+
 
 @pytest.mark.release_one
 @pytest.mark.P1

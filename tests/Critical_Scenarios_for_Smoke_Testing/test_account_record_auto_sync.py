@@ -13,7 +13,9 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
+
 value_src = "uuu"
+
 
 # Generate Random Name, Email and Phone
 fake = Faker()
@@ -30,6 +32,7 @@ name_var = random_name
 email_var = random_email
 phone_var = random_phone
 
+
 @pytest.fixture(scope="module")
 def driver():
     driver = webdriver.Chrome()
@@ -37,6 +40,7 @@ def driver():
     driver.implicitly_wait(10)
     yield driver
     driver.quit()
+
 
 @pytest.mark.P1
 @pytest.mark.release_one

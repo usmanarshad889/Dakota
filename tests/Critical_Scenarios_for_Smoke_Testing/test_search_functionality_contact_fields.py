@@ -40,6 +40,7 @@ def driver():
     yield driver
     driver.quit()
 
+
 @pytest.mark.release_one
 @pytest.mark.P1
 @allure.severity(allure.severity_level.CRITICAL)
