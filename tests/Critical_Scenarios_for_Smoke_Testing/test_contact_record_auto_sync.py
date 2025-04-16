@@ -51,6 +51,7 @@ def driver():
 @allure.story("Validate successful mapping of contact fields.")
 def test_contact_record_auto_sync(driver, config):
     driver.get(config["uat_login_url"])
+    driver.delete_all_cookies()
     wait = WebDriverWait(driver, 60, poll_frequency=0.5)
 
     try:
@@ -172,6 +173,7 @@ def test_contact_record_auto_sync(driver, config):
 
     # Navigate to login page of fuse app
     driver.get(config["base_url"])
+    driver.delete_all_cookies()
 
     try:
         # Perform login

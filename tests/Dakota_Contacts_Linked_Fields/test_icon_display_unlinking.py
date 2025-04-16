@@ -43,6 +43,7 @@ def driver():
 @allure.story("Test scenarios where the field remains empty for unlinked contacts.")
 def test_icon_display_unlinking(driver, config):
     driver.get(config["uat_login_url"])
+    driver.delete_all_cookies()
     wait = WebDriverWait(driver, 60, poll_frequency=0.5)
 
     try:
@@ -165,6 +166,7 @@ def test_icon_display_unlinking(driver, config):
 
     # Navigate to login page
     driver.get(config["base_url"])
+    driver.delete_all_cookies()
     wait = WebDriverWait(driver, 60, poll_frequency=0.5)
 
     try:

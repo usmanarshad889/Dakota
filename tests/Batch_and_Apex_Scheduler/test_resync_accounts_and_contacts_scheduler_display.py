@@ -23,8 +23,9 @@ def driver():
 @allure.feature("Scheduler Display")
 @allure.story('Confirm the display of the Resync Accounts and Contacts fields scheduler and its run time.')
 def test_resync_accounts_and_contacts_scheduler_display(driver, config):
-    # Navigate to login page of fuse app
+    # Navigate to login page
     driver.get(config["base_url"])
+    driver.delete_all_cookies()
     wait = WebDriverWait(driver, 60, poll_frequency=0.5)
 
     try:
@@ -47,7 +48,6 @@ def test_resync_accounts_and_contacts_scheduler_display(driver, config):
     except Exception as e:
         pytest.skip(f"Skipping test due to unexpected login error: {type(e).__name__}")
         driver.quit()
-
 
     with allure.step("Waiting for Document Ready State to be Complete"):
         WebDriverWait(driver, 90).until(

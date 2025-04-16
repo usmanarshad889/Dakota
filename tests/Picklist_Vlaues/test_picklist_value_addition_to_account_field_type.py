@@ -29,6 +29,7 @@ def driver():
 def test_picklist_value_addition_to_account_field_type(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])
+    driver.delete_all_cookies()
     wait = WebDriverWait(driver, 60, poll_frequency=0.5)
 
     try:
@@ -84,7 +85,7 @@ def test_picklist_value_addition_to_account_field_type(driver, config):
     driver.switch_to.frame(iframe)
     time.sleep(1)
 
-    # Scrolldown in iframe
+    # Scroll down in iframe
     element = wait.until(EC.element_to_be_clickable((By.XPATH, "//td[normalize-space()='Data Sensitivity Level']")))
     driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", element)
 
@@ -139,7 +140,7 @@ def test_picklist_value_addition_to_account_field_type(driver, config):
     driver.switch_to.frame(iframe)
     time.sleep(1)
 
-    # Scrolldown in iframe
+    # Scroll down in iframe
     element = wait.until(EC.element_to_be_clickable((By.XPATH, "//td[normalize-space()='Data Sensitivity Level']")))
     driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", element)
 

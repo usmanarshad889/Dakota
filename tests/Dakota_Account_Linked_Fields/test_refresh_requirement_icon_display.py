@@ -47,6 +47,7 @@ def driver():
 @allure.story("Confirm the page refresh requirement for updating the linked icon.")
 def test_refresh_page_icon(driver, config):
     driver.get(config["uat_login_url"])
+    driver.delete_all_cookies()
     wait = WebDriverWait(driver, 60, poll_frequency=0.5)
 
     try:
@@ -165,6 +166,7 @@ def test_refresh_page_icon(driver, config):
 
     # Navigate to login page
     driver.get(config["base_url"])
+    driver.delete_all_cookies()
     wait = WebDriverWait(driver, 60, poll_frequency=0.5)
 
     try:

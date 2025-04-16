@@ -31,6 +31,7 @@ print("Suffix:", suffix)
 print("Email:", email)
 print("CRD:", CRD)
 
+
 @pytest.fixture(scope="module")
 def driver():
     driver = webdriver.Chrome()
@@ -48,6 +49,7 @@ def driver():
 def test_create_contact_preview_popup_marketplace(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])
+    driver.delete_all_cookies()
     wait = WebDriverWait(driver, 60, poll_frequency=0.5)
 
     try:

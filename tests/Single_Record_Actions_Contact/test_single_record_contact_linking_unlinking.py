@@ -43,6 +43,7 @@ def driver():
 @allure.story("Validate linking/unlinking actions for individual contacts.")
 def test_create_contact_linking_unlinking(driver, config):
     driver.get(config["uat_login_url"])
+    driver.delete_all_cookies()
     wait = WebDriverWait(driver, 60, poll_frequency=0.5)
 
     try:
@@ -164,6 +165,7 @@ def test_create_contact_linking_unlinking(driver, config):
 
     # Navigate to login page of fuse app
     driver.get(config["base_url"])
+    driver.delete_all_cookies()
 
     try:
         # Perform login

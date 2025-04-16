@@ -23,8 +23,9 @@ def driver():
 @allure.feature("Confirmation Dialog")
 @allure.story("Test 'Cancel' option in the confirmation dialog.")
 def test_dialog_display_in_mapping(driver, config):
-    # Navigate to login page of fuse app
+    # Navigate to login page
     driver.get(config["base_url"])
+    driver.delete_all_cookies()
     wait = WebDriverWait(driver, 60, poll_frequency=0.5)
 
     try:

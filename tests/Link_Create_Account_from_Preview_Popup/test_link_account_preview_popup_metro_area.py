@@ -10,6 +10,7 @@ from selenium.webdriver.support.ui import Select
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
+
 @pytest.fixture(scope="module")
 def driver():
     driver = webdriver.Chrome()
@@ -17,6 +18,7 @@ def driver():
     driver.implicitly_wait(10)
     yield driver
     driver.quit()
+
 
 @pytest.mark.P1
 @pytest.mark.release_three
@@ -26,6 +28,7 @@ def driver():
 def test_link_account_preview_popup_metro_area(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])
+    driver.delete_all_cookies()
     wait = WebDriverWait(driver, 60, poll_frequency=0.5)
 
     try:

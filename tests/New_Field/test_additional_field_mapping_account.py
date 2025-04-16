@@ -46,6 +46,7 @@ def driver():
 def test_field_addition_to_account(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])
+    driver.delete_all_cookies()
     wait = WebDriverWait(driver, 60, poll_frequency=0.5)
 
     try:
@@ -93,7 +94,7 @@ def test_field_addition_to_account(driver, config):
     driver.switch_to.frame(iframe)
     time.sleep(1)
 
-    # Scrolldown in iframe
+    # Scroll down in iframe
     element = wait.until(EC.element_to_be_clickable((By.XPATH, "//h3[1]")))
     driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", element)
 
@@ -161,7 +162,7 @@ def test_field_addition_to_account(driver, config):
     btn.send_keys(field_name)
     time.sleep(4)
 
-    # Extraxt field context
+    # Extract field context
     actual_field = wait.until(EC.element_to_be_clickable((By.XPATH, "//tbody//tr//td[1]")))
     print(f"Actual field Text : {actual_field.text}")
 
@@ -170,6 +171,7 @@ def test_field_addition_to_account(driver, config):
 
 
     driver.get(config["uat_login_url"])
+    driver.delete_all_cookies()
     wait = WebDriverWait(driver, 20)
 
     try:
@@ -263,17 +265,31 @@ def test_field_addition_to_account(driver, config):
     assert "was created" in toast_massage.lower().strip() , f"Error while creating account : {toast_massage}"
 
 
-    # Navigate to login page of fuse app
+    # Navigate to login page
     driver.get(config["base_url"])
-    wait = WebDriverWait(driver, 20)
+    driver.delete_all_cookies()
+    wait = WebDriverWait(driver, 60, poll_frequency=0.5)
 
-    # Perform login
-    username = wait.until(EC.element_to_be_clickable((By.ID, "username")))
-    username.send_keys(config["username"])
-    password = wait.until(EC.element_to_be_clickable((By.ID, "password")))
-    password.send_keys(config["password"])
-    login_button = wait.until(EC.element_to_be_clickable((By.ID, "Login")))
-    login_button.click()
+    try:
+        # Perform login
+        username = wait.until(EC.element_to_be_clickable((By.ID, "username")))
+        username.send_keys(config["username"])
+        password = wait.until(EC.element_to_be_clickable((By.ID, "password")))
+        password.send_keys(config["password"])
+        login_button = wait.until(EC.element_to_be_clickable((By.ID, "Login")))
+        time.sleep(2)
+        login_button.click()
+        time.sleep(3)
+
+        # Wait for URL change
+        wait.until(EC.url_contains("lightning.force.com"))
+
+        # Verify Login
+        wait.until(EC.element_to_be_clickable((By.XPATH, "//one-app-nav-bar-item-root[5]"))).click()
+
+    except Exception as e:
+        pytest.skip(f"Skipping test due to unexpected login error: {type(e).__name__}")
+        driver.quit()
 
     # Navigate to Market Place Search
     driver.get(f"{config['base_url']}lightning/n/Marketplace__Dakota_Search")

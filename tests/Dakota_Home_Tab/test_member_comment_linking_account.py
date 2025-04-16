@@ -27,6 +27,7 @@ def driver():
 def test_member_comment_linking_account(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])
+    driver.delete_all_cookies()
     wait = WebDriverWait(driver, 60, poll_frequency=0.5)
 
     try:

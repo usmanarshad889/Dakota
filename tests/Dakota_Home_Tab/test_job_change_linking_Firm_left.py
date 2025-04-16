@@ -27,6 +27,7 @@ def driver():
 def test_job_change_linking_firm_left(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])
+    driver.delete_all_cookies()
     wait = WebDriverWait(driver, 60, poll_frequency=0.5)
 
     try:

@@ -23,8 +23,9 @@ def driver():
 @allure.feature("Marketplace Setup")
 @allure.story("Validate the confirmation dialog when updating mappings in Marketplace Setup > Mapping.")
 def test_cancel_option_in_dialog_box_in_mapping(driver, config):
-    # Navigate to login page of fuse app
+    # Navigate to login page
     driver.get(config["base_url"])
+    driver.delete_all_cookies()
     wait = WebDriverWait(driver, 60, poll_frequency=0.5)
 
     try:

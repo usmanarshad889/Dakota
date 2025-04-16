@@ -46,6 +46,7 @@ def driver():
 @allure.story('Validate the "Dakota Account Linked" field displays a linked icon after linking.')
 def test_display_icon_linking(driver, config):
     driver.get(config["uat_login_url"])
+    driver.delete_all_cookies()
     wait = WebDriverWait(driver, 60, poll_frequency=0.5)
 
     try:
@@ -163,6 +164,7 @@ def test_display_icon_linking(driver, config):
 
     # Navigate to login page
     driver.get(config["base_url"])
+    driver.delete_all_cookies()
     wait = WebDriverWait(driver, 60, poll_frequency=0.5)
 
     try:

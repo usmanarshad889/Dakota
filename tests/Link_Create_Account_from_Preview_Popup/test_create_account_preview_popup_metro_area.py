@@ -10,6 +10,7 @@ from selenium.webdriver.support.ui import Select
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
+
 @pytest.fixture(scope="module")
 def driver():
     driver = webdriver.Chrome()
@@ -17,6 +18,7 @@ def driver():
     driver.implicitly_wait(10)
     yield driver
     driver.quit()
+
 
 @pytest.mark.P1
 @pytest.mark.release_three
@@ -26,6 +28,7 @@ def driver():
 def test_create_account_preview_popup_metro_area(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])
+    driver.delete_all_cookies()
     wait = WebDriverWait(driver, 60, poll_frequency=0.5)
 
     try:
@@ -109,7 +112,7 @@ def test_create_account_preview_popup_metro_area(driver, config):
     driver.execute_script("window.scrollBy(0, 3000);")
     time.sleep(2)
 
-    # Sroll to All account button and click on it
+    # Scroll to All account button and click on it
     element = wait.until(EC.presence_of_element_located((By.XPATH, "//span[normalize-space()='All Accounts']")))
     # Scroll to the element
     driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", element)
