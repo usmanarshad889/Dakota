@@ -98,13 +98,12 @@ def test_account_field_change_notify_create_task(driver, config):
         # Wait for URL change
         wait.until(EC.url_contains("lightning.force.com"))
 
-        # Verify Login (40 seconds max)
+        # Verify Login
         try:
-            WebDriverWait(driver, 40, poll_frequency=0.5).until(
-                EC.element_to_be_clickable((By.XPATH, "//one-app-nav-bar-item-root[2]"))
-            ).click()
-        except TimeoutException:
-            pytest.skip("Skipping test because login verification did not complete within 40 seconds.")
+            WebDriverWait(driver, 30).until(EC.element_to_be_clickable((By.XPATH, "//one-app-nav-bar-item-root[2]"))).click()
+        except Exception as e:
+            pytest.skip(f"Skipping test due to unexpected login error: {type(e).__name__}")
+            driver.quit()
 
     except Exception as e:
         pytest.skip(f"Skipping test due to unexpected login error: {type(e).__name__}")
@@ -300,13 +299,12 @@ def test_account_field_change_notify_create_task(driver, config):
         # Wait for URL change
         wait.until(EC.url_contains("lightning.force.com"))
 
-        # Verify Login (40 seconds max)
+        # Verify Login
         try:
-            WebDriverWait(driver, 40, poll_frequency=0.5).until(
-                EC.element_to_be_clickable((By.XPATH, "//one-app-nav-bar-item-root[5]"))
-            ).click()
-        except TimeoutException:
-            pytest.skip("Skipping test because login verification did not complete within 40 seconds.")
+            WebDriverWait(driver, 30).until(EC.element_to_be_clickable((By.XPATH, "//one-app-nav-bar-item-root[2]"))).click()
+        except Exception as e:
+            pytest.skip(f"Skipping test due to unexpected login error: {type(e).__name__}")
+            driver.quit()
 
     except Exception as e:
         pytest.skip(f"Skipping test due to unexpected login error: {type(e).__name__}")

@@ -46,7 +46,11 @@ def test_job_change_creation_of_account_firm_left(driver, config):
         wait.until(EC.url_contains("lightning.force.com"))
 
         # Verify Login
-        wait.until(EC.element_to_be_clickable((By.XPATH, "//one-app-nav-bar-item-root[5]"))).click()
+        try:
+            WebDriverWait(driver, 30).until(EC.element_to_be_clickable((By.XPATH, "//one-app-nav-bar-item-root[2]"))).click()
+        except Exception as e:
+            pytest.skip(f"Skipping test due to unexpected login error: {type(e).__name__}")
+            driver.quit()
 
     except Exception as e:
         pytest.skip(f"Skipping test due to unexpected login error: {type(e).__name__}")
