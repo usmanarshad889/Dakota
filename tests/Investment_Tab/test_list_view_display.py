@@ -20,6 +20,7 @@ def driver():
     driver.quit()
 
 
+@pytest.mark.regression
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Default List Views")
 @allure.story('Verify default list views ("All," "Public Investments," "13F Filings") display records accurately.')

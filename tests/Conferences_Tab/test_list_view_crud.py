@@ -20,6 +20,7 @@ def driver():
     driver.quit()
 
 
+@pytest.mark.regression
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Custom List View Functionality")
 @allure.story("Test custom list view functionality (creation, renaming, editing, and deletion).")

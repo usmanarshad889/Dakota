@@ -44,12 +44,10 @@ def driver():
     driver.quit()
 
 
-@pytest.mark.P1
-@pytest.mark.release_one
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Mapping - Contact field Mapping")
 @allure.story("Validate successful mapping of contact fields.")
-def test_contact_record_auto_sync(driver, config):
+def test_data_pushing_standard_fields_contact(driver, config):
     driver.get(config["uat_login_url"])
     driver.delete_all_cookies()
     wait = WebDriverWait(driver, 60, poll_frequency=0.5)
@@ -226,6 +224,7 @@ def test_contact_record_auto_sync(driver, config):
     else:
         print("All retry attempts failed.")
 
+
     # Click on Authentication svg button
     try:
         # Wait for full page load
@@ -237,7 +236,6 @@ def test_contact_record_auto_sync(driver, config):
         element.click()
     except (NoSuchElementException, TimeoutException) as e:
         print(f"Message: {type(e).__name__}")
-        pass
     time.sleep(1)
 
     # Verify the Authentication with correct Credentials

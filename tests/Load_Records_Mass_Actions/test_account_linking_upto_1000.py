@@ -18,6 +18,7 @@ def driver():
     yield driver
     driver.quit()
 
+
 @pytest.mark.P1
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Mass Actions")

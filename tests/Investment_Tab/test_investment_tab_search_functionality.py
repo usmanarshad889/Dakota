@@ -22,6 +22,7 @@ def driver():
     driver.quit()
 
 
+@pytest.mark.regression
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Search Functionality")
 @allure.story("Ensure search by investment name returns accurate results and test search functionality with partial and complete names.")

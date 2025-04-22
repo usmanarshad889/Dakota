@@ -17,6 +17,8 @@ def driver():
     yield driver
     driver.quit()
 
+
+@pytest.mark.regression
 @pytest.mark.P1
 @pytest.mark.release_three
 @allure.severity(allure.severity_level.CRITICAL)

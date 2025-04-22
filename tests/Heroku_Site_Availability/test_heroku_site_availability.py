@@ -17,6 +17,7 @@ def driver():
     yield driver
     driver.quit()
 
+@pytest.mark.regression
 @pytest.mark.P1
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Availability - Heroku Site")
@@ -69,7 +70,7 @@ def test_heroku_site_availability(driver, config):
         wait.until(lambda d: d.execute_script("return document.readyState") == "complete")
 
         element = wait.until(
-            EC.element_to_be_clickable((By.XPATH, "(//*[name()='svg'][@class='slds-button__icon'])[3]"))
+            EC.element_to_be_clickable((By.XPATH, "//li[1]//article[1]//div[1]//div[1]//div[1]//button[1]//lightning-primitive-icon[1]"))
         )
         element.click()
     except (NoSuchElementException, TimeoutException) as e:

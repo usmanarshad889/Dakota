@@ -20,6 +20,7 @@ def driver():
     driver.quit()
 
 
+@pytest.mark.regression
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Filters and Filter Logic")
 @allure.story("Validate filters and filter logic.")

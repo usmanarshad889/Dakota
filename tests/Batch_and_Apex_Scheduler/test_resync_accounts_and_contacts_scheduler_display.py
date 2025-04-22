@@ -19,6 +19,7 @@ def driver():
 
 
 @pytest.mark.P1
+@pytest.mark.regression
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Scheduler Display")
 @allure.story('Confirm the display of the Resync Accounts and Contacts fields scheduler and its run time.')

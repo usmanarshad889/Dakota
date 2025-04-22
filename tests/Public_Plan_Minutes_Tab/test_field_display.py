@@ -17,6 +17,8 @@ def driver():
     yield driver
     driver.quit()
 
+
+
 @pytest.mark.regression
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Public Plan Minutes")
