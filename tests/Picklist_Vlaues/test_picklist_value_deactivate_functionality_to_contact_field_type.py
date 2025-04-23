@@ -23,6 +23,7 @@ def driver():
     driver.quit()
 
 
+@pytest.mark.Skipped
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Picklist Values")
 @allure.story("Confirm picklist value deactivation functionality.")

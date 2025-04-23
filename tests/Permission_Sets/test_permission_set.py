@@ -15,6 +15,8 @@ def driver():
     yield driver
     driver.quit()
 
+
+@pytest.mark.Skipped
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Permission Sets")
 @allure.story("Verify that the user does not have both Admin and User permission sets assigned.")

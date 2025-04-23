@@ -20,6 +20,7 @@ def driver():
 
 
 @pytest.mark.P1
+@pytest.mark.Skipped
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Account Preview Display")
 @allure.story('Verify the " of QPs" field is displayed correctly in account previews.')

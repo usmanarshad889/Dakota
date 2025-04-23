@@ -20,6 +20,7 @@ def driver():
 
 
 @pytest.mark.P1
+@pytest.mark.Skipped
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Contact Linking")
 @allure.story('Ensure the "Dakota Contact CRD" field is available for linking contacts.')

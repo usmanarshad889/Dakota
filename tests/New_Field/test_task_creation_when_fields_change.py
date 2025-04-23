@@ -179,7 +179,7 @@ def test_task_creation_when_fields_change(driver, config):
         wait.until(lambda d: d.execute_script("return document.readyState") == "complete")
 
         element = wait.until(
-            EC.element_to_be_clickable((By.XPATH, "(//*[name()='svg'][@class='slds-button__icon'])[3]"))
+            EC.element_to_be_clickable((By.XPATH, "//li[1]//article[1]//div[1]//div[1]//div[1]//button[1]//lightning-primitive-icon[1]"))
         )
         element.click()
     except (NoSuchElementException, TimeoutException) as e:

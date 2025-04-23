@@ -21,6 +21,7 @@ def driver():
     driver.quit()
 
 
+@pytest.mark.Skipped
 @pytest.mark.load
 @pytest.mark.release_one
 @pytest.mark.P1

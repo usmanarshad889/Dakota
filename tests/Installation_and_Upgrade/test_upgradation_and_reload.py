@@ -69,7 +69,7 @@ def test_upgrade_and_reload(driver, config):
     # Click on Authentication svg button
     try:
         element = wait.until(
-            EC.presence_of_element_located((By.XPATH, "(//*[name()='svg'][@class='slds-button__icon'])[3]"))
+            EC.presence_of_element_located((By.XPATH, "//li[1]//article[1]//div[1]//div[1]//div[1]//button[1]//lightning-primitive-icon[1]"))
         )
         element.click()
     except:
@@ -111,7 +111,7 @@ def test_upgrade_and_reload(driver, config):
     # Click on Mapping svg button
     try:
         element = WebDriverWait(driver, 10).until(
-            EC.element_to_be_clickable((By.XPATH, "(//*[name()='svg'][@class='slds-button__icon'])[4]"))
+            EC.element_to_be_clickable((By.XPATH, "//li[2]//article[1]//div[1]//div[1]//div[1]//button[1]//lightning-primitive-icon[1]"))
         )
         element.click()
     except:
@@ -201,7 +201,7 @@ def test_upgrade_and_reload(driver, config):
     # Click on Addition Setting svg button
     try:
         element = WebDriverWait(driver, 10).until(
-            EC.element_to_be_clickable((By.XPATH, "(//*[name()='svg'][@class='slds-button__icon'])[5]"))
+            EC.element_to_be_clickable((By.XPATH, "//li[3]//article[1]//div[1]//div[1]//div[1]//button[1]//lightning-primitive-icon[1]"))
         )
         element.click()
     except:

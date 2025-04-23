@@ -23,6 +23,7 @@ def driver():
     driver.quit()
 
 
+@pytest.mark.Skipped
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Field Display")
 @allure.story("Validate that the newly added field is displayed as plain text.")

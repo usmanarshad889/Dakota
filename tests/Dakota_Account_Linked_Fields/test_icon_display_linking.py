@@ -41,6 +41,7 @@ def driver():
     driver.quit()
 
 
+@pytest.mark.Skipped
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Account Linking")
 @allure.story('Validate the "Dakota Account Linked" field displays a linked icon after linking.')

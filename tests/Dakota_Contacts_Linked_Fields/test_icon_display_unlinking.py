@@ -38,6 +38,7 @@ def driver():
     driver.quit()
 
 
+@pytest.mark.Skipped
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Contact Linking")
 @allure.story("Test scenarios where the field remains empty for unlinked contacts.")

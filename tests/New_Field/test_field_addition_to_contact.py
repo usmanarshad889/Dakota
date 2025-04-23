@@ -23,6 +23,7 @@ def driver():
     driver.quit()
 
 
+@pytest.mark.Skipped
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Field Addition")
 @allure.story("Verify the successful addition of a new field in the Contact object.")

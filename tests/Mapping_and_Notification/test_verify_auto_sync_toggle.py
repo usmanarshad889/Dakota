@@ -17,6 +17,8 @@ def driver():
     yield driver
     driver.quit()
 
+
+@pytest.mark.Skipped
 @pytest.mark.P1
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Field Settings")

@@ -66,7 +66,7 @@ def test_notification_mapped_field_create_task(driver, config):
     driver.get(f"{config['base_url']}lightning/n/Marketplace__Dakota_Setup")
 
 
-    element = wait.until(EC.element_to_be_clickable((By.XPATH, "(//*[name()='svg'][@class='slds-button__icon'])[4]")))
+    element = wait.until(EC.element_to_be_clickable((By.XPATH, "//li[2]//article[1]//div[1]//div[1]//div[1]//button[1]//lightning-primitive-icon[1]")))
     element.click()
     time.sleep(1)
 

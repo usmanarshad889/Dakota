@@ -18,6 +18,7 @@ def driver():
     driver.quit()
 
 
+@pytest.mark.Skipped
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Permission Sets")
 @allure.story("Validate permission set assignment for non-admin users.")

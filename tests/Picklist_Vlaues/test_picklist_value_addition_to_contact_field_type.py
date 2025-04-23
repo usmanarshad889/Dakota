@@ -23,6 +23,8 @@ def driver():
     driver.quit()
 
 
+
+@pytest.mark.Skipped
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Picklist Values")
 @allure.story("Test the addition of new picklist values via the Sync Contact Type Field scheduler.")

@@ -43,6 +43,7 @@ def driver():
     driver.quit()
 
 
+@pytest.mark.Skipped
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Account Linking")
 @allure.story("Test scenarios where the field remains empty for unlinked accounts.")

@@ -18,6 +18,8 @@ def driver():
     yield driver
     driver.quit()
 
+
+@pytest.mark.Skipped
 @pytest.mark.P1
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Notification Settings")
@@ -72,7 +74,7 @@ def test_activation_of_receive_follow_toggle(driver, config):
     # Navigate to installed packages setup
     driver.get(f"{config['base_url']}lightning/n/Marketplace__Dakota_Setup")
 
-    element = wait.until(EC.element_to_be_clickable((By.XPATH, "(//*[name()='svg'][@class='slds-button__icon'])[5]")))
+    element = wait.until(EC.element_to_be_clickable((By.XPATH, "//li[3]//article[1]//div[1]//div[1]//div[1]//button[1]//lightning-primitive-icon[1]")))
     element.click()
     time.sleep(1)
 

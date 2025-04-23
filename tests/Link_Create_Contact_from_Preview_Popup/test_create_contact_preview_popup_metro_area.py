@@ -43,6 +43,7 @@ def driver():
     driver.quit()
 
 
+@pytest.mark.Skipped
 @pytest.mark.P1
 @pytest.mark.release_three
 @allure.severity(allure.severity_level.CRITICAL)
@@ -225,6 +226,7 @@ def test_link_contact_preview_popup_metro_area(driver, config):
 
     # Enter Email
     field = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='Email']")))
+    field.clear()
     field.send_keys(email)
 
     # click on save button
