@@ -1,0 +1,1 @@
+ReSync Accounts/Contacts Scheduler Jobs run at 0, 10, 20, 30, 40 and 50 mins.
