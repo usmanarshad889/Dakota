@@ -13,10 +13,8 @@ def is_sorted(data):
 
 @pytest.fixture(scope="module")
 def driver():
-    """Fixture for setting up WebDriver"""
     driver = webdriver.Chrome()
     driver.maximize_window()
-    driver.implicitly_wait(10)
     yield driver
     driver.quit()
 
@@ -29,44 +27,30 @@ def test_ask_dakota_sorting(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])
     driver.delete_all_cookies()
-    wait = WebDriverWait(driver, 60, poll_frequency=0.5)
+    wait = WebDriverWait(driver, 30, poll_frequency=0.5)
 
+    # Login block
     try:
-        # Perform login
-        username = wait.until(EC.element_to_be_clickable((By.ID, "username")))
-        username.send_keys(config["username"])
-        password = wait.until(EC.element_to_be_clickable((By.ID, "password")))
-        password.send_keys(config["password"])
-        login_button = wait.until(EC.element_to_be_clickable((By.ID, "Login")))
-        time.sleep(2)
-        login_button.click()
-        time.sleep(3)
-
-        # Wait for URL change
-        wait.until(EC.url_contains("lightning.force.com"))
-
-        # Verify Login
-        try:
-            WebDriverWait(driver, 30).until(EC.element_to_be_clickable((By.XPATH, "//one-app-nav-bar-item-root[2]"))).click()
-        except Exception as e:
-            pytest.skip(f"Skipping test due to unexpected login error: {type(e).__name__}")
-            driver.quit()
-
+        wait.until(EC.element_to_be_clickable((By.ID, "username"))).send_keys(config["username"])
+        wait.until(EC.element_to_be_clickable((By.ID, "password"))).send_keys(config["password"])
+        time.sleep(1)
+        wait.until(EC.element_to_be_clickable((By.ID, "Login"))).click()
     except Exception as e:
-        pytest.skip(f"Skipping test due to unexpected login error: {type(e).__name__}")
         driver.quit()
+        pytest.skip(f"Skipping test due to login failure: {type(e).__name__}")
 
-
-    with allure.step("Waiting for Document Ready State to be Complete"):
-        WebDriverWait(driver, 90).until(
-            lambda d: print("Current Ready State:", d.execute_script('return document.readyState')) or
-                      d.execute_script('return document.readyState') == 'complete'
-        )
-    print("Document Ready State is COMPLETE!")
-    time.sleep(1)
+    # Confirm login success
+    try:
+        wait.until(EC.presence_of_element_located((By.XPATH, "//button[@title='App Launcher']")))
+        print("Login successfully verified ... ")
+    except Exception as e:
+        driver.quit()
+        pytest.skip(f"Skipping test due to missing App Launcher: {type(e).__name__}")
 
     # Navigate to Dakota Home Page
     driver.get(f"{config['base_url']}lightning/n/Marketplace__Home")
+
+    wait = WebDriverWait(driver, 60, poll_frequency=0.5)
 
     # Scroll down the element
     scroll_element = wait.until(EC.element_to_be_clickable((By.XPATH, "//span[@class='title-div'][normalize-space()='Ask Dakota']")))

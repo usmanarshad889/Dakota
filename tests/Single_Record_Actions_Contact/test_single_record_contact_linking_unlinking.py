@@ -28,9 +28,9 @@ search_name = "Test" + " " + last_name
 
 @pytest.fixture(scope="module")
 def driver():
+    """Fixture for setting up WebDriver"""
     driver = webdriver.Chrome()
     driver.maximize_window()
-    driver.implicitly_wait(10)
     yield driver
     driver.quit()
 

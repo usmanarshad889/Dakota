@@ -1,14 +1,9 @@
 import time
-import random
-import string
+
 import pytest
 import allure
-from allure_commons.types import AttachmentType
-from faker import Faker
+
 from selenium import webdriver
-from selenium.common import NoSuchElementException, TimeoutException
-from selenium.webdriver import ActionChains
-from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -28,35 +23,33 @@ def driver():
 @allure.feature("Mapping - Account field Mapping")
 @allure.story("Validate successful mapping of account fields.")
 def test_account_record_auto_sync(driver, config, run):
-    driver.get(config["uat_login_url"])
+    start_time = time.time()
+    driver.get(config["base_url"])
     driver.delete_all_cookies()
-    wait = WebDriverWait(driver, 60, poll_frequency=0.5)
+    wait = WebDriverWait(driver, 30, poll_frequency=0.5)
 
+    # Login block
     try:
-        # Perform login
-        username = wait.until(EC.element_to_be_clickable((By.ID, "username")))
-        username.send_keys(config["uat_username"])
-        password = wait.until(EC.element_to_be_clickable((By.ID, "password")))
-        password.send_keys(config["uat_password"])
-        login_button = wait.until(EC.element_to_be_clickable((By.ID, "Login")))
-        time.sleep(2)
-        login_button.click()
-
-        # Wait for URL change
-        wait.until(EC.url_contains("lightning.force.com"))
-
-        # Verify Login
-        try:
-            WebDriverWait(driver, 30).until(EC.element_to_be_clickable((By.XPATH, "//one-app-nav-bar-item-root[2]"))).click()
-        except Exception as e:
-            pytest.skip(f"Skipping test due to unexpected login error: {type(e).__name__}")
-            driver.quit()
-
+        wait.until(EC.element_to_be_clickable((By.ID, "username"))).send_keys(config["username"])
+        wait.until(EC.element_to_be_clickable((By.ID, "password"))).send_keys(config["password"])
+        time.sleep(1)
+        wait.until(EC.element_to_be_clickable((By.ID, "Login"))).click()
     except Exception as e:
-        pytest.skip(f"Skipping test due to unexpected login error: {type(e).__name__}")
         driver.quit()
+        pytest.skip(f"Skipping test due to login failure: {type(e).__name__}")
 
+    # Confirm login success
+    try:
+        wait.until(EC.presence_of_element_located((By.XPATH, "//button[@title='App Launcher']")))
+        print("App Launcher is found")
+    except Exception as e:
+        driver.quit()
+        pytest.skip(f"Skipping test due to missing App Launcher: {type(e).__name__}")
 
-    # Move to account Tab and click on new button
-    driver.get(f"{config['uat_base_url']}lightning/o/Account/list?filterName=__Recent")
+    # Navigate to Opportunity list view
+    driver.get("https://dakotanetworks--uat.sandbox.lightning.force.com/lightning/o/Opportunity/list?filterName=__Recent")
     time.sleep(2)
+    end_time = time.time()
+
+
+    print(start_time , end_time)

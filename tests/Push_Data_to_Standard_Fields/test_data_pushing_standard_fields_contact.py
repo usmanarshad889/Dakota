@@ -37,12 +37,11 @@ print(full_name)
 
 @pytest.fixture(scope="module")
 def driver():
+    """Fixture for setting up WebDriver"""
     driver = webdriver.Chrome()
     driver.maximize_window()
-    driver.implicitly_wait(10)
     yield driver
     driver.quit()
-
 
 @pytest.mark.Skipped
 @allure.severity(allure.severity_level.CRITICAL)
