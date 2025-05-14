@@ -1,1 +1,0 @@
-Pull Accounts and Contacts Scheduler Jobs run at 16, 31, 1 and 46 mins.
