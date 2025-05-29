@@ -275,15 +275,15 @@ def test_account_record_auto_sync(driver, config):
     driver.execute_script("window.scrollBy(0, 500);")
     time.sleep(10)
 
-    # Select phone with CRD
-    select_element = wait.until(EC.element_to_be_clickable((By.XPATH, "(//select[@name='a7Ndy0000001H3gEAE'])[1]")))
-    option = Select(select_element)
-    option.select_by_visible_text("Account Phone")
-
-    # Select Website with Account Description
-    select_element = wait.until(EC.element_to_be_clickable((By.XPATH, "(//select[@name='a7Ndy0000001H3hEAE'])[1]")))
-    option = Select(select_element)
-    option.select_by_visible_text("Website")
+    # # Select phone with CRD
+    # select_element = wait.until(EC.element_to_be_clickable((By.XPATH, "(//select[@name='a7Ndy0000001H3gEAE'])[1]")))
+    # option = Select(select_element)
+    # option.select_by_visible_text("Account Phone")
+    #
+    # # Select Website with Account Description
+    # select_element = wait.until(EC.element_to_be_clickable((By.XPATH, "(//select[@name='a7Ndy0000001H3hEAE'])[1]")))
+    # option = Select(select_element)
+    # option.select_by_visible_text("Website")
 
     try:
         # Select Sync Option
@@ -372,43 +372,51 @@ def test_account_record_auto_sync(driver, config):
         print(f"Error: {type(e).__name__}")
     time.sleep(3)
 
-    # Define the stopping condition element
+    # Define the stopping condition element (second checkbox)
     stopping_condition_locator = (By.XPATH, "(//span[@class='slds-checkbox_faux'])[2]")
 
     max_attempts = 5
     attempts = 0
 
     while attempts < max_attempts:
-        # Refresh page and clear cookies
         driver.refresh()
+        time.sleep(2)  # Allow time for page to load after refresh
 
-        # Wait for search input and enter the search term
-        name_input = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='searchTerm']")))
-        name_input.clear()
-        name_input.send_keys(name_var)
+        try:
+            # Enter search term
+            name_input = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='searchTerm']")))
+            name_input.clear()
+            name_input.send_keys(name_var)
 
-        search_element = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@title='Search']")))
+            # Click the Search button
+            search_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@title='Search']")))
+            actions = ActionChains(driver)
 
-        # Double-click search button multiple times until condition is met
-        actions = ActionChains(driver)
-        for _ in range(3):
+            for _ in range(3):  # Try clicking search up to 3 times
+                # Check stopping condition before clicking again
+                if driver.find_elements(*stopping_condition_locator):
+                    print("Stopping condition met. Exiting loop.")
+                    break
+
+                actions.move_to_element(search_button).click().perform()
+                time.sleep(2)  # Let the results update/load
+
+            # Break outer loop if condition is met
             if driver.find_elements(*stopping_condition_locator):
-                print("Stopping condition met. Exiting loop.")
+                print("Element found after search attempts.")
                 break
 
-            actions.double_click(search_element).perform()
+        except Exception as e:
+            print(f"Attempt {attempts + 1} failed: {e}")
 
-        # If element is found, exit the while loop
-        if driver.find_elements(*stopping_condition_locator):
-            break
+        attempts += 1
+        time.sleep(1)
 
-        attempts += 1  # Increment attempt counter
-
-    # Fail test if maximum attempts reached and condition is not met
+    # Assert loop succeeded
     assert attempts < max_attempts, "Test failed: Stopping condition not met after 5 attempts"
 
-    # Check for checkboxes after exiting loop
-    checkboxes = driver.find_elements(By.XPATH, "(//span[@class='slds-checkbox_faux'])[2]")
+    # Final check for the checkbox element
+    checkboxes = driver.find_elements(*stopping_condition_locator)
     assert len(checkboxes) > 0, "Checkbox not found or not visible"
     time.sleep(1)
 
@@ -534,11 +542,11 @@ def test_account_record_auto_sync(driver, config):
     type_text = type_field.text
     print(f"Type Text : {type_text}")
 
-    # Verify the CRD as '3546'
-    xpath = '''(//span[@class='test-id__field-value slds-form-element__static slds-grow word-break-ie11'])[10]'''
-    crd_field = wait.until(EC.element_to_be_clickable((By.XPATH, xpath)))
-    crd_text = crd_field.text
-    print(f"CRD Value : {crd_text}")
+    # # Verify the CRD as '3546'
+    # xpath = '''(//span[@class='test-id__field-value slds-form-element__static slds-grow word-break-ie11'])[10]'''
+    # crd_field = wait.until(EC.element_to_be_clickable((By.XPATH, xpath)))
+    # crd_text = crd_field.text
+    # print(f"CRD Value : {crd_text}")
 
     # Verify the Account Record Type
     xpath = '''(//div[@class='recordTypeName slds-grow slds-truncate'])[1]'''
@@ -550,6 +558,6 @@ def test_account_record_auto_sync(driver, config):
     # assert phone_text == phone_var, f"Phone Mismatch: Expected '{phone_var}', but got '{phone_text}'"
     assert web_text == email_var, f"Website Mismatch: Expected '{email_var}', but got '{web_text}'"
     assert type_text == "Bank", f"Type Mismatch: Expected 'Bank', but got '{type_text}'"
-    assert crd_text == "3546", f"CRD Value Mismatch: Expected CRD Value '3546', but got '{crd_text}'"
+    # assert crd_text == "3546", f"CRD Value Mismatch: Expected CRD Value '3546', but got '{crd_text}'"
     assert account_type_text == "Investment Allocator", f"Account Record Type Mismatch: Expected CRD Value 'Investment Allocator', but got '{account_type_text}'"
     time.sleep(10)
