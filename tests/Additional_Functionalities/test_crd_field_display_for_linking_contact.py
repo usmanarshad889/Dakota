@@ -19,7 +19,6 @@ def driver():
 
 
 @pytest.mark.P1
-@pytest.mark.Skipped
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Contact Linking")
 @allure.story('Ensure the "Dakota Contact CRD" field is available for linking contacts.')
@@ -53,14 +52,6 @@ def test_crd_field_display_for_linking_contact(driver, config):
         driver.quit()
 
 
-    with allure.step("Waiting for Document Ready State to be Complete"):
-        WebDriverWait(driver, 90).until(
-            lambda d: print("Current Ready State:", d.execute_script('return document.readyState')) or
-                      d.execute_script('return document.readyState') == 'complete'
-        )
-    print("Document Ready State is COMPLETE!")
-    time.sleep(1)
-
     # Navigate to installed pakages setup
     driver.get(f"{config['base_url']}lightning/n/Marketplace__Dakota_Search")
 
@@ -89,9 +80,11 @@ def test_crd_field_display_for_linking_contact(driver, config):
     dropdown = wait.until(EC.element_to_be_clickable((By.XPATH, "//select[@name='MassUploadActions']")))
     dropdown_option = Select(dropdown)
     dropdown_option.select_by_visible_text("Link Selected Contacts to Existing Contacts")
+    time.sleep(5)
 
     # Click on linked account
     dropdown = wait.until(EC.element_to_be_clickable((By.XPATH, "(//select[@class='slds-select'])[6]")))
+    time.sleep(1)
     dropdown_option = Select(dropdown)
     dropdown_option.select_by_visible_text("Dakota CRD#")
 

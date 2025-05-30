@@ -199,28 +199,10 @@ def test_account_field_change_notify_create_task(driver, config):
     time.sleep(2)
 
 
-    try:
-        # Click on Related contacts
-        xpath = '''//li//lst-related-list-quick-link//div//div//records-hoverable-link//div'''
-        all_links = WebDriverWait(driver, 30).until(EC.presence_of_all_elements_located((By.XPATH, xpath)))
+    btn = WebDriverWait(driver, 30).until(EC.element_to_be_clickable((By.XPATH, "//button[normalize-space()='New']")))
+    time.sleep(1)
+    btn.click()
 
-        for link in all_links:
-            if "Related Contacts" in link.text:
-                link.click()
-                time.sleep(4)
-                break
-
-    except (NoSuchElementException, TimeoutException) as e:
-        print(f"Error: {type(e).__name__}")
-        button = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@name='NewContact']")))
-        button.click()
-
-    try:
-        btn = WebDriverWait(driver, 30).until(EC.element_to_be_clickable((By.XPATH, "//div[@title='New Contact']")))
-        time.sleep(1)
-        btn.click()
-    except (NoSuchElementException, TimeoutException) as e:
-        print(f"Error: {type(e).__name__}")
 
     btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//span[normalize-space()='Next']")))
     time.sleep(1)
@@ -237,12 +219,6 @@ def test_account_field_change_notify_create_task(driver, config):
     driver.execute_script("arguments[0].scrollIntoView();", element)
     time.sleep(1)
 
-
-    # Select account name
-    salutation_field = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@name='salutation']")))
-    salutation_field.click()
-    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//lightning-base-combobox-item[@data-value='Mr.']")))
-    btn.click()
 
     # Select First name
     btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='firstName']")))
@@ -265,6 +241,8 @@ def test_account_field_change_notify_create_task(driver, config):
             break  # Stop after the first successful click
         except NoSuchElementException:
             print(f"Element {r} not found, trying next...")
+
+    time.sleep(1)
 
     # click on save button
     save_btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@name='SaveEdit']")))
@@ -438,50 +416,58 @@ def test_account_field_change_notify_create_task(driver, config):
     driver.get(f"{config['base_url']}lightning/n/Marketplace__Dakota_Search")
     time.sleep(3)
 
-    # Define the stopping condition element
+    # Define the stopping condition element (second checkbox)
     stopping_condition_locator = (By.XPATH, "(//span[@class='slds-checkbox_faux'])[2]")
 
     max_attempts = 5
     attempts = 0
 
     while attempts < max_attempts:
-        # Refresh page and clear cookies
         driver.refresh()
+        time.sleep(2)  # Allow time for page to load after refresh
 
-        # Wait for search input and enter the search term
-        name_input = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='searchTerm']")))
-        name_input.clear()
-        name_input.send_keys(name_var)
+        try:
+            # Enter search term
+            name_input = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='searchTerm']")))
+            name_input.clear()
+            name_input.send_keys(name_var)
 
-        search_element = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@title='Search']")))
+            # Click the Search button
+            search_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@title='Search']")))
+            actions = ActionChains(driver)
 
-        # Double-click search button multiple times until condition is met
-        actions = ActionChains(driver)
-        for _ in range(3):
+            for _ in range(3):  # Try clicking search up to 3 times
+                # Check stopping condition before clicking again
+                if driver.find_elements(*stopping_condition_locator):
+                    print("Stopping condition met. Exiting loop.")
+                    break
+
+                actions.move_to_element(search_button).click().perform()
+                time.sleep(2)  # Let the results update/load
+
+            # Break outer loop if condition is met
             if driver.find_elements(*stopping_condition_locator):
-                print("Stopping condition met. Exiting loop.")
+                print("Element found after search attempts.")
                 break
 
-            actions.double_click(search_element).perform()
+        except Exception as e:
+            print(f"Attempt {attempts + 1} failed: {e}")
 
-        # If element is found, exit the while loop
-        if driver.find_elements(*stopping_condition_locator):
-            break
+        attempts += 1
+        time.sleep(1)
 
-        attempts += 1  # Increment attempt counter
-
-    # Fail test if maximum attempts reached and condition is not met
+    # Assert loop succeeded
     assert attempts < max_attempts, "Test failed: Stopping condition not met after 5 attempts"
 
-    # Check for checkboxes after exiting loop
-    checkboxes = driver.find_elements(By.XPATH, "(//span[@class='slds-checkbox_faux'])[2]")
+    # Final check for the checkbox element
+    checkboxes = driver.find_elements(*stopping_condition_locator)
     assert len(checkboxes) > 0, "Checkbox not found or not visible"
     time.sleep(1)
 
 
     # Navigate to UAT Environment
     driver.get(config["uat_login_url"])
-    wait = WebDriverWait(driver, 20)
+    wait = WebDriverWait(driver, 60)
 
     try:
         # Perform login
@@ -497,13 +483,7 @@ def test_account_field_change_notify_create_task(driver, config):
 
     try:
         # Navigate to Market Place Setup
-        driver.get(f"{config['uat_base_url']}lightning/o/Account/list?filterName=All_Accounts_Private_Fund")
-    except (NoSuchElementException, TimeoutException) as e:
-        print(f"Error: {type(e).__name__}")
-
-    try:
-        # Navigate to Market Place Setup
-        driver.get(f"{config['uat_base_url']}lightning/o/Account/list?filterName=All_Accounts_Private_Fund")
+        driver.get(f"{config['uat_base_url']}lightning/o/Account/list?filterName=__Recent")
     except (NoSuchElementException, TimeoutException) as e:
         print(f"Error: {type(e).__name__}")
 
@@ -543,7 +523,7 @@ def test_account_field_change_notify_create_task(driver, config):
 
 
     driver.get(config["base_url"])
-    wait = WebDriverWait(driver, 20)
+    wait = WebDriverWait(driver, 60)
 
 
     try:
@@ -565,50 +545,53 @@ def test_account_field_change_notify_create_task(driver, config):
     except (NoSuchElementException, TimeoutException) as e:
         print(f"Error: {type(e).__name__}")
 
-    try:
-        # Navigate to Market Place Setup
-        driver.get(f"{config['base_url']}lightning/n/Marketplace__Dakota_Search")
-    except (NoSuchElementException, TimeoutException) as e:
-        print(f"Error: {type(e).__name__}")
 
 
     # Define the stopping condition element
     stopping_condition_locator = (By.XPATH, "//th[@class='test']//lightning-icon[@class='slds-m-left_x-small slds-m-right_x-small slds-icon_container_circle slds-icon-action-share-link slds-icon_container']")
 
-    max_attempts = 10
+    max_attempts = 5
     attempts = 0
 
     while attempts < max_attempts:
-        # Refresh page and clear cookies
         driver.refresh()
+        time.sleep(2)  # Allow time for page to load after refresh
 
-        # Wait for search input and enter the search term
-        name_input = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='searchTerm']")))
-        name_input.clear()
-        name_input.send_keys(name_var)
+        try:
+            # Enter search term
+            name_input = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='searchTerm']")))
+            name_input.clear()
+            name_input.send_keys(name_var)
 
-        search_element = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@title='Search']")))
+            # Click the Search button
+            search_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@title='Search']")))
+            actions = ActionChains(driver)
 
-        # Double-click search button multiple times until condition is met
-        actions = ActionChains(driver)
-        for _ in range(3):
+            for _ in range(3):  # Try clicking search up to 3 times
+                # Check stopping condition before clicking again
+                if driver.find_elements(*stopping_condition_locator):
+                    print("Stopping condition met. Exiting loop.")
+                    break
+
+                actions.move_to_element(search_button).click().perform()
+                time.sleep(2)  # Let the results update/load
+
+            # Break outer loop if condition is met
             if driver.find_elements(*stopping_condition_locator):
-                print("Stopping condition met. Exiting loop.")
+                print("Element found after search attempts.")
                 break
 
-            actions.double_click(search_element).perform()
+        except Exception as e:
+            print(f"Attempt {attempts + 1} failed: {e}")
 
-        # If element is found, exit the while loop
-        if driver.find_elements(*stopping_condition_locator):
-            break
+        attempts += 1
+        time.sleep(1)
 
-        attempts += 1  # Increment attempt counter
-
-    # Fail test if maximum attempts reached and condition is not met
+    # Assert loop succeeded
     assert attempts < max_attempts, "Test failed: Stopping condition not met after 5 attempts"
 
-    # Check for checkboxes after exiting loop
-    checkboxes = driver.find_elements(By.XPATH, "(//span[@class='slds-checkbox_faux'])[2]")
+    # Final check for the checkbox element
+    checkboxes = driver.find_elements(*stopping_condition_locator)
     assert len(checkboxes) > 0, "Checkbox not found or not visible"
     time.sleep(5)
 
@@ -619,11 +602,6 @@ def test_account_field_change_notify_create_task(driver, config):
     except (NoSuchElementException, TimeoutException) as e:
         print(f"Error: {type(e).__name__}")
 
-    try:
-        # Navigate to Market Place Setup
-        driver.get(f"{config['base_url']}lightning/o/Task/home")
-    except (NoSuchElementException, TimeoutException) as e:
-        print(f"Error: {type(e).__name__}")
 
 
     # Select Table View
