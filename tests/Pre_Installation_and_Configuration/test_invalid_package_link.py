@@ -15,6 +15,8 @@ def driver():
     yield driver
     driver.quit()
 
+
+@pytest.mark.release_six
 @allure.severity(allure.severity_level.MINOR)
 @allure.feature("Managed Package Installation")
 @allure.story("Verify errors are handled gracefully for incorrect or invalid package links")

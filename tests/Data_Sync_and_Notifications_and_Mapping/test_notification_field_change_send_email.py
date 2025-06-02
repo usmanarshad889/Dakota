@@ -18,6 +18,7 @@ def driver():
     driver.quit()
 
 
+@pytest.mark.release_eight
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Field Change Notification")
 @allure.story("Ensure that 'Notify when any field changes' triggers correctly for linked records.")

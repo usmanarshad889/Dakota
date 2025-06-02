@@ -20,10 +20,7 @@ def driver():
     driver.quit()
 
 
-@pytest.mark.Skipped
-@pytest.mark.load
 @pytest.mark.release_one
-@pytest.mark.P1
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Marketplace Search")
 @allure.story("Validate the 'Load More' functionality for unlinked contacts with linked account in Marketplace search.")

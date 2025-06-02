@@ -19,7 +19,6 @@ def driver():
     yield driver
     driver.quit()
 
-@pytest.mark.P1
 @pytest.mark.release_two
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Dakota Home Tab - New Public Investments")

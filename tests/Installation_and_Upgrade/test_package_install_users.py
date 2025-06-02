@@ -15,6 +15,8 @@ def driver():
     yield driver
     driver.quit()
 
+
+@pytest.mark.release_six
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Package Installation")
 @allure.story("Confirm the package shows install users as: Admin only, All users, Specific profiles.")

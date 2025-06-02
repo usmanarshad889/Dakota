@@ -42,6 +42,7 @@ def driver():
     driver.quit()
 
 
+@pytest.mark.release_four
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Field Synchronization")
 @allure.story("Validate the synchronization of the newly added field and ensure its correct mapping.")

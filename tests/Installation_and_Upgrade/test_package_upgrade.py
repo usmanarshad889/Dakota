@@ -18,6 +18,8 @@ def driver():
     yield driver
     driver.quit()
 
+
+@pytest.mark.release_six
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Managed Package Upgrade")
 @allure.story("Test upgrading from an earlier version, ensuring correct handling of new features and validation of previous configuration")

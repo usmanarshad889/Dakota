@@ -18,7 +18,7 @@ def driver():
     driver.quit()
 
 
-@pytest.mark.regression
+@pytest.mark.release_five
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Default List Views")
 @allure.story('Verify default list views ("All," "Past Conferences") display correct records based on dates.')

@@ -21,7 +21,7 @@ def driver():
     driver.quit()
 
 
-@pytest.mark.regression
+@pytest.mark.release_five
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Search Functionality")
 @allure.story("Test the search functionality for search names.")

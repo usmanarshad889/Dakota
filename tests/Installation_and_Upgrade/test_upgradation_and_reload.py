@@ -16,6 +16,8 @@ def driver():
     yield driver
     driver.quit()
 
+
+@pytest.mark.release_six
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Package Upgrade")
 @allure.story("Test reloading of marketplace setup page after package Installation.")

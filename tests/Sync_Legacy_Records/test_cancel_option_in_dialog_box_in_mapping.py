@@ -18,8 +18,7 @@ def driver():
     driver.quit()
 
 
-@pytest.mark.Skipped
-@pytest.mark.P1
+@pytest.mark.release_five
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Confirmation Dialog")
 @allure.story("Test 'Cancel' option in the confirmation dialog.")

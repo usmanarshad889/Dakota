@@ -23,8 +23,7 @@ def driver():
     driver.quit()
 
 
-@pytest.mark.Skipped
-@pytest.mark.P1
+@pytest.mark.release_seven
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Scheduler Functionality")
 @allure.story("Ensure the scheduler runs every Friday at 5 PM.")

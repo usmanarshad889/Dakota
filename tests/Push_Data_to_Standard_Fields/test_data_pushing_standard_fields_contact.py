@@ -43,7 +43,6 @@ def driver():
     yield driver
     driver.quit()
 
-@pytest.mark.Skipped
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Mapping - Contact field Mapping")
 @allure.story("Validate successful mapping of contact fields.")

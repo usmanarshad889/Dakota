@@ -22,7 +22,6 @@ def driver():
     yield driver
     driver.quit()
 
-@pytest.mark.Skipped
 @pytest.mark.release_three
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Field Display")

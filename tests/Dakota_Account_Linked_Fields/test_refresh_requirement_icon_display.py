@@ -41,7 +41,7 @@ def driver():
     driver.quit()
 
 
-@pytest.mark.Skipped
+@pytest.mark.release_four
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Account Linking")
 @allure.story("Confirm the page refresh requirement for updating the linked icon.")

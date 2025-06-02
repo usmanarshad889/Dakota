@@ -24,6 +24,7 @@ def driver():
     driver.quit()
 
 
+@pytest.mark.release_eight
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Investment Sorting")
 @allure.story('Verify default sorting of investments by "Created Date" in descending order.')

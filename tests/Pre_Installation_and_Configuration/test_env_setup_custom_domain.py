@@ -24,6 +24,7 @@ def driver():
     driver.quit()
 
 
+@pytest.mark.release_six
 @allure.severity(allure.severity_level.NORMAL)
 @allure.feature("Environment Setup")
 @allure.story("Validate that the environment is set up with a custom domain and email deliver-ability settings.")

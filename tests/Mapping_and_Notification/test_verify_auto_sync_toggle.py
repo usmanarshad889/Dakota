@@ -18,8 +18,7 @@ def driver():
     driver.quit()
 
 
-@pytest.mark.Skipped
-@pytest.mark.P1
+@pytest.mark.release_seven
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Field Settings")
 @allure.story("Verify the Auto Sync Field Updates toggle is visible at the top of the mapping section and is activated/inactivated based on user preferences.")

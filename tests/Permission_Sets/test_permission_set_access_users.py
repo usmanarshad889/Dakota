@@ -19,7 +19,7 @@ def driver():
 
 
 
-@pytest.mark.Skipped
+@pytest.mark.release_four
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Permission Sets")
 @allure.story("Ensure permission sets User restrict or grant access as expected.")

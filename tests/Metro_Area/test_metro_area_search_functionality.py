@@ -18,8 +18,8 @@ def driver():
     yield driver
     driver.quit()
 
-@pytest.mark.Skipped
-@pytest.mark.P1
+
+@pytest.mark.release_six
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Metro Area")
 @allure.story("Verify the correct search functionality of Metro Area records.")

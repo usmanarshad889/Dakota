@@ -38,6 +38,7 @@ def driver():
     driver.quit()
 
 
+@pytest.mark.release_eight
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Notification Settings")
 @allure.story("Send Email: Email notifications sent to assigned recipients.")

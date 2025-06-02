@@ -17,8 +17,7 @@ def driver():
     driver.quit()
 
 
-@pytest.mark.Skipped
-@pytest.mark.P1
+@pytest.mark.release_six
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Marketplace Setup")
 @allure.story("Validate the display of the Investment field and its related fields in Marketplace Setup.")

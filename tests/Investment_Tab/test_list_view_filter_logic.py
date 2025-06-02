@@ -19,7 +19,7 @@ def driver():
     driver.quit()
 
 
-@pytest.mark.regression
+@pytest.mark.release_four
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Custom List View Filters")
 @allure.story("Validate filters and filter logic in custom list views.")

@@ -39,7 +39,6 @@ def driver():
     yield driver
     driver.quit()
 
-@pytest.mark.P1
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Task Creation")
 @allure.story("Ensure that a Task is created when a field is updated, only when the Auto Sync Field Updates is enabled.")

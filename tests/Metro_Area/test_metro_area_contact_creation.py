@@ -42,8 +42,7 @@ def driver():
     driver.quit()
 
 
-@pytest.mark.Skipped
-@pytest.mark.P1
+@pytest.mark.release_six
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Contact Creation")
 @allure.story("Verify the correct creation of contact in Metro Area.")

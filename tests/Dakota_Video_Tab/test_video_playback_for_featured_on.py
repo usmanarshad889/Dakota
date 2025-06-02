@@ -17,8 +17,7 @@ def driver():
     driver.quit()
 
 
-@pytest.mark.regression
-@pytest.mark.P1
+@pytest.mark.release_six
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Video Playback")
 @allure.story('Test video playback for "Featured On" columns.')

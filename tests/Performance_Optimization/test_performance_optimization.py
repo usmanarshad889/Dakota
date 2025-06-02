@@ -28,6 +28,7 @@ def wait_for_page_load(driver, timeout=90):
     print("Document Ready State is COMPLETE!")
 
 
+@pytest.mark.release_eight
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Performance Testing")
 @allure.story("Test the loading time of the SF Org Tabs.")

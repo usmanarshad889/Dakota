@@ -19,7 +19,7 @@ def driver():
     driver.quit()
 
 
-@pytest.mark.P1
+@pytest.mark.release_seven
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Mass Actions")
 @allure.story("Test mass actions for creating related contacts for up to 1000 records.")

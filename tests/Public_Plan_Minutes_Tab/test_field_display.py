@@ -19,7 +19,7 @@ def driver():
 
 
 
-@pytest.mark.regression
+@pytest.mark.release_five
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Public Plan Minutes")
 @allure.story("Test the display of Public Plan Minute records with correct fields.")

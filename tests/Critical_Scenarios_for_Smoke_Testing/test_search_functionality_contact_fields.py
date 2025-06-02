@@ -41,7 +41,6 @@ def driver():
 
 
 @pytest.mark.release_one
-@pytest.mark.P1
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Search Functionality - Contact filter")
 @allure.story("Validate contacts page filter are working correctly.")

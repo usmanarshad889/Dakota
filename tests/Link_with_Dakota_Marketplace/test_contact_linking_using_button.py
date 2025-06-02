@@ -29,8 +29,7 @@ def driver():
     driver.quit()
 
 
-@pytest.mark.Skipped
-@pytest.mark.P1
+@pytest.mark.release_six
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Contact Linking")
 @allure.story("Test linking Salesforce Contacts with Dakota Marketplace contacts using the button.")

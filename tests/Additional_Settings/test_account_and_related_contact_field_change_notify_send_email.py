@@ -75,7 +75,7 @@ def driver():
     driver.quit()
 
 
-@pytest.mark.P1
+@pytest.mark.release_seven
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Field Change Notification")
 @allure.story('Validate that when the toggle button "Notify when any field changes" is enabled, an email is triggered whenever any field in the account and related contacts is modified.')

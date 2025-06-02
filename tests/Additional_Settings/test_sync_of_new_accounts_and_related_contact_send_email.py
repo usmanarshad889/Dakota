@@ -74,7 +74,7 @@ def driver():
     driver.quit()
 
 
-@pytest.mark.P1
+@pytest.mark.release_seven
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Auto Sync Functionality")
 @allure.story('Validate that when the toggle button "Auto Sync New Accounts and Related Contacts" is enabled, newly created account and related contacts are synced correctly, and an email is successfully triggered.')

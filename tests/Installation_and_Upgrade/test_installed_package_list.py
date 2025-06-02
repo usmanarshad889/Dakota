@@ -16,6 +16,7 @@ def driver():
     driver.quit()
 
 
+@pytest.mark.release_six
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Package Installation")
 @allure.story("Verify that the package appears in the 'Installed Packages' list after installation.")

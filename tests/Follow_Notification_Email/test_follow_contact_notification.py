@@ -21,8 +21,7 @@ def driver():
     driver.quit()
 
 
-@pytest.mark.Skipped
-@pytest.mark.P1
+@pytest.mark.release_seven
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Followed Contacts Notifications")
 @allure.story("Validate email notifications sent on updates to followed contacts.")

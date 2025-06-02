@@ -19,7 +19,7 @@ def driver():
     yield driver
     driver.quit()
 
-@pytest.mark.regression
+@pytest.mark.release_five
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("PDF Generation")
 @allure.story("Validate the ability to generate PDFs for 1–100 selected records.")

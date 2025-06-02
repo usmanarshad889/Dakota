@@ -15,6 +15,8 @@ def driver():
     yield driver
     driver.quit()
 
+
+@pytest.mark.release_six
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Package uninstallation")
 @allure.story("Verify the uninstallation of managed package")

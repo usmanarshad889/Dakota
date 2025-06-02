@@ -43,7 +43,6 @@ def driver():
     driver.quit()
 
 
-@pytest.mark.P1
 @pytest.mark.release_one
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Mapping - Contact field Mapping")

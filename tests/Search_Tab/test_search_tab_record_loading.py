@@ -20,8 +20,7 @@ def driver():
     driver.quit()
 
 
-@pytest.mark.regression
-@pytest.mark.regression
+@pytest.mark.release_five
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Search Tab")
 @allure.story("Test the records loading functionality of search tab.")

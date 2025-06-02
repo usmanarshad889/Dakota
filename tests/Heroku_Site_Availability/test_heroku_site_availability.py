@@ -17,8 +17,7 @@ def driver():
     yield driver
     driver.quit()
 
-@pytest.mark.regression
-@pytest.mark.P1
+
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Availability - Heroku Site")
 @allure.story("Validate the availability of Heroku site")

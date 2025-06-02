@@ -37,7 +37,7 @@ def driver():
     driver.quit()
 
 
-@pytest.mark.Skipped
+@pytest.mark.release_four
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Contact Linking")
 @allure.story('Validate the "Dakota Contact Linked" field displays a linked icon after linking.')

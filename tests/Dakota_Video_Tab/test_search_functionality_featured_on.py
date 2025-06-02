@@ -18,8 +18,7 @@ def driver():
     yield driver
     driver.quit()
 
-@pytest.mark.regression
-@pytest.mark.P1
+@pytest.mark.release_six
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Search Functionality")
 @allure.story("Test search functionality with multiple keywords.")

@@ -22,8 +22,7 @@ def driver():
     driver.quit()
 
 
-@pytest.mark.regression
-@pytest.mark.P1
+@pytest.mark.release_five
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Filters")
 @allure.story("Confirm state visibility changes based on selected countries.")

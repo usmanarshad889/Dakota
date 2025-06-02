@@ -23,7 +23,7 @@ def driver():
     driver.quit()
 
 
-@pytest.mark.Skipped
+@pytest.mark.release_four
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Picklist Values")
 @allure.story("Test the addition of new picklist values via the Sync Account Type Field scheduler.")

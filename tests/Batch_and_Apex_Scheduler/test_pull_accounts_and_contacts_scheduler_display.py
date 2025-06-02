@@ -17,8 +17,7 @@ def driver():
     driver.quit()
 
 
-@pytest.mark.P1
-@pytest.mark.regression
+@pytest.mark.release_five
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Scheduler Display")
 @allure.story('Confirm the display of the Pull Accounts and Contacts scheduler and its run time.')
