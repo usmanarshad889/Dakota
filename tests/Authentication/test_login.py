@@ -22,7 +22,7 @@ def test_authentication_correct_credentials(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])
     driver.delete_all_cookies()
-    wait = WebDriverWait(driver, 30, poll_frequency=0.5)
+    wait = WebDriverWait(driver, 20, poll_frequency=0.5)
 
     try:
         # Perform login
