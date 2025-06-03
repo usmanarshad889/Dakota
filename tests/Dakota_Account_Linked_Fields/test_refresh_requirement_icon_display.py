@@ -1,11 +1,8 @@
 import time
 import random
-import openpyxl
-import os
 import string
 import pytest
 import allure
-from allure_commons.types import AttachmentType
 from faker import Faker
 from selenium import webdriver
 from selenium.common import NoSuchElementException, TimeoutException
