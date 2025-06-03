@@ -17,6 +17,8 @@ def driver():
     yield driver
     driver.quit()
 
+
+@pytest.mark.smoke
 @pytest.mark.release_two
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Mass Account Creation")
