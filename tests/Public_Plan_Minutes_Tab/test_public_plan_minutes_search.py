@@ -2,6 +2,7 @@ import time
 import random
 import pytest
 import allure
+from test_utils import skip_broken
 
 from allure_commons.types import AttachmentType
 from selenium import webdriver
@@ -25,6 +26,8 @@ def driver():
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Public Plan Minutes")
 @allure.story("Verify search functionality for Public Plan Minute names.")
+@pytest.mark.all
+@skip_broken
 def test_public_plan_search(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

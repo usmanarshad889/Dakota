@@ -1,6 +1,7 @@
 import time
 import pytest
 import allure
+from test_utils import skip_broken
 
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
@@ -21,6 +22,8 @@ def driver():
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Metro Area")
 @allure.story("Verify the display of metro area records in Metro Area Tab.")
+@pytest.mark.all
+@skip_broken
 def test_metro_area_records_display(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

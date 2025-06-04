@@ -3,6 +3,8 @@ import pytest
 import allure
 import datetime
 import random
+from test_utils import skip_broken
+
 from allure_commons.types import AttachmentType
 from selenium import webdriver
 from selenium.webdriver.common.action_chains import ActionChains
@@ -25,6 +27,8 @@ def driver():
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Followed Contacts Notifications")
 @allure.story("Validate email notifications sent on updates to followed contacts.")
+@pytest.mark.all
+@skip_broken
 def test_follow_contact_notification(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

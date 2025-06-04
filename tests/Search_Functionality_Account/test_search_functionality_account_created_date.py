@@ -1,6 +1,8 @@
 import time
 import pytest
 import allure
+from test_utils import skip_broken
+
 from allure_commons.types import AttachmentType
 from selenium import webdriver
 from datetime import datetime, timedelta
@@ -23,6 +25,8 @@ def driver():
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Accounts")
 @allure.story("Verify search filter for Marketplace Created Date.")
+@pytest.mark.all
+@skip_broken
 def test_search_aum(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

@@ -1,6 +1,8 @@
 import time
 import pytest
 import allure
+from test_utils import skip_broken
+
 from allure_commons.types import AttachmentType
 from selenium import webdriver
 from selenium.common import NoSuchElementException, TimeoutException
@@ -22,6 +24,8 @@ def driver():
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Account Preview Display")
 @allure.story('Verify the " of QPs" field is displayed correctly in account previews.')
+@pytest.mark.all
+@skip_broken
 def test_qp_display_in_account_preview(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

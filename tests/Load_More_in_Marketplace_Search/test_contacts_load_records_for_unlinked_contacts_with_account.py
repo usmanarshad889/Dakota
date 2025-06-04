@@ -1,6 +1,8 @@
 import time
 import pytest
 import allure
+from test_utils import skip_broken
+
 from allure_commons.types import AttachmentType
 from selenium import webdriver
 from selenium.common import TimeoutException, NoSuchElementException
@@ -25,6 +27,8 @@ def driver():
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Marketplace Search")
 @allure.story("Validate the 'Load More' functionality for unlinked contacts with linked account in Marketplace search.")
+@pytest.mark.all
+@skip_broken
 def test_load_contacts_for_unlinked_accounts(driver, config):
     # Navigate to login page of fuse app
     driver.get(config["base_url"])

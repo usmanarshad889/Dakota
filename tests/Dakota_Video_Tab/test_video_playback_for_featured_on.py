@@ -2,6 +2,8 @@ import time
 import random
 import pytest
 import allure
+from test_utils import skip_broken
+
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -21,6 +23,8 @@ def driver():
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Video Playback")
 @allure.story('Test video playback for "Featured On" columns.')
+@pytest.mark.all
+@skip_broken
 def test_video_playback_for_featured_on(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

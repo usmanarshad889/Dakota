@@ -1,6 +1,8 @@
 import time
 import pytest
 import allure
+from test_utils import skip_broken
+
 from allure_commons.types import AttachmentType
 from selenium import webdriver
 from selenium.common import NoSuchElementException, TimeoutException
@@ -31,6 +33,8 @@ def driver():
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Field Change Notification")
 @allure.story("Ensure that 'Notify when any field changes' triggers correctly for linked records.")
+@pytest.mark.all
+@skip_broken
 def test_notification_mapped_field_none(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

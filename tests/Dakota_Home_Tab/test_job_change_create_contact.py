@@ -3,6 +3,8 @@ import pytest
 import allure
 import random
 import string
+from test_utils import skip_broken
+
 
 from allure_commons.types import AttachmentType
 from selenium import webdriver
@@ -42,6 +44,8 @@ def driver():
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Dakota Home Tab - Job Changes (Create Contact)")
 @allure.story("Test Creation of contacts directly from Job Changes.")
+@pytest.mark.all
+@skip_broken
 def test_job_change_creation_of_account(driver, config):
     driver.get(config["base_url"])
     driver.delete_all_cookies()

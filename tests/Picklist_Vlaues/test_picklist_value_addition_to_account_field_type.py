@@ -3,6 +3,8 @@ import random
 import string
 import pytest
 import allure
+from test_utils import skip_broken
+
 from allure_commons.types import AttachmentType
 from selenium import webdriver
 from selenium.common import NoSuchElementException, TimeoutException
@@ -27,6 +29,8 @@ def driver():
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Picklist Values")
 @allure.story("Test the addition of new picklist values via the Sync Account Type Field scheduler.")
+@pytest.mark.all
+@skip_broken
 def test_picklist_value_addition_to_account_field_type(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

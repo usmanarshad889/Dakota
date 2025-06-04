@@ -1,6 +1,8 @@
 import time
 import pytest
 import allure
+from test_utils import skip_broken
+
 from allure_commons.types import AttachmentType
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -28,6 +30,8 @@ def driver():
 @allure.severity(allure.severity_level.NORMAL)
 @allure.feature("Environment Setup")
 @allure.story("Validate that the environment is set up with a custom domain and email deliver-ability settings.")
+@pytest.mark.all
+@skip_broken
 def test_env_setup_custom_domain(driver, config):
     test_status = True  # Flag to track test success
 

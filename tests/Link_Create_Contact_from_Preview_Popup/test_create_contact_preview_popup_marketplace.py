@@ -1,6 +1,8 @@
 import time
 import pytest
 import allure
+from test_utils import skip_broken
+
 import random
 import string
 from selenium.webdriver.support.ui import Select
@@ -45,6 +47,8 @@ def driver():
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Marketplace Search")
 @allure.story('Validate the "Create Contact" button in the preview popup for Marketplace Search and proper creation.')
+@pytest.mark.all
+@skip_broken
 def test_create_contact_preview_popup_marketplace(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

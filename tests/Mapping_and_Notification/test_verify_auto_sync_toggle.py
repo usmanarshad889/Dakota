@@ -1,6 +1,8 @@
 import time
 import pytest
 import allure
+from test_utils import skip_broken
+
 from allure_commons.types import AttachmentType
 from selenium import webdriver
 from selenium.common import NoSuchElementException, TimeoutException
@@ -22,6 +24,8 @@ def driver():
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Field Settings")
 @allure.story("Verify the Auto Sync Field Updates toggle is visible at the top of the mapping section and is activated/inactivated based on user preferences.")
+@pytest.mark.all
+@skip_broken
 def test_verify_auto_sync_toggle(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

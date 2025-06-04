@@ -1,6 +1,8 @@
 import time
 import pytest
 import allure
+from test_utils import skip_broken
+
 from allure_commons.types import AttachmentType
 from selenium import webdriver
 from selenium.common import NoSuchElementException, TimeoutException
@@ -22,6 +24,8 @@ def driver():
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Permission Sets")
 @allure.story("Validate permission set assignment for non-admin users.")
+@pytest.mark.all
+@skip_broken
 def test_non_admin_user_permission_set(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

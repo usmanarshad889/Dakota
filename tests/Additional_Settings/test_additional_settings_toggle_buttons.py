@@ -17,6 +17,7 @@ def driver():
     driver.quit()
 
 
+@pytest.mark.all
 @pytest.mark.release_seven
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("User Settings - Toggles")

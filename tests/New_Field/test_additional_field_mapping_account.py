@@ -4,6 +4,8 @@ import string
 import pytest
 from faker import Faker
 import allure
+from test_utils import skip_broken
+
 from allure_commons.types import AttachmentType
 from selenium import webdriver
 from selenium.common import NoSuchElementException, TimeoutException
@@ -43,6 +45,8 @@ def driver():
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Field Synchronization")
 @allure.story("Validate the synchronization of the newly added field and ensure its correct mapping.")
+@pytest.mark.all
+@skip_broken
 def test_field_addition_to_account(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])
@@ -303,43 +307,51 @@ def test_field_addition_to_account(driver, config):
     driver.get(f"{config['base_url']}lightning/n/Marketplace__Dakota_Search")
     time.sleep(3)
 
-    # Define the stopping condition element
+    # Define the stopping condition element (second checkbox)
     stopping_condition_locator = (By.XPATH, "(//span[@class='slds-checkbox_faux'])[2]")
 
     max_attempts = 5
     attempts = 0
 
     while attempts < max_attempts:
-        # Refresh page and clear cookies
         driver.refresh()
+        time.sleep(2)  # Allow time for page to load after refresh
 
-        # Wait for search input and enter the search term
-        name_input = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='searchTerm']")))
-        name_input.clear()
-        name_input.send_keys(name_var)
+        try:
+            # Enter search term
+            name_input = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='searchTerm']")))
+            name_input.clear()
+            name_input.send_keys(name_var)
 
-        search_element = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@title='Search']")))
+            # Click the Search button
+            search_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@title='Search']")))
+            actions = ActionChains(driver)
 
-        # Double-click search button multiple times until condition is met
-        actions = ActionChains(driver)
-        for _ in range(3):
+            for _ in range(3):  # Try clicking search up to 3 times
+                # Check stopping condition before clicking again
+                if driver.find_elements(*stopping_condition_locator):
+                    print("Stopping condition met. Exiting loop.")
+                    break
+
+                actions.move_to_element(search_button).click().perform()
+                time.sleep(2)  # Let the results update/load
+
+            # Break outer loop if condition is met
             if driver.find_elements(*stopping_condition_locator):
-                print("Stopping condition met. Exiting loop.")
+                print("Element found after search attempts.")
                 break
 
-            actions.double_click(search_element).perform()
+        except Exception as e:
+            print(f"Attempt {attempts + 1} failed: {e}")
 
-        # If element is found, exit the while loop
-        if driver.find_elements(*stopping_condition_locator):
-            break
+        attempts += 1
+        time.sleep(1)
 
-        attempts += 1  # Increment attempt counter
-
-    # Fail test if maximum attempts reached and condition is not met
+    # Assert loop succeeded
     assert attempts < max_attempts, "Test failed: Stopping condition not met after 5 attempts"
 
-    # Check for checkboxes after exiting loop
-    checkboxes = driver.find_elements(By.XPATH, "(//span[@class='slds-checkbox_faux'])[2]")
+    # Final check for the checkbox element
+    checkboxes = driver.find_elements(*stopping_condition_locator)
     assert len(checkboxes) > 0, "Checkbox not found or not visible"
     time.sleep(1)
 

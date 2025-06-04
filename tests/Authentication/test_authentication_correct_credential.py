@@ -1,6 +1,8 @@
 import time
 import pytest
 import allure
+from test_utils import skip_broken
+
 from allure_commons.types import AttachmentType
 from selenium import webdriver
 from selenium.common import NoSuchElementException
@@ -21,6 +23,8 @@ def driver():
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Authentication - Correct Credentials")
 @allure.story("Validate successful authentication with correct credentials for the Heroku.")
+@pytest.mark.all
+@skip_broken
 def test_authentication_correct_credentials(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

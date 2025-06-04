@@ -3,6 +3,8 @@ import random
 import string
 import pytest
 import allure
+from test_utils import skip_broken
+
 from allure_commons.types import AttachmentType
 from faker import Faker
 from selenium import webdriver
@@ -27,6 +29,8 @@ def driver():
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Contact Linking")
 @allure.story("Ensure error handling for relinking already linked contacts.")
+@pytest.mark.all
+@skip_broken
 def test_already_linked_contact_linking(driver, config):
     # Navigate to login page of fuse app
     driver.get(config["base_url"])

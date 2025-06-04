@@ -1,6 +1,8 @@
 import time
 import pytest
 import allure
+from test_utils import skip_broken
+
 from selenium import webdriver
 from selenium.common import NoSuchElementException, TimeoutException
 from selenium.webdriver.common.by import By
@@ -17,6 +19,7 @@ def driver():
     driver.quit()
 
 
+@pytest.mark.all
 @pytest.mark.release_six
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Marketplace Setup")

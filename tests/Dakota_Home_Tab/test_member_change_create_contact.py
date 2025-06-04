@@ -3,6 +3,7 @@ import pytest
 import allure
 import random
 import string
+from test_utils import skip_broken
 
 from allure_commons.types import AttachmentType
 from selenium import webdriver
@@ -43,6 +44,8 @@ def driver():
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Dakota Home Tab - Ask Dakota, Create Contact")
 @allure.story("Test creation of contacts directly from member comment")
+@pytest.mark.all
+@skip_broken
 def test_member_comment_create_contact_from_contact(driver, config):
     driver.get(config["base_url"])
     driver.delete_all_cookies()

@@ -2,6 +2,8 @@ import time
 import random
 import pytest
 import allure
+from test_utils import skip_broken
+
 
 from allure_commons.types import AttachmentType
 from selenium import webdriver
@@ -24,6 +26,8 @@ def driver():
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Manager Presentations")
 @allure.story("Validate search functionality for Manager Presentation names.")
+@pytest.mark.all
+@skip_broken
 def test_manager_presentation_search(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

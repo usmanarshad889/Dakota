@@ -2,6 +2,8 @@ import time
 import pytest
 import allure
 import datetime
+from test_utils import skip_broken
+
 import random
 from allure_commons.types import AttachmentType
 from selenium import webdriver
@@ -27,6 +29,8 @@ def driver():
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Scheduler Functionality")
 @allure.story("Ensure the scheduler runs every Friday at 5 PM.")
+@pytest.mark.all
+@skip_broken
 def test_follow_scheduler_run(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

@@ -1,6 +1,7 @@
 import time
 import pytest
 import allure
+from test_utils import skip_broken
 
 from allure_commons.types import AttachmentType
 from selenium import webdriver
@@ -20,6 +21,7 @@ def driver():
     driver.quit()
 
 
+@pytest.mark.all
 @pytest.mark.release_five
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Search Tab")

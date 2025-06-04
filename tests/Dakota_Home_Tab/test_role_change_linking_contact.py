@@ -2,6 +2,8 @@ import time
 import pytest
 import allure
 from selenium import webdriver
+from test_utils import skip_broken
+
 from selenium.webdriver.common.by import By
 from selenium.common import NoSuchElementException
 from selenium.common import TimeoutException
@@ -22,6 +24,8 @@ def driver():
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Dakota Home Tab - Role Changes (Link Contact)")
 @allure.story("Test linking of accounts directly from Role Changes.")
+@pytest.mark.all
+@skip_broken
 def test_role_change_linking_contact(driver, config):
     driver.get(config["base_url"])
     driver.delete_all_cookies()

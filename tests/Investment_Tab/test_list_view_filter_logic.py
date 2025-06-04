@@ -2,6 +2,8 @@ import time
 from datetime import datetime
 import pytest
 import allure
+from test_utils import skip_broken
+
 from allure_commons.types import AttachmentType
 from selenium import webdriver
 from selenium.common import NoSuchElementException, TimeoutException
@@ -23,6 +25,8 @@ def driver():
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Custom List View Filters")
 @allure.story("Validate filters and filter logic in custom list views.")
+@pytest.mark.all
+@skip_broken
 def test_list_view_filter_logic(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

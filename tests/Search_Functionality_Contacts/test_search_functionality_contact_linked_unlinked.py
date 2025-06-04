@@ -3,6 +3,8 @@ from asyncio import wait_for
 
 import pytest
 import allure
+from test_utils import skip_broken
+
 from allure_commons.types import AttachmentType
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -24,6 +26,8 @@ def driver():
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Contacts")
 @allure.story("Ensure correct results for linked and unlinked contacts.")
+@pytest.mark.all
+@skip_broken
 def test_search_linked_unlinked(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

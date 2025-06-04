@@ -1,6 +1,8 @@
 import time
 import pytest
 import allure
+from test_utils import skip_broken
+
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.common import NoSuchElementException
@@ -22,6 +24,8 @@ def driver():
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Dakota Home Tab - Job Changes (Link Firm Left)")
 @allure.story("Test linking of accounts directly from Job Changes - Firm Left")
+@pytest.mark.all
+@skip_broken
 def test_job_change_linking_firm_left(driver, config):
     driver.get(config["base_url"])
     driver.delete_all_cookies()

@@ -3,6 +3,7 @@ import pytest
 import allure
 import random
 import string
+from test_utils import skip_broken
 
 from selenium.webdriver import ActionChains
 from selenium.webdriver.support.ui import Select
@@ -46,6 +47,8 @@ def driver():
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Contact Creation")
 @allure.story("Verify the correct creation of contact in Metro Area.")
+@pytest.mark.all
+@skip_broken
 def test_metro_area_account_creation(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

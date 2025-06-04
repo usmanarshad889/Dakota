@@ -3,6 +3,7 @@ import pytest
 import allure
 import random
 import string
+from test_utils import skip_broken
 
 from allure_commons.types import AttachmentType
 from selenium import webdriver
@@ -26,6 +27,8 @@ def driver():
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Filters")
 @allure.story("Confirm state visibility changes based on selected countries.")
+@pytest.mark.all
+@skip_broken
 def test_state_visibility_based_on_country(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

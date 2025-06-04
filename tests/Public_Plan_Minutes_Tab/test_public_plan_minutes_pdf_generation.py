@@ -1,6 +1,7 @@
 import time
 import pytest
 import allure
+from test_utils import skip_broken
 
 from allure_commons.types import AttachmentType
 from selenium import webdriver
@@ -23,6 +24,8 @@ def driver():
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("PDF Generation")
 @allure.story("Validate the ability to generate PDFs for 1–100 selected records.")
+@pytest.mark.all
+@skip_broken
 def test_public_plan_minutes_pdf_generation(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

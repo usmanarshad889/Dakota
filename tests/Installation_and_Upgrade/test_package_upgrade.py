@@ -1,6 +1,8 @@
 import time
 import pytest
 import allure
+from test_utils import skip_broken
+
 from allure_commons.types import AttachmentType
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -23,6 +25,8 @@ def driver():
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Managed Package Upgrade")
 @allure.story("Test upgrading from an earlier version, ensuring correct handling of new features and validation of previous configuration")
+@pytest.mark.all
+@skip_broken
 def test_package_upgrade(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

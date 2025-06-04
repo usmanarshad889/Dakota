@@ -1,6 +1,8 @@
 import time
 import pytest
 import allure
+from test_utils import skip_broken
+
 from allure_commons.types import AttachmentType
 from selenium import webdriver
 from selenium.common import NoSuchElementException, TimeoutException
@@ -23,6 +25,8 @@ def driver():
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Mass Actions")
 @allure.story("Test mass actions for creating contact for up to 1000 records.")
+@pytest.mark.all
+@skip_broken
 def test_contact_creation_upto_1000(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

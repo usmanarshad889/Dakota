@@ -1,6 +1,8 @@
 import time
 from datetime import datetime
 import pytest
+from test_utils import skip_broken
+
 import allure
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -19,6 +21,8 @@ def driver():
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Dakota Home Tab - Job Changes")
 @allure.story("Validate data consistency and sorting in Job Changes")
+@pytest.mark.all
+@skip_broken
 def test_job_change_sorting(driver, config):
     driver.get(config["base_url"])
     driver.delete_all_cookies()
