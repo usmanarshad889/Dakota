@@ -42,7 +42,7 @@ def skip_broken_but_fail_on_assertion(
             except AssertionError:
                 raise  # Fail normally
             except tuple(exception_types or default_exceptions) as e:
-                skip_msg = f"Testcase skipped due to Unexpected login Error : (Browser Crash)"
+                skip_msg = f"Testcase skipped ... "
                 allure.dynamic.description(f"Original error: {skip_msg}")
 
                 if attach_screenshot and driver:
