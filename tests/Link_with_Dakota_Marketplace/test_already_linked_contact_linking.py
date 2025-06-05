@@ -1,15 +1,10 @@
 import time
-import random
-import string
 import pytest
 import allure
 from test_utils import skip_broken
 
-from allure_commons.types import AttachmentType
-from faker import Faker
+
 from selenium import webdriver
-from selenium.common import NoSuchElementException, TimeoutException
-from selenium.webdriver import ActionChains
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -89,6 +84,8 @@ def test_already_linked_contact_linking(driver, config):
     dropdown = wait.until(EC.element_to_be_clickable((By.XPATH, "(//select[@name='DisplayCriteria'])[2]")))
     dropdown_option = Select(dropdown)
     dropdown_option.select_by_visible_text("Linked Contacts")
+
+    time.sleep(10)
 
 
     # Click on Search Button

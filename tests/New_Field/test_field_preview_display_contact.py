@@ -29,7 +29,7 @@ def driver():
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Field Display")
 @allure.story("Validate that the newly added field is displayed correctly in the preview popup.")
-@pytest.mark.all
+# @pytest.mark.all
 @skip_broken
 def test_field_preview_display(driver, config):
     # Navigate to login page

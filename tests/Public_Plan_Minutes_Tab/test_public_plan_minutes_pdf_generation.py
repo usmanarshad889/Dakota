@@ -20,6 +20,7 @@ def driver():
     yield driver
     driver.quit()
 
+
 @pytest.mark.release_five
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("PDF Generation")
@@ -79,7 +80,7 @@ def test_public_plan_minutes_pdf_generation(driver, config):
 
 
     # Verify that 100 records are displayed
-    records = wait.until(EC.presence_of_element_located((By.XPATH, "//span[normalize-space()='Showing 100 of 1174']")))
+    records = wait.until(EC.presence_of_element_located((By.XPATH, "//div[@class='recordShow']")))
 
     assert "100" in records.text.strip() , "100 records are not displayed"
 

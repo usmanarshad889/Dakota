@@ -74,7 +74,7 @@ def test_search_state_metro_area(driver, config):
     print(f"Current Tab : {tab.text}")
 
     # Wait for the results to load
-    time.sleep(8)
+    time.sleep(15)
 
     # Select Metro Area field
     cov_input = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[@placeholder='Select Metro Area(s)'])")))

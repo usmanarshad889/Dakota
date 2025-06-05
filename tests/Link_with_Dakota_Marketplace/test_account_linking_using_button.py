@@ -141,6 +141,7 @@ def test_account_linking_using_button(driver, config):
     dropdown = wait.until(EC.element_to_be_clickable((By.XPATH, "//select[@name='DisplayCriteria']")))
     dropdown_option = Select(dropdown)
     dropdown_option.select_by_visible_text("Unlinked Accounts")
+    time.sleep(10)
 
 
     # Select Marketplace Created Date

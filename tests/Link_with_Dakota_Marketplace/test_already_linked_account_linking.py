@@ -85,16 +85,7 @@ def test_already_linked_account_linking(driver, config):
     dropdown_option = Select(dropdown)
     dropdown_option.select_by_visible_text("Linked Accounts")
 
-
-    # Click on search button
-    try:
-        btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='searchTerm']")))
-        btn.clear()
-    except (NoSuchElementException, TimeoutException) as e:
-        print(f"Error: {type(e).__name__}")
-
-    btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@title='Search']")))
-    btn.click()
+    time.sleep(10)
 
 
     # Click on first account name checkbox

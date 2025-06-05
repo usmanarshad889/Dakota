@@ -77,7 +77,7 @@ def test_search_linked_unlinked(driver, config):
     tab.click()
 
     # Wait for the results to load
-    time.sleep(8)
+    time.sleep(15)
 
     # Select Display Criteria (Linked Account)
     criteria_dropdown = wait.until(EC.element_to_be_clickable((By.XPATH, "(//select[@name='DisplayCriteria'])[2]")))

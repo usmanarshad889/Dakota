@@ -151,6 +151,8 @@ def test_contact_linking_using_button(driver, config):
     dropdown_option = Select(dropdown)
     dropdown_option.select_by_visible_text("Unlinked Contacts")
 
+    time.sleep(10)
+
 
     # Select Marketplace Created Date
     dropdown = wait.until(EC.element_to_be_clickable((By.XPATH, "(//select[@name='CRMCreatedDate'])[2]")))

@@ -80,7 +80,7 @@ def test_search_aum(driver, config):
     criteria_dropdown = wait.until(EC.element_to_be_clickable((By.XPATH, "(//select[@name='DisplayCriteria'])")))
     dropdown_option = Select(criteria_dropdown)
     dropdown_option.select_by_visible_text("Unlinked Accounts")
-    time.sleep(10)
+    time.sleep(15)
 
     # click on search button
     button = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@title='Search']")))
@@ -88,6 +88,7 @@ def test_search_aum(driver, config):
 
     # Click on first Result
     button = wait.until(EC.element_to_be_clickable((By.XPATH, "(//button[@name='previewAccount'])[1]")))
+    time.sleep(1)
     button.click()
 
     # Copy Dakota Created Date

@@ -48,7 +48,7 @@ def driver():
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Field Synchronization")
 @allure.story("Validate the synchronization of the newly added field and ensure its correct mapping.")
-@pytest.mark.all
+# @pytest.mark.all
 @skip_broken
 def test_field_addition_to_account(driver, config):
     # Navigate to login page

@@ -75,7 +75,7 @@ def test_search_contact_type(driver, config):
     tab.click()
 
     # Wait for the results to load
-    time.sleep(8)
+    time.sleep(15)
 
     # Select Contact Type field
     con_input = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[@placeholder='Select Type(s)'])[2]")))

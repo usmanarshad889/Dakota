@@ -74,7 +74,7 @@ def test_search_aum(driver, config):
     print(f"Current Tab : {tab.text}")
 
     # Wait for the results to load
-    time.sleep(8)
+    time.sleep(15)
 
 
     # Select AUM "From" value

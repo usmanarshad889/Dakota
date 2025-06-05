@@ -70,13 +70,13 @@ def test_link_account_preview_popup_marketplace(driver, config):
     driver.get(f"{config['base_url']}lightning/n/Marketplace__Dakota_Search")
 
     # Wait for the results to load
-    time.sleep(10)
+    time.sleep(15)
 
     # Select Display Criteria (Linked Account)
     criteria_dropdown = wait.until(EC.element_to_be_clickable((By.XPATH, "(//select[@name='DisplayCriteria'])[1]")))
     dropdown_option = Select(criteria_dropdown)
     dropdown_option.select_by_visible_text("Unlinked Accounts")
-    time.sleep(3)
+    time.sleep(5)
 
 
     # Click the Search button and print its text

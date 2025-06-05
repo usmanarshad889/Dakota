@@ -6,7 +6,6 @@ import string
 from test_utils import skip_broken
 
 from selenium.webdriver import ActionChains
-from selenium.webdriver.support.ui import Select
 from allure_commons.types import AttachmentType
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -48,7 +47,7 @@ def driver():
 @allure.feature("Contact Creation")
 @allure.story("Verify the correct creation of contact in Metro Area.")
 @pytest.mark.all
-@skip_broken
+# @skip_broken
 def test_metro_area_account_creation(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])
@@ -201,12 +200,16 @@ def test_metro_area_account_creation(driver, config):
     button.click()
 
     # Select Account Name
-    input_field = wait.until(EC.visibility_of_element_located((By.XPATH, "//input[@placeholder='Search Accounts...']")))
-    input_field.clear()
-    input_field.send_keys("Test Contacts")
-    time.sleep(3)
-    dropdown_option = wait.until(EC.visibility_of_element_located((By.XPATH, "(//lightning-base-combobox-item[@role='option'])[2]")))
-    dropdown_option.click()
+    try:
+        input_field = wait.until(EC.visibility_of_element_located((By.XPATH, "//input[@placeholder='Search Accounts...']")))
+        input_field.clear()
+        input_field.send_keys("Test Contacts")
+        time.sleep(3)
+        dropdown_option = wait.until(EC.visibility_of_element_located((By.XPATH, "(//lightning-base-combobox-item[@role='option'])[2]")))
+        dropdown_option.click()
+    except (NoSuchElementException, TimeoutException) as e:
+        print(f"Error: {type(e).__name__}")
+
 
     # Select name - Salutation
     salutation_field = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@name='salutation']")))

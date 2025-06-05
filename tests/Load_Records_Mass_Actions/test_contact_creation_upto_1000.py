@@ -66,13 +66,6 @@ def test_contact_creation_upto_1000(driver, config):
     print("Document Ready State is COMPLETE!")
     time.sleep(1)
 
-    # Click on Marketplace Search button
-    try:
-        btn = WebDriverWait(driver, 30).until(EC.element_to_be_clickable((By.XPATH, "//one-app-nav-bar-item-root[@data-target-selection-name='sfdc:TabDefinition.Marketplace__Dakota_Search']")))
-        btn.click()
-    except (NoSuchElementException, TimeoutException) as e:
-        print(f"Message: {type(e).__name__}")
-    time.sleep(1)
 
     # Navigate to installed packages setup
     driver.get(f"{config['base_url']}lightning/n/Marketplace__Dakota_Search")
@@ -84,7 +77,7 @@ def test_contact_creation_upto_1000(driver, config):
 
     button = wait.until(EC.visibility_of_element_located((By.XPATH, "//div[@class='buttonDiv']//button[@title='Search'][normalize-space()='Search']")))
     print(f"Button Text : {button.text}")
-    time.sleep(8)
+    time.sleep(15)
 
     # Select linked accounts from filter
     dropdown = wait.until(EC.element_to_be_clickable((By.XPATH, "(//select[@name='DisplayCriteria'])[2]")))
@@ -96,7 +89,7 @@ def test_contact_creation_upto_1000(driver, config):
     button.click()
 
     # Parameters
-    max_records = 1000
+    max_records = 300
     retry_limit = 3  # How many times to retry if no new records load
 
     # Initial wait

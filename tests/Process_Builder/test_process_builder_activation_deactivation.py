@@ -25,7 +25,7 @@ def driver():
 @allure.feature("Process Builders")
 @allure.story("Ensure users can activate/deactivate process builders manually via Setup.")
 @pytest.mark.all
-@skip_broken
+# @skip_broken
 def test_process_builder_activation_deactivation(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])
@@ -66,21 +66,13 @@ def test_process_builder_activation_deactivation(driver, config):
     print("Document Ready State is COMPLETE!")
     time.sleep(1)
 
-    # Click on Marketplace Search button
-    try:
-        btn = WebDriverWait(driver, 30).until(EC.element_to_be_clickable((By.XPATH, "//one-app-nav-bar-item-root[@data-target-selection-name='sfdc:TabDefinition.Marketplace__Dakota_Search']")))
-        btn.click()
-    except (NoSuchElementException, TimeoutException) as e:
-        print(f"Message: {type(e).__name__}")
-    time.sleep(1)
-
 
     # Navigate to installed pakages setup
     driver.get(f"{config['base_url']}lightning/setup/ProcessAutomation/home")
 
 
     # Switch to iframe
-    iframe = WebDriverWait(driver, 30).until(EC.element_to_be_clickable((By.XPATH, "//iframe[@title='accessibility title']")))
+    iframe = wait.until(EC.element_to_be_clickable((By.XPATH, "//iframe[@title='accessibility title']")))
     driver.switch_to.frame(iframe)
     print("Successfully switched to iframe")
     time.sleep(1)

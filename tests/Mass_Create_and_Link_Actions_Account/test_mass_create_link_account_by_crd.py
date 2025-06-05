@@ -73,17 +73,10 @@ def test_mass_create_link_account_by_crd(driver, config):
     dropdown = wait.until(EC.element_to_be_clickable((By.XPATH, "//select[@name='DisplayCriteria']")))
     dropdown_option = Select(dropdown)
     dropdown_option.select_by_visible_text("Unlinked Accounts")
-    time.sleep(1)
-
-    # Click on search button
-    try:
-        btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='searchTerm']")))
-        btn.clear()
-    except (NoSuchElementException, TimeoutException) as e:
-        print(f"Error: {type(e).__name__}")
+    time.sleep(15)
 
     btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@title='Search']")))
-    time.sleep(5)
+    time.sleep(2)
     btn.click()
 
     # Click on ALL CHECKBOX
@@ -94,6 +87,8 @@ def test_mass_create_link_account_by_crd(driver, config):
     dropdown = wait.until(EC.element_to_be_clickable((By.XPATH, "//select[@name='MassUploadActions']")))
     dropdown_option = Select(dropdown)
     dropdown_option.select_by_visible_text("Link Account")
+
+    time.sleep(10)
 
     # Click on linked account
     dropdown = wait.until(EC.element_to_be_clickable((By.XPATH, "(//select[@class='slds-select'])[4]")))

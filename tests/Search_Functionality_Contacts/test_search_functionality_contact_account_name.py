@@ -82,7 +82,7 @@ def test_search_functionality_by_contact_account_name(driver, config):
     account_input.send_keys("Test")
 
     # Wait for the results to load
-    time.sleep(8)
+    time.sleep(15)
 
     # Click the Search button and print its text
     search_button = wait.until(EC.visibility_of_element_located(

@@ -78,21 +78,15 @@ def test_mass_create_for_existing_contacts_fullname(driver, config):
     dropdown = wait.until(EC.element_to_be_clickable((By.XPATH, "(//select[@name='DisplayCriteria'])[2]")))
     dropdown_option = Select(dropdown)
     dropdown_option.select_by_visible_text("Unlinked Contacts")
-    time.sleep(1)
+    time.sleep(15)
 
-    # Click on search button
-    try:
-        btn = wait.until(EC.element_to_be_clickable((By.XPATH, "(//input[@name='searchTerm'])[2]")))
-        btn.clear()
-    except (NoSuchElementException, TimeoutException) as e:
-        print(f"Error: {type(e).__name__}")
 
     # Click the Search button and print its text
     search_button = wait.until(EC.visibility_of_element_located(
         (By.XPATH, "//div[@class='buttonDiv']//button[@title='Search'][normalize-space()='Search']")
     ))
     print(f"Button Text : {search_button.text}")
-    time.sleep(5)
+    time.sleep(2)
     search_button.click()
 
     # Click on ALL CHECKBOX
@@ -103,6 +97,8 @@ def test_mass_create_for_existing_contacts_fullname(driver, config):
     dropdown = wait.until(EC.element_to_be_clickable((By.XPATH, "//select[@name='MassUploadActions']")))
     dropdown_option = Select(dropdown)
     dropdown_option.select_by_visible_text("Link Selected Contacts to Existing Contacts")
+
+    time.sleep(10)
 
     # Click on linked account
     dropdown = wait.until(EC.element_to_be_clickable((By.XPATH, "(//select[@class='slds-select'])[6]")))
