@@ -41,6 +41,7 @@ def driver():
 
 
 @pytest.mark.release_one
+@pytest.mark.smoke
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Search Functionality - Account filter")
 @allure.story("Validate accounts page filter are working correctly.")
