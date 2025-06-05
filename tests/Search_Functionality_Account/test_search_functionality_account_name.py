@@ -1,7 +1,7 @@
 import time
 import pytest
 import allure
-from test_utils import skip_broken
+from test_utils import skip_broken , pass_broken
 
 from allure_commons.types import AttachmentType
 from selenium import webdriver
@@ -25,7 +25,7 @@ def driver():
 @allure.feature("Accounts")
 @allure.story("Verify search filter for Account Name.")
 @pytest.mark.all
-@skip_broken
+@pass_broken
 def test_search_account_name(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

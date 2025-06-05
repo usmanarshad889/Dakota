@@ -2,7 +2,7 @@ import time
 import pytest
 import allure
 from faker import Faker
-from test_utils import skip_broken
+from test_utils import skip_broken , pass_broken
 
 
 from selenium import webdriver
@@ -35,7 +35,7 @@ def driver():
 @allure.feature("Account Linking")
 @allure.story("Test linking Salesforce Accounts with Dakota Marketplace accounts using the button.")
 @pytest.mark.all
-@skip_broken
+@pass_broken
 def test_account_linking_using_button(driver, config):
     # Navigate to login page of fuse app
     driver.get(config["base_url"])

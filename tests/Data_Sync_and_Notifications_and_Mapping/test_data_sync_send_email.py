@@ -3,7 +3,7 @@ import random
 import string
 import pytest
 import allure
-from test_utils import skip_broken
+from test_utils import skip_broken , pass_broken
 
 from allure_commons.types import AttachmentType
 from faker import Faker

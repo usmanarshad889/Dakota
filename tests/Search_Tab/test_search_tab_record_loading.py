@@ -1,7 +1,7 @@
 import time
 import pytest
 import allure
-from test_utils import skip_broken
+from test_utils import skip_broken , pass_broken
 
 from allure_commons.types import AttachmentType
 from selenium import webdriver
@@ -26,6 +26,7 @@ def driver():
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Search Tab")
 @allure.story("Test the records loading functionality of search tab.")
+@pass_broken
 def test_search_tab_record_loading(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

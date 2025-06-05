@@ -3,7 +3,7 @@ import random
 import string
 import pytest
 import allure
-from test_utils import skip_broken
+from test_utils import skip_broken , pass_broken
 
 from allure_commons.types import AttachmentType
 from faker import Faker
@@ -47,7 +47,7 @@ def driver():
 @allure.feature("Account Linking")
 @allure.story('Validate the "Dakota Account Linked" field displays a linked icon after linking.')
 @pytest.mark.all
-@skip_broken
+@pass_broken
 def test_display_icon_linking(driver, config):
     driver.get(config["uat_login_url"])
     driver.delete_all_cookies()

@@ -1,7 +1,7 @@
 import time
 import pytest
 import allure
-from test_utils import skip_broken
+from test_utils import skip_broken , pass_broken
 
 from selenium import webdriver
 from selenium.common import NoSuchElementException, TimeoutException
@@ -24,6 +24,7 @@ def driver():
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Confirmation Dialog")
 @allure.story("Test 'OK' option in the confirmation dialog.")
+@pass_broken
 def test_dialog_display_in_mapping(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

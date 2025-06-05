@@ -1,7 +1,7 @@
 import time
 import pytest
 import allure
-from test_utils import skip_broken
+from test_utils import skip_broken , pass_broken
 
 from allure_commons.types import AttachmentType
 from selenium import webdriver
@@ -23,7 +23,7 @@ def driver():
 @allure.feature("Authentication - Incorrect Credentials")
 @allure.story("Test error handling with invalid credentials for the Heroku.")
 @pytest.mark.all
-@skip_broken
+@pass_broken
 def test_authentication_incorrect_credentials(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

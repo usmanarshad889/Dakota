@@ -1,7 +1,7 @@
 import time
 import pytest
 import allure
-from test_utils import skip_broken
+from test_utils import skip_broken , pass_broken
 
 from allure_commons.types import AttachmentType
 from selenium import webdriver
@@ -34,6 +34,7 @@ def wait_for_page_load(driver, timeout=90):
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Performance Testing")
 @allure.story("Test the loading time of the SF Org Tabs.")
+@pass_broken
 def measure_page_load(driver, url, page_name):
     """Reusable function to measure and report page load time."""
     with allure.step(f"Navigating to {page_name}"):

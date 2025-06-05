@@ -2,7 +2,7 @@ import time
 
 import allure
 import pytest
-from test_utils import skip_broken
+from test_utils import skip_broken , pass_broken
 
 from selenium import webdriver
 from selenium.common import NoSuchElementException, TimeoutException
@@ -26,7 +26,7 @@ def driver():
 @allure.feature("Contact Linking")
 @allure.story('Test "Link Selected Contacts to Existing Contacts" with search by Last Name.')
 @pytest.mark.all
-@skip_broken
+@pass_broken
 def test_mass_create_for_existing_contacts_lastname(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

@@ -3,7 +3,7 @@ import random
 import string
 import pytest
 import allure
-from test_utils import skip_broken
+from test_utils import skip_broken , pass_broken
 
 from allure_commons.types import AttachmentType
 from selenium import webdriver
@@ -30,7 +30,7 @@ def driver():
 @allure.feature("Picklist Values")
 @allure.story("Confirm picklist value deletion functionality.")
 @pytest.mark.all
-@skip_broken
+@pass_broken
 def test_picklist_value_addition_to_account_field_type(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

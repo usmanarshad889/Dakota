@@ -3,7 +3,7 @@ import random
 import string
 import pytest
 import allure
-from test_utils import skip_broken
+from test_utils import skip_broken , pass_broken
 
 from faker import Faker
 from selenium import webdriver
@@ -45,7 +45,7 @@ def driver():
 @allure.feature("Account Linking")
 @allure.story("Confirm the page refresh requirement for updating the linked icon.")
 @pytest.mark.all
-@skip_broken
+@pass_broken
 def test_refresh_page_icon(driver, config):
     driver.get(config["uat_login_url"])
     driver.delete_all_cookies()

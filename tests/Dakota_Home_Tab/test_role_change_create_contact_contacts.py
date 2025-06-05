@@ -1,7 +1,7 @@
 import time
 import pytest
 import allure
-from test_utils import skip_broken
+from test_utils import skip_broken , pass_broken
 
 from allure_commons.types import AttachmentType
 from selenium import webdriver
@@ -24,7 +24,7 @@ def driver():
 @allure.feature("Dakota Home Tab - Job Changes (Create Account from Account)")
 @allure.story("Test creation of accounts directly from Job Changes - Account Name")
 @pytest.mark.all
-@skip_broken
+@pass_broken
 def test_role_change_creation_of_account_from_account(driver, config):
     driver.get(config["base_url"])
     driver.delete_all_cookies()

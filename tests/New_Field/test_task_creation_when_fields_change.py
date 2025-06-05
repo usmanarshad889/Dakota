@@ -3,7 +3,7 @@ import random
 import string
 import pytest
 import allure
-from test_utils import skip_broken
+from test_utils import skip_broken , pass_broken
 
 from datetime import datetime
 from allure_commons.types import AttachmentType
@@ -45,7 +45,7 @@ def driver():
 @allure.feature("Task Creation")
 @allure.story("Ensure that a Task is created when a field is updated, only when the Auto Sync Field Updates is enabled.")
 @pytest.mark.all
-@skip_broken
+@pass_broken
 def test_task_creation_when_fields_change(driver, config):
     driver.get(config["uat_login_url"])
     driver.delete_all_cookies()

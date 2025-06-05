@@ -1,7 +1,7 @@
 import time
 import pytest
 import allure
-from test_utils import skip_broken
+from test_utils import skip_broken , pass_broken
 
 from allure_commons.types import AttachmentType
 from selenium import webdriver
@@ -27,7 +27,7 @@ def driver():
 @allure.feature("Metro Areas")
 @allure.story('Validate the "Link Contact" button in the preview popup for Metro Areas tabs and proper linking.')
 @pytest.mark.all
-@skip_broken
+@pass_broken
 def test_link_contact_preview_popup_metro_area(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

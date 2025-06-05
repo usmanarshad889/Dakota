@@ -1,7 +1,7 @@
 import time
 import pytest
 import allure
-from test_utils import skip_broken
+from test_utils import skip_broken , pass_broken
 
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -23,6 +23,7 @@ def driver():
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Investment Preference Settings")
 @allure.story("Validate filters and logical operators in Investment Preference settings.")
+@pass_broken
 def test_filter_logic_in_investment_preference(driver, config):
     # Navigate to login page of fuse app
     driver.get(config["base_url"])

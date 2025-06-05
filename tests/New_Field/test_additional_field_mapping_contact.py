@@ -4,7 +4,7 @@ import string
 import pytest
 from faker import Faker
 import allure
-from test_utils import skip_broken
+from test_utils import skip_broken , pass_broken
 
 from allure_commons.types import AttachmentType
 from selenium import webdriver
@@ -49,7 +49,7 @@ def driver():
 @allure.feature("Field Synchronization")
 @allure.story("Validate the synchronization of the newly added field and ensure its correct mapping.")
 # @pytest.mark.all
-@skip_broken
+@pass_broken
 def test_field_addition_to_account(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

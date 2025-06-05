@@ -1,7 +1,7 @@
 import time
 import pytest
 import allure
-from test_utils import skip_broken
+from test_utils import skip_broken , pass_broken
 
 from allure_commons.types import AttachmentType
 from selenium import webdriver
@@ -27,7 +27,7 @@ def driver():
 @allure.feature("Field Change Notification")
 @allure.story("Ensure that 'Notify when any field changes' triggers correctly for linked records.")
 @pytest.mark.all
-@skip_broken
+@pass_broken
 def test_notification_mapped_field_create_task(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

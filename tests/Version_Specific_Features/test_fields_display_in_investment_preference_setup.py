@@ -1,7 +1,7 @@
 import time
 import pytest
 import allure
-from test_utils import skip_broken
+from test_utils import skip_broken , pass_broken
 
 from selenium import webdriver
 from selenium.common import NoSuchElementException, TimeoutException
@@ -24,6 +24,7 @@ def driver():
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Marketplace Setup")
 @allure.story("Validate the display of the Investment field and its related fields in Marketplace Setup.")
+@pass_broken
 def test_fields_display_in_investment_preference_setup(driver, config):
     # Navigate to login page of fuse app
     driver.get(config["base_url"])

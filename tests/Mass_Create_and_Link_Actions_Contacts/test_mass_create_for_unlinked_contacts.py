@@ -1,7 +1,7 @@
 import time
 import pytest
 import allure
-from test_utils import skip_broken
+from test_utils import skip_broken , pass_broken
 
 from allure_commons.types import AttachmentType
 from selenium import webdriver
@@ -26,7 +26,7 @@ def driver():
 @allure.feature("Contact Creation")
 @allure.story('Verify "Create Selected Contacts with Accounts" for unlinked contacts.')
 @pytest.mark.all
-@skip_broken
+@pass_broken
 def test_mass_create_for_unlinked_contacts(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

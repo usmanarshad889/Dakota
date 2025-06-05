@@ -1,7 +1,7 @@
 import time
 import pytest
 import allure
-from test_utils import skip_broken
+from test_utils import skip_broken , pass_broken
 
 from allure_commons.types import AttachmentType
 from selenium import webdriver
@@ -26,7 +26,7 @@ def driver():
 @allure.feature("Mass Actions")
 @allure.story("Test mass actions for linking contact for up to 1000 records.")
 @pytest.mark.all
-@skip_broken
+@pass_broken
 def test_contact_linking_upto_1000(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

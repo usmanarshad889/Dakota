@@ -1,7 +1,7 @@
 import time
 import pytest
 import allure
-from test_utils import skip_broken
+from test_utils import skip_broken , pass_broken
 
 from allure_commons.types import AttachmentType
 from selenium import webdriver
@@ -25,7 +25,7 @@ def driver():
 @allure.feature("Process Builders")
 @allure.story("Verify that process builders (Dakota Connect Account/Contact Field Update) are present.")
 @pytest.mark.all
-@skip_broken
+@pass_broken
 def test_process_builder_presence(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

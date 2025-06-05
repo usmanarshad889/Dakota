@@ -3,7 +3,7 @@ import random
 import string
 import pytest
 import allure
-from test_utils import skip_broken
+from test_utils import skip_broken , pass_broken
 
 from allure_commons.types import AttachmentType
 from selenium import webdriver
@@ -30,7 +30,7 @@ def driver():
 @allure.feature("Field Display")
 @allure.story("Validate that the newly added field is displayed correctly in the preview popup.")
 # @pytest.mark.all
-@skip_broken
+@pass_broken
 def test_field_preview_display(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

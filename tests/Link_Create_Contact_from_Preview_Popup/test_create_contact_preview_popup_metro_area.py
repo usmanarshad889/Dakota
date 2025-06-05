@@ -3,7 +3,7 @@ import pytest
 import allure
 import random
 import string
-from test_utils import skip_broken
+from test_utils import skip_broken , pass_broken
 
 from selenium.webdriver import ActionChains
 from selenium.webdriver.support.ui import Select
@@ -49,7 +49,7 @@ def driver():
 @allure.feature("Metro Areas")
 @allure.story('Validate the "Create Contact" button in the preview popup for Metro Areas tabs and proper creation.')
 @pytest.mark.all
-@skip_broken
+@pass_broken
 def test_link_contact_preview_popup_metro_area(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

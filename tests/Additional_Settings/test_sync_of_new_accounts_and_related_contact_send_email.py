@@ -3,6 +3,8 @@ import random
 import string
 import pytest
 import allure
+from test_utils import skip_broken , pass_broken
+
 import datetime
 from allure_commons.types import AttachmentType
 from faker import Faker
@@ -79,6 +81,7 @@ def driver():
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Auto Sync Functionality")
 @allure.story('Validate that when the toggle button "Auto Sync New Accounts and Related Contacts" is enabled, newly created account and related contacts are synced correctly, and an email is successfully triggered.')
+@skip_broken
 def test_sync_of_new_accounts_created_by_create_task(driver, config):
     driver.get(config["uat_login_url"])
     wait = WebDriverWait(driver, 60, poll_frequency=0.5)

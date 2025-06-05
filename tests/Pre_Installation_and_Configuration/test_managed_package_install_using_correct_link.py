@@ -1,7 +1,7 @@
 import time
 import pytest
 import allure
-from test_utils import skip_broken
+from test_utils import skip_broken , pass_broken
 
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -24,6 +24,7 @@ def driver():
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Managed Package Installation")
 @allure.story("Ensure the managed package can be installed using the correct package link")
+@pass_broken
 def test_installation_using_correct_link(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

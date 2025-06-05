@@ -1,7 +1,7 @@
 import time
 import pytest
 import allure
-from test_utils import skip_broken
+from test_utils import skip_broken , pass_broken
 
 from allure_commons.types import AttachmentType
 from selenium import webdriver
@@ -25,7 +25,7 @@ def driver():
 @allure.feature("Linking/Unlinking - Contact Linking and Unlinking")
 @allure.story("Validate successful linking and unlinking if Contacts.")
 @pytest.mark.all
-@skip_broken
+@pass_broken
 def test_link_unlink_contact(driver, config):
     # Navigate to login page of fuse app
     driver.get(config["base_url"])

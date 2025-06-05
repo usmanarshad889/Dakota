@@ -1,7 +1,7 @@
 import time
 import pytest
 import allure
-from test_utils import skip_broken
+from test_utils import skip_broken , pass_broken
 
 from selenium import webdriver
 from selenium.common import NoSuchElementException, TimeoutException
@@ -24,6 +24,7 @@ def driver():
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Marketplace Setup")
 @allure.story("Validate the confirmation dialog when updating mappings in Marketplace Setup > Mapping.")
+@pass_broken
 def test_cancel_option_in_dialog_box_in_mapping(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

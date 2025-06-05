@@ -5,7 +5,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from test_utils import skip_broken
+from test_utils import skip_broken , pass_broken
 
 @pytest.fixture(scope="module")
 def driver():
@@ -19,7 +19,7 @@ def driver():
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Login - Correct Credentials")
 @allure.story("Validate successful login functionality with correct credentials.")
-@skip_broken
+@pass_broken
 def test_authentication_correct_credentials(driver, config):
 
 

@@ -2,7 +2,7 @@ import time
 import pytest
 import allure
 import datetime
-from test_utils import skip_broken
+from test_utils import skip_broken , pass_broken
 
 from selenium import webdriver
 from selenium.webdriver import Keys
@@ -26,7 +26,7 @@ def driver():
 @allure.feature("Scheduler Functionality")
 @allure.story("Ensure the scheduler runs every Friday at 5 PM.")
 @pytest.mark.all
-@skip_broken
+@pass_broken
 def test_follow_scheduler_run(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

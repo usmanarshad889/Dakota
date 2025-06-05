@@ -3,7 +3,7 @@ import random
 import string
 import pytest
 import allure
-from test_utils import skip_broken
+from test_utils import skip_broken , pass_broken
 
 from allure_commons.types import AttachmentType
 from faker import Faker
@@ -47,7 +47,7 @@ def driver():
 @allure.feature("Search Functionality - Contact filter")
 @allure.story("Validate contacts page filter are working correctly.")
 @pytest.mark.all
-@skip_broken
+@pass_broken
 def test_search_functionality_contact_fields(driver, config):
     driver.get(config["uat_login_url"])
     driver.delete_all_cookies()

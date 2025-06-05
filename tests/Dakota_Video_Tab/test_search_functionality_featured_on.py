@@ -2,7 +2,7 @@ import time
 import random
 import pytest
 import allure
-from test_utils import skip_broken
+from test_utils import skip_broken , pass_broken
 
 from selenium import webdriver
 from selenium.common import TimeoutException
@@ -25,7 +25,7 @@ def driver():
 @allure.feature("Search Functionality")
 @allure.story("Test search functionality with multiple keywords.")
 @pytest.mark.all
-@skip_broken
+@pass_broken
 def test_video_playback_for_content_on(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

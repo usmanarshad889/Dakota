@@ -1,11 +1,9 @@
 import time
 import pytest
 import allure
-from test_utils import skip_broken
+from test_utils import skip_broken , pass_broken
 
-from allure_commons.types import AttachmentType
 from selenium import webdriver
-from selenium.common import TimeoutException, NoSuchElementException
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
@@ -28,7 +26,7 @@ def driver():
 @allure.feature("Marketplace Search")
 @allure.story("Validate the 'Load More' functionality for linked contacts in Marketplace search.")
 @pytest.mark.all
-@skip_broken
+@pass_broken
 def test_load_contacts_linked(driver, config):
     # Navigate to login page of fuse app
     driver.get(config["base_url"])

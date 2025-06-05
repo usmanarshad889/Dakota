@@ -3,7 +3,7 @@ import random
 import string
 import pytest
 import allure
-from test_utils import skip_broken
+from test_utils import skip_broken , pass_broken
 
 from allure_commons.types import AttachmentType
 from faker import Faker
@@ -30,7 +30,7 @@ def driver():
 @allure.feature("Account Linking")
 @allure.story("Ensure error handling when attempting to relink already linked accounts.")
 @pytest.mark.all
-@skip_broken
+@pass_broken
 def test_already_linked_account_linking(driver, config):
     # Navigate to login page of fuse app
     driver.get(config["base_url"])

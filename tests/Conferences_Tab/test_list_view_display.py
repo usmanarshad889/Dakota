@@ -1,7 +1,7 @@
 import time
 import pytest
 import allure
-from test_utils import skip_broken
+from test_utils import skip_broken , pass_broken
 
 from selenium import webdriver
 from selenium.common import NoSuchElementException, TimeoutException
@@ -23,7 +23,7 @@ def driver():
 @allure.feature("Default List Views")
 @allure.story('Verify default list views ("All," "Past Conferences") display correct records based on dates.')
 @pytest.mark.all
-@skip_broken
+@pass_broken
 def test_list_view_display(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

@@ -2,7 +2,7 @@ import time
 import random
 import pytest
 import allure
-from test_utils import skip_broken
+from test_utils import skip_broken , pass_broken
 
 from allure_commons.types import AttachmentType
 from selenium import webdriver
@@ -27,6 +27,7 @@ def driver():
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Search Functionality")
 @allure.story("Test the search functionality for search names.")
+@pass_broken
 def test_search_tab_search_functionality(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

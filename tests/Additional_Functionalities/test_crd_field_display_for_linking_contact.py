@@ -1,14 +1,15 @@
 import time
 import pytest
 import allure
-from test_utils import skip_broken
-from allure_commons.types import AttachmentType
+from test_utils import skip_broken , pass_broken
+
 from selenium import webdriver
 from selenium.common import NoSuchElementException, TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+
 
 
 @pytest.fixture(scope="module")
@@ -24,7 +25,7 @@ def driver():
 @allure.feature("Contact Linking")
 @allure.story('Ensure the "Dakota Contact CRD" field is available for linking contacts.')
 @pytest.mark.all
-@skip_broken
+@pass_broken
 def test_crd_field_display_for_linking_contact(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

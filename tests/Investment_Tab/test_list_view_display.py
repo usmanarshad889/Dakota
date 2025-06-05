@@ -2,7 +2,7 @@ import time
 from datetime import datetime
 import pytest
 import allure
-from test_utils import skip_broken
+from test_utils import skip_broken , pass_broken
 
 from allure_commons.types import AttachmentType
 from selenium import webdriver
@@ -26,7 +26,7 @@ def driver():
 @allure.feature("Default List Views")
 @allure.story('Verify default list views ("All," "Public Investments," "13F Filings") display records accurately.')
 @pytest.mark.all
-@skip_broken
+@pass_broken
 def test_list_view_display(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

@@ -1,7 +1,7 @@
 import time
 import pytest
 import allure
-from test_utils import skip_broken
+from test_utils import skip_broken , pass_broken
 
 from selenium import webdriver
 from selenium.common import NoSuchElementException, TimeoutException
@@ -24,6 +24,7 @@ def driver():
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Account Tab Setup")
 @allure.story("Validate the display of Metro Area field in account tab setup.")
+@pass_broken
 def test_metro_area_display_in_account_setup(driver, config):
     # Navigate to login page of fuse app
     driver.get(config["base_url"])

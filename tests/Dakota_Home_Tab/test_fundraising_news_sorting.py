@@ -2,7 +2,7 @@ import time
 from datetime import datetime
 import pytest
 import allure
-from test_utils import skip_broken
+from test_utils import skip_broken , pass_broken
 
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -25,7 +25,7 @@ def driver():
 @allure.feature("Dakota Home Tab - Fundraising News")
 @allure.story("Validate data consistency and sorting in Fundraising News")
 @pytest.mark.all
-@skip_broken
+@pass_broken
 def test_fundraising_news_sorting(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

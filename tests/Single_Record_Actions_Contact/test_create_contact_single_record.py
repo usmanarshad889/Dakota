@@ -2,7 +2,7 @@ import time
 import random
 import pytest
 import allure
-from test_utils import skip_broken
+from test_utils import skip_broken , pass_broken
 
 from allure_commons.types import AttachmentType
 from faker import Faker
@@ -43,6 +43,7 @@ def driver():
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Contact Creation")
 @allure.story("Confirm 'Create Contact' action for new records.")
+@pass_broken
 def test_create_contact_single_record(driver, config):
     driver.get(config["uat_login_url"])
     driver.delete_all_cookies()

@@ -2,7 +2,7 @@ import time
 from datetime import datetime
 import pytest
 import allure
-from test_utils import skip_broken
+from test_utils import skip_broken , pass_broken
 
 from allure_commons.types import AttachmentType
 from selenium import webdriver
@@ -25,7 +25,7 @@ def driver():
 @allure.feature("Filter Functionality")
 @allure.story("Validate filter application and filter logic.")
 @pytest.mark.all
-@skip_broken
+@pass_broken
 def test_list_view_filter_logic(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

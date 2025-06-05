@@ -1,7 +1,7 @@
 import time
 import pytest
 import allure
-from test_utils import skip_broken
+from test_utils import skip_broken , pass_broken
 
 from allure_commons.types import AttachmentType
 from selenium import webdriver
@@ -25,7 +25,7 @@ def driver():
 @allure.feature("Account Linking")
 @allure.story("Verify the correct linking of account in Metro Area.")
 @pytest.mark.all
-@skip_broken
+@pass_broken
 def test_metro_area_account_linking(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

@@ -1,7 +1,7 @@
 import time
 import pytest
 import allure
-from test_utils import skip_broken
+from test_utils import skip_broken , pass_broken
 
 from allure_commons.types import AttachmentType
 from selenium import webdriver
@@ -29,7 +29,7 @@ def driver():
 @allure.feature("Marketplace Search")
 @allure.story("Validate the 'Load More' functionality for linked accounts in Marketplace search.")
 @pytest.mark.all
-@skip_broken
+@pass_broken
 def test_load_account_linked(driver, config):
     # Navigate to login page of fuse app
     driver.get(config["base_url"])

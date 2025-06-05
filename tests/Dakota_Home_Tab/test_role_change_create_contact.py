@@ -3,7 +3,7 @@ import pytest
 import allure
 import random
 import string
-from test_utils import skip_broken
+from test_utils import skip_broken , pass_broken
 
 from allure_commons.types import AttachmentType
 from selenium import webdriver
@@ -45,7 +45,7 @@ def driver():
 @allure.feature("Dakota Home Tab - Role Changes (Create Contact)")
 @allure.story("Test Creation of contacts directly from Role Changes.")
 @pytest.mark.all
-@skip_broken
+@pass_broken
 def test_role_change_creation_of_account(driver, config):
     driver.get(config["base_url"])
     driver.delete_all_cookies()

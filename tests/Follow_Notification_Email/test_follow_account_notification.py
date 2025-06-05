@@ -3,7 +3,7 @@ import pytest
 import allure
 import datetime
 import random
-from test_utils import skip_broken
+from test_utils import skip_broken , pass_broken
 
 from allure_commons.types import AttachmentType
 from selenium import webdriver
@@ -28,7 +28,7 @@ def driver():
 @allure.feature("Followed Accounts Notifications")
 @allure.story("Validate email notifications sent on updates to followed accounts.")
 @pytest.mark.all
-@skip_broken
+@pass_broken
 def test_follow_account_notification(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])
