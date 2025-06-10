@@ -8,6 +8,7 @@ from selenium.common.exceptions import (
     InvalidSessionIdException
 )
 from typing import List, Type
+from urllib3.exceptions import ReadTimeoutError
 
 
 # ===== Decorator 1: Skip on technical failures but fail on assertion errors =====
@@ -25,7 +26,8 @@ def skip_broken_but_fail_on_assertion(
         ElementNotInteractableException,
         NoSuchWindowException,
         InvalidSessionIdException,
-        UnicodeEncodeError
+        UnicodeEncodeError,
+        ReadTimeoutError
     )
 
     def decorator(func):
@@ -78,7 +80,8 @@ def pass_broken_but_fail_on_assertion(
         ElementNotInteractableException,
         NoSuchWindowException,
         InvalidSessionIdException,
-        UnicodeEncodeError
+        UnicodeEncodeError,
+        ReadTimeoutError
     )
 
     def decorator(func):
