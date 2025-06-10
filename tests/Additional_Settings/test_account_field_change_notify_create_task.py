@@ -64,7 +64,7 @@ def driver():
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Field Change Notification")
 @allure.story('Validate that when the toggle button "Notify when any field changes" is enabled, a task is created whenever any field in the account is modified.')
-@pass_broken
+# @pass_broken
 def test_account_field_change_notify_create_task(driver, config):
     driver.get(config["uat_login_url"])
     wait = WebDriverWait(driver, 60, poll_frequency=0.5)

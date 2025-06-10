@@ -44,7 +44,7 @@ def driver():
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Account Linking")
 @allure.story("Test linking/unlinking actions for individual accounts.")
-@pass_broken
+# @pass_broken
 def test_single_record_linking_unlinking(driver, config):
     driver.get(config["uat_login_url"])
     driver.delete_all_cookies()

@@ -43,7 +43,7 @@ def driver():
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Contact Linking")
 @allure.story("Validate linking/unlinking actions for individual contacts.")
-@pass_broken
+# @pass_broken
 def test_create_contact_linking_unlinking(driver, config):
     driver.get(config["uat_login_url"])
     driver.delete_all_cookies()

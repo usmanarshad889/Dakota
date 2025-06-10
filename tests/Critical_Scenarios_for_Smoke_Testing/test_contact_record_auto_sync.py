@@ -49,8 +49,8 @@ def driver():
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Mapping - Contact field Mapping")
 @allure.story("Validate successful mapping of contact fields.")
-@pytest.mark.all
-@pass_broken
+# @pytest.mark.all
+# @pass_broken
 def test_contact_record_auto_sync(driver, config):
     driver.get(config["uat_login_url"])
     driver.delete_all_cookies()

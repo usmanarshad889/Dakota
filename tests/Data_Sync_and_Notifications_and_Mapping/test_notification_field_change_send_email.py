@@ -25,7 +25,7 @@ def driver():
 @allure.feature("Field Change Notification")
 @allure.story("Ensure that 'Notify when any field changes' triggers correctly for linked records.")
 @pytest.mark.all
-@skip_broken
+# @skip_broken
 def test_notification_field_change_send_email(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])
