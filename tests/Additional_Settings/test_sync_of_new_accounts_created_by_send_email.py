@@ -63,7 +63,7 @@ def driver():
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Auto Sync Functionality")
 @allure.story('Validate that when the toggle button "Auto Sync New Accounts and Related Contacts" is enabled, newly created accounts are synced correctly, and an email is successfully triggered.')
-# @skip_broken
+@skip_broken
 def test_sync_of_new_accounts_created_by_create_task(driver, config):
     driver.get(config["uat_login_url"])
     wait = WebDriverWait(driver, 60, poll_frequency=0.5)

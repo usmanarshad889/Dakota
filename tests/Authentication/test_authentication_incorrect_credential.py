@@ -22,7 +22,7 @@ def driver():
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Authentication - Incorrect Credentials")
 @allure.story("Test error handling with invalid credentials for the Heroku.")
-# @pytest.mark.all
+@pytest.mark.all
 @pass_broken
 def test_authentication_incorrect_credentials(driver, config):
     # Navigate to login page

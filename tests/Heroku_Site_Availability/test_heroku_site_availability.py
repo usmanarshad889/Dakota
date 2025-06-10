@@ -24,7 +24,7 @@ def driver():
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Availability - Heroku Site")
 @allure.story("Validate the availability of Heroku site")
-# @pytest.mark.all
+@pytest.mark.all
 @pass_broken
 def test_heroku_site_availability(driver, config):
     # Navigate to login page

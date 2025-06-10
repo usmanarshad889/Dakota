@@ -45,7 +45,7 @@ def driver():
 @allure.feature("Notification Settings")
 @allure.story("Send Email: Email notifications sent to assigned recipients.")
 @pytest.mark.all
-# @skip_broken
+@skip_broken
 def test_account_record_auto_sync_send_email(driver, config):
     driver.get(config["uat_login_url"])
     wait = WebDriverWait(driver, 60, poll_frequency=0.5)

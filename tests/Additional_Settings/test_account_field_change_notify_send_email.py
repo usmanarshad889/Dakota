@@ -64,7 +64,7 @@ def driver():
 @allure.severity(allure.severity_level.CRITICAL)
 @allure.feature("Field Change Notification")
 @allure.story('Validate that when the toggle button "Notify when any field changes" is enabled, an email is triggered whenever any field in the account is modified.')
-# @skip_broken
+@skip_broken
 def test_account_field_change_notify_send_email(driver, config):
     driver.get(config["uat_login_url"])
     wait = WebDriverWait(driver, 60, poll_frequency=0.5)

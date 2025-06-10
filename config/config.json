@@ -1,12 +1,12 @@
 {
   "sandbox": {
-    "base_url": "https://dakotanetworks--sand2024.sandbox.lightning.force.com/",
-    "username": "draftsf@draftdata.com.sand2024",
+    "base_url": "https://dakotanetworks--fuseupgrad.sandbox.lightning.force.com/",
+    "username": "draftsf@draftdata.com.fuseupgrad",
     "password": "LOWYqfakgQ8oo",
-    "uat_login_url": "https://dakotanetworks.lightning.force.com/",
-    "uat_base_url": "https://dakotanetworks.lightning.force.com/",
-    "uat_username": "draftsf@draftdata.com",
-    "uat_password": "LOWYqfakgQ8oo"
+    "uat_login_url": "https://test.salesforce.com/",
+    "uat_base_url": "https://dakotanetworks--uat.sandbox.lightning.force.com/",
+    "uat_username": "draftsf@draftdata.com.uat",
+    "uat_password": "Rolustech@99"
   },
   "production": {
     "base_url": "https://dakotanetworks--fuseupgrad.sandbox.my.salesforce-setup.com/",
