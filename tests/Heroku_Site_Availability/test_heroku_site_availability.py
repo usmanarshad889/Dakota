@@ -84,11 +84,11 @@ def test_heroku_site_availability(driver, config):
 
     # Verify the Authentication with correct Credentials
     wait.until(EC.element_to_be_clickable((By.XPATH, "//input[@name='Username']"))).clear()
-    driver.find_element(By.XPATH, "//input[@name='Username']").send_keys("Fuse Upgrade")
+    driver.find_element(By.XPATH, "//input[@name='Username']").send_keys("FuseUpgrad")
     driver.find_element(By.XPATH, "//input[@name='Password']").clear()
-    driver.find_element(By.XPATH, "//input[@name='Password']").send_keys("rolus009")
+    driver.find_element(By.XPATH, "//input[@name='Password']").send_keys("admin")
     driver.find_element(By.XPATH, "//input[@name='AuthorizationURL']").clear()
-    driver.find_element(By.XPATH, "//input[@name='AuthorizationURL']").send_keys("https://marketplace-dakota-uat.herokuapp.com")
+    driver.find_element(By.XPATH, "//input[@name='AuthorizationURL']").send_keys("https://marketplace-as-a-service.herokuapp.com")
     time.sleep(1)
 
     try:
