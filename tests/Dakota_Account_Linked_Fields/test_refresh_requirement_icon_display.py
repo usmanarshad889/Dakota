@@ -45,7 +45,7 @@ def driver():
 @allure.feature("Account Linking")
 @allure.story("Confirm the page refresh requirement for updating the linked icon.")
 @pytest.mark.all
-@pass_broken
+@skip_broken
 def test_refresh_page_icon(driver, config):
     driver.get(config["uat_login_url"])
     driver.delete_all_cookies()

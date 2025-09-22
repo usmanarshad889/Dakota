@@ -25,7 +25,7 @@ def driver():
 @allure.feature("Dakota Home Tab - Job Changes (Link Firm Left)")
 @allure.story("Test linking of accounts directly from Job Changes - Firm Left")
 @pytest.mark.all
-@pass_broken
+@skip_broken
 def test_job_change_linking_firm_left(driver, config):
     driver.get(config["base_url"])
     driver.delete_all_cookies()

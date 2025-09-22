@@ -47,7 +47,7 @@ def driver():
 @allure.feature("Account Linking")
 @allure.story("Test scenarios where the field remains empty for unlinked accounts.")
 @pytest.mark.all
-@pass_broken
+@skip_broken
 def test_display_icon_unlinking(driver, config):
     driver.get(config["uat_login_url"])
     driver.delete_all_cookies()

@@ -26,7 +26,7 @@ def driver():
 @allure.feature("Dakota Home Tab - New 13F Filings")
 @allure.story("Validate data consistency and sorting in New 13F Filings")
 @pytest.mark.all
-@pass_broken
+@skip_broken
 def test_new_f13_filling_sorting(driver, config):
     driver.get(config["base_url"])
     driver.delete_all_cookies()

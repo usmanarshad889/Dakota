@@ -25,7 +25,7 @@ def driver():
 @allure.feature("Dakota Home Tab - Ask Dakota, Link Account")
 @allure.story("Test creation of contacts directly from member comment")
 @pytest.mark.all
-@pass_broken
+@skip_broken
 def test_member_comment_linking_account(driver, config):
     driver.get(config["base_url"])
     driver.delete_all_cookies()

@@ -25,7 +25,7 @@ def driver():
 @allure.feature("Dakota Home Tab - Fundraising News")
 @allure.story("Validate data consistency and sorting in Fundraising News")
 @pytest.mark.all
-@pass_broken
+@skip_broken
 def test_fundraising_news_sorting(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

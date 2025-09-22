@@ -24,7 +24,7 @@ def driver():
 @allure.story('''Verify display of Job Changes, Role Changes, Fundraising News, 
 Dakota Videos, Member Comments, and New Investments/Accounts/Contacts''')
 @pytest.mark.all
-@pass_broken
+@skip_broken
 def test_verify_dashboard_sections(driver, config):
     driver.get(config["base_url"])
     driver.delete_all_cookies()

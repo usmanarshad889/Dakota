@@ -44,7 +44,7 @@ def driver():
 @allure.feature("Contact Linking")
 @allure.story('Validate the "Dakota Contact Linked" field displays a linked icon after linking.')
 @pytest.mark.all
-@pass_broken
+@skip_broken
 def test_icon_display_linking(driver, config):
     driver.get(config["uat_login_url"])
     driver.delete_all_cookies()

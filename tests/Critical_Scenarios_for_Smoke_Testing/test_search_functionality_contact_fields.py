@@ -47,7 +47,7 @@ def driver():
 @allure.feature("Search Functionality - Contact filter")
 @allure.story("Validate contacts page filter are working correctly.")
 @pytest.mark.all
-@pass_broken
+@skip_broken
 def test_search_functionality_contact_fields(driver, config):
     driver.get(config["uat_login_url"])
     driver.delete_all_cookies()

@@ -24,7 +24,7 @@ def driver():
 @allure.feature("Dakota Home Tab - Job Changes (Create Account from Account)")
 @allure.story("Test creation of accounts directly from Job Changes - Account Name")
 @pytest.mark.all
-@pass_broken
+@skip_broken
 def test_role_change_creation_of_account_from_account(driver, config):
     driver.get(config["base_url"])
     driver.delete_all_cookies()

@@ -23,7 +23,7 @@ def driver():
 @allure.feature("Video Playback")
 @allure.story('Test video playback for "Content Name" columns.')
 @pytest.mark.all
-@pass_broken
+@skip_broken
 def test_video_playback_for_content_on(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

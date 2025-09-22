@@ -45,7 +45,7 @@ def driver():
 @allure.feature("Dakota Home Tab - Ask Dakota, Create Contact")
 @allure.story("Test creation of contacts directly from member comment")
 @pytest.mark.all
-@pass_broken
+@skip_broken
 def test_member_comment_create_contact_from_contact(driver, config):
     driver.get(config["base_url"])
     driver.delete_all_cookies()

@@ -44,7 +44,7 @@ def driver():
 @allure.feature("Contact Linking")
 @allure.story("Test scenarios where the field remains empty for unlinked contacts.")
 @pytest.mark.all
-@pass_broken
+@skip_broken
 def test_icon_display_unlinking(driver, config):
     driver.get(config["uat_login_url"])
     driver.delete_all_cookies()

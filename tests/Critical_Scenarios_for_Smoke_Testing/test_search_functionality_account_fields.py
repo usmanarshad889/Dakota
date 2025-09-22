@@ -45,7 +45,7 @@ def driver():
 @allure.feature("Search Functionality - Account filter")
 @allure.story("Validate accounts page filter are working correctly.")
 @pytest.mark.all
-@pass_broken
+@skip_broken
 def test_search_functionality_account_fields(driver, config):
     driver.get(config["uat_login_url"])
     driver.delete_all_cookies()

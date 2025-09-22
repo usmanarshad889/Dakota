@@ -45,7 +45,7 @@ def driver():
 @allure.feature("Notification Settings")
 @allure.story("Create Task: Task created for specific updates.")
 @pytest.mark.all
-@pass_broken
+@skip_broken
 def test_account_record_auto_sync_create_task(driver, config):
     driver.get(config["uat_login_url"])
     wait = WebDriverWait(driver, 60, poll_frequency=0.5)

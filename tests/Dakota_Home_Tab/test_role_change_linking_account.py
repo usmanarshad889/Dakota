@@ -25,7 +25,7 @@ def driver():
 @allure.feature("Dakota Home Tab - Role Changes (Link Account)")
 @allure.story("Test linking of accounts directly from Role Changes - Account Name")
 @pytest.mark.all
-@pass_broken
+@skip_broken
 def test_role_change_linking_contact(driver, config):
     driver.get(config["base_url"])
     driver.delete_all_cookies()

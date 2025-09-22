@@ -25,7 +25,7 @@ def driver():
 @allure.feature("Dakota Home Tab - Ask Dakota")
 @allure.story("Validate data consistency and sorting in Ask Dakota")
 @pytest.mark.all
-@pass_broken
+@skip_broken
 def test_ask_dakota_sorting(driver, config):
     # Navigate to login page
     driver.get(config["base_url"])

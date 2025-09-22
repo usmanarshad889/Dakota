@@ -25,7 +25,7 @@ def driver():
 @allure.feature("Linking/Unlinking - Contact Linking and Unlinking")
 @allure.story("Validate successful linking and unlinking if Contacts.")
 @pytest.mark.all
-@pass_broken
+@skip_broken
 def test_link_unlink_contact(driver, config):
     # Navigate to login page of fuse app
     driver.get(config["base_url"])

@@ -22,7 +22,7 @@ def driver():
 @allure.feature("Dakota Home Tab - Job Changes")
 @allure.story("Validate data consistency and sorting in Job Changes")
 @pytest.mark.all
-@pass_broken
+@skip_broken
 def test_job_change_sorting(driver, config):
     driver.get(config["base_url"])
     driver.delete_all_cookies()

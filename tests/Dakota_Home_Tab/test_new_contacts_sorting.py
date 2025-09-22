@@ -26,7 +26,7 @@ def driver():
 @allure.feature("Dakota Home Tab - New Contacts")
 @allure.story("Validate data consistency and sorting in New Contacts")
 @pytest.mark.all
-@pass_broken
+@skip_broken
 def test_new_contacts_sorting(driver, config):
     driver.get(config["base_url"])
     driver.delete_all_cookies()
