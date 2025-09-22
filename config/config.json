@@ -1,6 +1,6 @@
 {
   "sandbox": {
-    "base_url": "https://dakotanetworks--fuseupgrad.sandbox.lightning.force.com/",
+    "base_url": "https://dakotanetworks--sfapptest.sandbox.lightning.force.com/",
     "username": "draftsf@draftdata.com.sfapptest",
     "password": "Rolus@123",
     "uat_login_url": "https://test.salesforce.com/",
